@@ -1,4 +1,1 @@
-logMe ()->
-  console.log 'hello'
-  console.log "hissds"
-  console.log "shnurss"
+myWorld = new World(document.body)
