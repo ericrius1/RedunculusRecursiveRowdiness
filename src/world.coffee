@@ -40,8 +40,17 @@ window.World = class World
     # SCENE WITH CAM
     @scene = new THREE.Scene()
     @scene.add @camera
-    @camera.position.set -25, -10, 0
+    @camera.position.set -25,100, 10 
+    @camera.up = new THREE.Vector3(0,0,1)
     @camera.lookAt 0
+
+    texture = THREE.ImageUtils.loadTexture('./assets/floor.png')
+    geometry = new THREE.PlaneGeometry(300,300)
+    material = new THREE.MeshBasicMaterial({map: texture})
+    plane = new THREE.Mesh(geometry, material)
+    plane.receiveShadow = false
+    @scene.add(plane)
+
 
   addEntity: (script)->
     @isRendering = false

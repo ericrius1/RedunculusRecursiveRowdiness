@@ -4,7 +4,7 @@
 
   window.World = World = (function() {
     function World(parentElement) {
-      var ASPECT, FAR, NEAR, SCREEN_HEIGHT, SCREEN_WIDTH, VIEW_ANGLE;
+      var ASPECT, FAR, NEAR, SCREEN_HEIGHT, SCREEN_WIDTH, VIEW_ANGLE, geometry, material, plane, texture;
       this.parentElement = parentElement;
       this.animate = __bind(this.animate, this);
       this.isRendering = false;
@@ -38,8 +38,17 @@
       this.animate();
       this.scene = new THREE.Scene();
       this.scene.add(this.camera);
-      this.camera.position.set(-25, -10, 0);
+      this.camera.position.set(-25, 100, 10);
+      this.camera.up = new THREE.Vector3(0, 0, 1);
       this.camera.lookAt(0);
+      texture = THREE.ImageUtils.loadTexture('./assets/floor.png');
+      geometry = new THREE.PlaneGeometry(300, 300);
+      material = new THREE.MeshBasicMaterial({
+        map: texture
+      });
+      plane = new THREE.Mesh(geometry, material);
+      plane.receiveShadow = false;
+      this.scene.add(plane);
     }
 
     World.prototype.addEntity = function(script) {
