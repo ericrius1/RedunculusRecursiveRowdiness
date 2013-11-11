@@ -43,7 +43,7 @@ window.World = class World
     # SCENE WITH CAM
     @scene = new THREE.Scene()
     @scene.add @camera
-    @camera.position.set -25,100, 10 
+    @camera.position.set -25,50, 10 
     @camera.up = new THREE.Vector3(0,0,1)
     @camera.lookAt 0
 

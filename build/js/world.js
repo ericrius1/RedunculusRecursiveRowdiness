@@ -41,7 +41,7 @@
       this.animate();
       this.scene = new THREE.Scene();
       this.scene.add(this.camera);
-      this.camera.position.set(-25, 100, 10);
+      this.camera.position.set(-25, 50, 10);
       this.camera.up = new THREE.Vector3(0, 0, 1);
       this.camera.lookAt(0);
       geometry = new THREE.PlaneGeometry(300, 300);
