@@ -1,20 +1,21 @@
 (function() {
-  var World;
+  var World,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   window.World = World = (function() {
-    var animate, render, update;
-
     function World(parentElement) {
       var ASPECT, FAR, NEAR, SCREEN_HEIGHT, SCREEN_WIDTH, VIEW_ANGLE;
       this.parentElement = parentElement;
+      this.animate = __bind(this.animate, this);
       this.isRendering = false;
-      this.frameCount = 0;
       SCREEN_WIDTH = window.innerWidth;
       SCREEN_HEIGHT = window.innerHeight;
       VIEW_ANGLE = 45;
       ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
       NEAR = 0.1;
       FAR = 20000;
+      this.noLighting = true;
+      this.entities = [];
       if (Detector.webgl) {
         this.renderer = new THREE.WebGLRenderer({
           antialias: true,
@@ -34,26 +35,50 @@
       });
       THREEx.WindowResize(this.renderer, this.camera);
       this.controls = new THREE.TrackballControls(this.camera, this.container);
-      animate();
+      this.animate();
+      this.scene = new THREE.Scene();
+      this.scene.add(this.camera);
+      this.camera.position.set(-25, -10, 0);
+      this.camera.lookAt(0);
     }
 
-    animate = function() {
-      requestAnimationFrame(animate);
+    World.prototype.addEntity = function(script) {
+      var diff, light, light2, start;
+      this.isRendering = false;
+      this.frameCount = 0;
+      this.g = new grow3.System(this.scene, this.camera, script);
+      start = (new Date).getTime();
+      this.entities.push(this.g.build());
+      diff = (new Date).getTime() - start;
+      console.debug("Building time: " + diff + "ms");
+      if (this.noLighting) {
+        light = new THREE.PointLight(0xffeeee, 1.3);
+        light.position.set(10, 10, 10);
+        this.scene.add(light);
+        light2 = new THREE.PointLight(0xeeeeff, 1.0);
+        light2.position.set(-10, -10, -10);
+        this.scene.add(light2);
+        this.noLighting = false;
+      }
+      return this.isRendering = true;
+    };
+
+    World.prototype.animate = function() {
+      requestAnimationFrame(this.animate);
       if (this.isRendering) {
-        this.frameCount++;
-        render();
-        return update();
+        this.render();
+        return this.update();
       } else {
-        return this.frameCount = 0;
+
       }
     };
 
-    render = function() {
+    World.prototype.render = function() {
       this.renderer.setClearColor(this.g.backgroundColor);
       return this.renderer.render(this.scene, this.camera);
     };
 
-    update = function() {
+    World.prototype.update = function() {
       return this.controls.update();
     };
 

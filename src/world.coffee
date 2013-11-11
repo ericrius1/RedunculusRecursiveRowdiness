@@ -1,13 +1,15 @@
 window.World = class World
   constructor: (@parentElement)->
     @isRendering = false
-    @frameCount = 0
     SCREEN_WIDTH = window.innerWidth
     SCREEN_HEIGHT = window.innerHeight
     VIEW_ANGLE = 45
     ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT
     NEAR = 0.1
     FAR = 20000
+    @noLighting = true
+    @entities = []
+
 
     # RENDERER
     if Detector.webgl
@@ -33,20 +35,47 @@ window.World = class World
 
     # CONTROLS
     @controls = new THREE.TrackballControls(@camera, @container)
-    animate()
+    @animate()
 
-  animate = ->
-    requestAnimationFrame animate
+    # SCENE WITH CAM
+    @scene = new THREE.Scene()
+    @scene.add @camera
+    @camera.position.set -25, -10, 0
+    @camera.lookAt 0
+
+  addEntity: (script)->
+    @isRendering = false
+    @frameCount = 0
+
+
+    # GROW3
+    @g = new grow3.System(@scene, @camera, script)
+    start = (new Date).getTime()
+    @entities.push @g.build()
+    diff = (new Date).getTime() - start
+    console.debug "Building time: " + diff + "ms"
+    
+    if @noLighting
+      # default lighting
+      light = new THREE.PointLight(0xffeeee, 1.3)
+      light.position.set 10, 10, 10
+      @scene.add light
+      light2 = new THREE.PointLight(0xeeeeff, 1.0) # soft white light
+      light2.position.set -10, -10, -10
+      @scene.add light2
+      @noLighting = false;
+    @isRendering = true
+
+  animate : =>
+    requestAnimationFrame @animate
     if @isRendering
-      @frameCount++
-      render()
-      update()
+      @render()
+      @update()
     else
-      @frameCount = 0
 
-  render = ->
+  render : ->
     @renderer.setClearColor @g.backgroundColor
     @renderer.render @scene, @camera
 
-  update = ->
+  update : ->
     @controls.update()

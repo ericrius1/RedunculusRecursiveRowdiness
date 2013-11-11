@@ -1,1 +1,7 @@
-myWorld = new World(document.body)
+
+
+window.onload = ->
+  myWorld = new World(document.body)
+  myWorld.addEntity(bush)
+
+
