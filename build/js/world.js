@@ -4,7 +4,7 @@
 
   window.World = World = (function() {
     function World(parentElement) {
-      var ASPECT, FAR, NEAR, SCREEN_HEIGHT, SCREEN_WIDTH, VIEW_ANGLE, geometry, material, plane, texture;
+      var ASPECT, FAR, NEAR, Pi, SCREEN_HEIGHT, SCREEN_WIDTH, VIEW_ANGLE, geometry, material, plane;
       this.parentElement = parentElement;
       this.animate = __bind(this.animate, this);
       this.isRendering = false;
@@ -16,6 +16,7 @@
       FAR = 20000;
       this.noLighting = true;
       this.entities = [];
+      Pi = 3.141592653589793;
       if (Detector.webgl) {
         this.renderer = new THREE.WebGLRenderer({
           antialias: true,
@@ -34,17 +35,22 @@
         charCode: "f".charCodeAt(0)
       });
       THREEx.WindowResize(this.renderer, this.camera);
-      this.controls = new THREE.TrackballControls(this.camera, this.container);
+      this.controls = new THREE.OrbitControls(this.camera, this.container);
+      this.controls.minPolarAngle = 0.1;
+      this.controls.maxPolarAngle = Pi - 1;
       this.animate();
       this.scene = new THREE.Scene();
       this.scene.add(this.camera);
       this.camera.position.set(-25, 100, 10);
       this.camera.up = new THREE.Vector3(0, 0, 1);
       this.camera.lookAt(0);
-      texture = THREE.ImageUtils.loadTexture('./assets/floor.png');
       geometry = new THREE.PlaneGeometry(300, 300);
-      material = new THREE.MeshBasicMaterial({
-        map: texture
+      material = new THREE.MeshPhongMaterial({
+        ambient: 0x030303,
+        color: 0xdddddd,
+        specular: 0x009900,
+        shininess: 30,
+        shading: THREE.FlatShading
       });
       plane = new THREE.Mesh(geometry, material);
       plane.receiveShadow = false;

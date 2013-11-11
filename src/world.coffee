@@ -9,6 +9,7 @@ window.World = class World
     FAR = 20000
     @noLighting = true
     @entities = []
+    Pi = 3.141592653589793
 
 
     # RENDERER
@@ -34,7 +35,9 @@ window.World = class World
     THREEx.WindowResize @renderer, @camera
 
     # CONTROLS
-    @controls = new THREE.TrackballControls(@camera, @container)
+    @controls = new THREE.OrbitControls(@camera, @container)
+    @controls.minPolarAngle = 0.1
+    @controls.maxPolarAngle = Pi - 1 
     @animate()
 
     # SCENE WITH CAM
@@ -44,9 +47,8 @@ window.World = class World
     @camera.up = new THREE.Vector3(0,0,1)
     @camera.lookAt 0
 
-    texture = THREE.ImageUtils.loadTexture('./assets/floor.png')
     geometry = new THREE.PlaneGeometry(300,300)
-    material = new THREE.MeshBasicMaterial({map: texture})
+    material = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading } )
     plane = new THREE.Mesh(geometry, material)
     plane.receiveShadow = false
     @scene.add(plane)
