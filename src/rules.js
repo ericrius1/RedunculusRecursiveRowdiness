@@ -1,23 +1,25 @@
 window.bush= function (grow3) {
 
     with (grow3) {
-        background(0x443333);
-
-        var materials = [new THREE.MeshPhongMaterial({color: 0xbbbbbb}),
-            new THREE.MeshPhongMaterial({color: 0xddbbbb})];
-
-        maxDepth(100);
-
+        var mats = [new THREE.MeshPhongMaterial({color: 0xeebbaa}), new THREE.MeshPhongMaterial({color: 0xbbeeaa}) ];
+        maxDepth(50);
         rules({
-            spiral: function () {
-                cube(material(materials).scale(1.2));
-                spiral(pitch(10).roll(13).move(0.6).scale(0.98));
+            line: function () {
+                for (var x = -5; x < 5; x++) {
+                    cube(scale(0.9).move(x).yaw(rnd(15)));
+                }
+            },
+
+            quad: function () {
+                for (var y = -5; y < 5; y++) {
+                    line(tH(y));
+                }
             },
 
             start: function () {
 
-                for (var i = 0; i < 720; i += 15) {
-                    spiral(scale(0.9).yaw(i / 3).pitch(i));
+                for (var z = -5; z < 5; z++) {
+                    quad(tH(10).tV(z).material(select(mats, z)));
                 }
             }
         });

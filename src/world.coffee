@@ -8,8 +8,7 @@ window.World = class World
 
     
     #CAMERA
-    @camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
-    @camera.position.z = 100
+    @camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
 
 
     @scene = new THREE.Scene()
@@ -57,6 +56,7 @@ window.World = class World
     @g = new grow3.System(@scene, @camera, script)
     start = (new Date).getTime()
     @entities.push @g.build()
+    @gameOn = true
 
 
 
@@ -81,12 +81,16 @@ window.World = class World
     havePointerLock = "pointerLockElement" of document or "mozPointerLockElement" of document or "webkitPointerLockElement" of document
     if havePointerLock
       element = document.body
-      pointerlockchange = (event) ->
+      @pointerlockchange = (event) ->
+        if myWorld.gameOn 
+          return
         if document.pointerLockElement is element or document.mozPointerLockElement is element or document.webkitPointerLockElement is element
           myWorld.controls.enabled = true
           myWorld.addEntity(bush)
 
           myWorld.blocker.style.display = "none"
+          document.removeEventListener "pointerlockchange", pointerlockchange, false
+          console.log 'removed'
         else
           myWorld.controls.enabled = false
           myWorld.blocker.style.display = "-webkit-box"

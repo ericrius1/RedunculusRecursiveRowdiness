@@ -12,8 +12,7 @@
       var geometry, light, material, mesh;
       this.blocker = document.getElementById("blocker");
       this.entities = [];
-      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-      this.camera.position.z = 100;
+      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
       this.scene = new THREE.Scene();
       light = new THREE.DirectionalLight(0xffffff, 1.5);
       light.position.set(1, 1, 1);
@@ -49,7 +48,8 @@
       var start;
       this.g = new grow3.System(this.scene, this.camera, script);
       start = (new Date).getTime();
-      return this.entities.push(this.g.build());
+      this.entities.push(this.g.build());
+      return this.gameOn = true;
     };
 
     onWindowResize = function() {
@@ -67,16 +67,21 @@
     };
 
     setUpControls = function() {
-      var element, havePointerLock, instructions, pointerlockchange, pointerlockerror;
+      var element, havePointerLock, instructions, pointerlockerror;
       instructions = document.getElementById("instructions");
       havePointerLock = "pointerLockElement" in document || "mozPointerLockElement" in document || "webkitPointerLockElement" in document;
       if (havePointerLock) {
         element = document.body;
-        pointerlockchange = function(event) {
+        this.pointerlockchange = function(event) {
+          if (myWorld.gameOn) {
+            return;
+          }
           if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
             myWorld.controls.enabled = true;
             myWorld.addEntity(bush);
-            return myWorld.blocker.style.display = "none";
+            myWorld.blocker.style.display = "none";
+            document.removeEventListener("pointerlockchange", pointerlockchange, false);
+            return console.log('removed');
           } else {
             myWorld.controls.enabled = false;
             myWorld.blocker.style.display = "-webkit-box";
