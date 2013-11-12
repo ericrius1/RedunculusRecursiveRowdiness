@@ -1,23 +1,26 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
     <head>
-        <style>body { margin: 0; overflow: hidden; }</style>
+        <meta charset="utf-8">
+        <title>three.js - pointerlock controls</title>
+        <LINK REL=StyleSheet HREF="css/styles.css" TYPE="text/css" MEDIA=screen>
     </head>
     <body>
         <script src="lib/three.js"></script>
-        <script src="lib/Detector.js"></script>
-        <script src="lib/OrbitControls.js"></script>
-        <script src="lib/FirstPersonControls.js"></script>
-        <script src="lib/FlyControls.js"></script>
         <script src="lib/PointerLockControls.js"></script>
-        <script src="lib/THREEx.FullScreen.js"></script>
-        <script src="lib/THREEx.WindowResize.js"></script>
-        <script src="lib/helvetiker_regular.typeface.js"></script>
+        <script src="build/js/world.js"></script>
+        <script src="build/js/main.js"></script>
 
-        <script src="lib/grow3.js"></script>
-        <script src="src/rules.js"></script>
-        <script src= "build/js/world.js"></script>
-        <script src= "build/js/main.js"></script>
+        <div id="blocker">
 
+            <div id="instructions">
+                <span style="font-size:40px">Click to play</span>
+                <br />
+                (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
+            </div>
+
+        </div>
+
+       
     </body>
 </html>
