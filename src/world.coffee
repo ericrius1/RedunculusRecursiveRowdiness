@@ -43,15 +43,34 @@ window.World = class World
     # SCENE WITH CAM
     @scene = new THREE.Scene()
     @scene.add @camera
-    @camera.position.set -25,50, 10 
-    @camera.up = new THREE.Vector3(0,0,1)
+    @camera.position.set 1, 1, 1
+    # @camera.up = new THREE.Vector3(0,0,1)
     @camera.lookAt 0
 
-    geometry = new THREE.PlaneGeometry(300,300)
-    material = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading } )
-    plane = new THREE.Mesh(geometry, material)
-    plane.receiveShadow = false
-    @scene.add(plane)
+    #floor
+    geometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );
+    geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+    i = 0
+    l = geometry.vertices.length
+
+    while i < l
+      vertex = geometry.vertices[i]
+      vertex.x += Math.random() * 20 - 10
+      vertex.y += Math.random() * 2
+      vertex.z += Math.random() * 20 - 10
+      i++
+    i = 0
+    l = geometry.faces.length
+
+    while i < l
+      face = geometry.faces[i]
+      face.vertexColors[0] = new THREE.Color().setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75)
+      face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75)
+      face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75)
+      i++
+    material = new THREE.MeshBasicMaterial(vertexColors: THREE.VertexColors)
+    mesh = new THREE.Mesh(geometry, material)
+    @scene.add mesh
 
 
   addEntity: (script)->
