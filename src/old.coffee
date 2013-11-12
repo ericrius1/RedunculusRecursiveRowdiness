@@ -64,7 +64,6 @@ window.World = class World
 
     document.body.appendChild( @renderer.domElement );
 
-    @animate()
 
 
   addEntity: (script)->

@@ -9,22 +9,16 @@
       this.animate = __bind(this.animate, this);
       var face, i, l, light, vertex;
       this.time = Date.now();
-      this.objects = [];
       this.blocker = document.getElementById("blocker");
-      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+      this.entities = [];
+      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+      this.camera.position.z = 40;
       this.scene = new THREE.Scene();
-      this.scene.fog = new THREE.Fog(0xffffff, 0, 750);
       light = new THREE.DirectionalLight(0xffffff, 1.5);
       light.position.set(1, 1, 1);
       this.scene.add(light);
-      light = new THREE.DirectionalLight(0xffffff, 0.75);
-      light.position.set(-1, -0.5, -1);
-      this.scene.add(light);
       this.controls = new THREE.PointerLockControls(this.camera);
       this.scene.add(this.controls.getObject());
-      this.ray = new THREE.Raycaster();
-      this.ray.ray.direction.set(0, -1, 0);
-      console.log('wahh');
       this.geometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
       this.geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
       i = 0;
@@ -50,59 +44,30 @@
       });
       this.mesh = new THREE.Mesh(this.geometry, this.material);
       this.scene.add(this.mesh);
-      this.geometry = new THREE.CubeGeometry(20, 20, 20);
-      i = 0;
-      l = this.geometry.faces.length;
-      while (i < l) {
-        face = this.geometry.faces[i];
-        face.vertexColors[0] = new THREE.Color().setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        i++;
-      }
-      i = 0;
-      while (i < 500) {
-        this.material = new THREE.MeshPhongMaterial({
-          specular: 0xffffff,
-          shading: THREE.FlatShading,
-          vertexColors: THREE.VertexColors
-        });
-        this.mesh = new THREE.Mesh(this.geometry, this.material);
-        this.mesh.position.x = Math.floor(Math.random() * 20 - 10) * 20;
-        this.mesh.position.y = Math.floor(Math.random() * 20) * 20 + 10;
-        this.mesh.position.z = Math.floor(Math.random() * 20 - 10) * 20;
-        this.scene.add(this.mesh);
-        this.material.color.setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        this.objects.push(this.mesh);
-        i++;
-      }
       this.renderer = new THREE.WebGLRenderer();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(this.renderer.domElement);
       window.addEventListener("resize", onWindowResize, false);
       setUpControls();
-      this.animate();
     }
 
+    World.prototype.addEntity = function(script) {
+      var diff, start;
+      this.g = new grow3.System(this.scene, this.camera, script);
+      start = (new Date).getTime();
+      this.entities.push(this.g.build());
+      diff = (new Date).getTime() - start;
+      return console.debug("Building time: " + diff + "ms");
+    };
+
     onWindowResize = function() {
-      myWorldcamera.aspect = window.innerWidth / window.innerHeight;
+      myWorld.camera.aspect = window.innerWidth / window.innerHeight;
       myWorld.camera.updateProjectionMatrix();
-      return myWorldrenderer.setSize(window.innerWidth, window.innerHeight);
+      return myWorld.renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
     World.prototype.animate = function() {
-      var distance, intersections;
       requestAnimationFrame(this.animate);
-      this.controls.isOnObject(false);
-      this.ray.ray.origin.copy(this.controls.getObject().position);
-      this.ray.ray.origin.y -= 10;
-      intersections = this.ray.intersectObjects(this.objects);
-      if (intersections.length > 0) {
-        distance = intersections[0].distance;
-        if (distance > 0 && distance < 10) {
-          this.controls.isOnObject(true);
-        }
-      }
       this.controls.update(Date.now() - this.time);
       this.renderer.render(this.scene, this.camera);
       return this.time = Date.now();
