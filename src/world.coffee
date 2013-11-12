@@ -5,22 +5,32 @@ window.World = class World
     @time = Date.now()
     @blocker = document.getElementById("blocker")
     @entities = []
+
     
     #CAMERA
     @camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
-    @camera.position.z = 40
-
+    @camera.position.z = 100
+    @camera.position.y = 10
 
     @scene = new THREE.Scene()
     light = new THREE.DirectionalLight(0xffffff, 1.5)
     light.position.set 1, 1, 1
+
+    light = new THREE.DirectionalLight(0xffffff, 1.5)
+    light.position.set 1, 1, 1
     @scene.add light
+
+
 
     #CONTROLS
     @controls = new THREE.PointerLockControls(@camera)
     @scene.add @controls.getObject()
 
-      
+    @stats = new Stats()
+    @stats.domElement.style.position = 'absolute';
+    @stats.domElement.style.left = '0px';
+    @stats.domElement.style.top = '0px';
+
     # floor
     @geometry = new THREE.PlaneGeometry(2000, 2000, 100, 100)
     @geometry.applyMatrix new THREE.Matrix4().makeRotationX(-Math.PI / 2)
@@ -75,11 +85,12 @@ window.World = class World
 
   animate: =>
     requestAnimationFrame @animate
-    
+    @stats.begin()
 
     @controls.update Date.now() - @time
     @renderer.render @scene, @camera
     @time = Date.now()
+    @stats.end()
 
 
 
@@ -92,6 +103,8 @@ window.World = class World
       pointerlockchange = (event) ->
         if document.pointerLockElement is element or document.mozPointerLockElement is element or document.webkitPointerLockElement is element
           myWorld.controls.enabled = true
+          myWorld.addEntity(bush)
+
           myWorld.blocker.style.display = "none"
         else
           myWorld.controls.enabled = false

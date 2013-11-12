@@ -12,13 +12,20 @@
       this.blocker = document.getElementById("blocker");
       this.entities = [];
       this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-      this.camera.position.z = 40;
+      this.camera.position.z = 100;
+      this.camera.position.y = 10;
       this.scene = new THREE.Scene();
+      light = new THREE.DirectionalLight(0xffffff, 1.5);
+      light.position.set(1, 1, 1);
       light = new THREE.DirectionalLight(0xffffff, 1.5);
       light.position.set(1, 1, 1);
       this.scene.add(light);
       this.controls = new THREE.PointerLockControls(this.camera);
       this.scene.add(this.controls.getObject());
+      this.stats = new Stats();
+      this.stats.domElement.style.position = 'absolute';
+      this.stats.domElement.style.left = '0px';
+      this.stats.domElement.style.top = '0px';
       this.geometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
       this.geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
       i = 0;
@@ -68,9 +75,11 @@
 
     World.prototype.animate = function() {
       requestAnimationFrame(this.animate);
+      this.stats.begin();
       this.controls.update(Date.now() - this.time);
       this.renderer.render(this.scene, this.camera);
-      return this.time = Date.now();
+      this.time = Date.now();
+      return this.stats.end();
     };
 
     setUpControls = function() {
@@ -82,6 +91,7 @@
         pointerlockchange = function(event) {
           if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
             myWorld.controls.enabled = true;
+            myWorld.addEntity(bush);
             return myWorld.blocker.style.display = "none";
           } else {
             myWorld.controls.enabled = false;
