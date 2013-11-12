@@ -1,26 +1,24 @@
-window.bush = function (grow3) {
+window.bush= function (grow3) {
 
     with (grow3) {
-        var mat1 = new THREE.MeshPhongMaterial({color: 0xddaa77});
-        var mat2 = new THREE.MeshPhongMaterial({color: 0xaadd77});
+        background(0x443333);
 
-        maxDepth(40);
+        var materials = [new THREE.MeshPhongMaterial({color: 0xbbbbbb}),
+            new THREE.MeshPhongMaterial({color: 0xddbbbb})];
+
+        maxDepth(100);
 
         rules({
-
-            arc: function () {
-                cube();
-            },
-
-            twistyObject: function () {
-               for(var i = 0; i < 100; i+=1.1){
-                arc(tH(i).pitch(i));
-                }
-               
+            spiral: function () {
+                cube(material(materials).scale(1.2));
+                spiral(pitch(10).roll(13).move(0.6).scale(0.98));
             },
 
             start: function () {
-                twistyObject(material(mat2));
+
+                for (var i = 0; i < 720; i += 15) {
+                    spiral(scale(0.9).yaw(i / 3).pitch(i));
+                }
             }
         });
     }

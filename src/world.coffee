@@ -8,7 +8,8 @@ window.World = class World
 
     
     #CAMERA
-    @camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
+    @camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
+    @camera.position.z = 100
 
 
     @scene = new THREE.Scene()

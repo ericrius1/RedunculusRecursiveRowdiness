@@ -12,7 +12,8 @@
       var geometry, light, material, mesh;
       this.blocker = document.getElementById("blocker");
       this.entities = [];
-      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+      this.camera.position.z = 100;
       this.scene = new THREE.Scene();
       light = new THREE.DirectionalLight(0xffffff, 1.5);
       light.position.set(1, 1, 1);
