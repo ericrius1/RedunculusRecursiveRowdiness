@@ -1,24 +1,24 @@
 
 window.World = class World
   
+  time = Date.now() 
   constructor: ()->
-    @time = Date.now()
     @blocker = document.getElementById("blocker")
     @entities = []
 
     
     #CAMERA
     @camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
-    @camera.position.z = 100
-    @camera.position.y = 10
+
 
     @scene = new THREE.Scene()
     light = new THREE.DirectionalLight(0xffffff, 1.5)
     light.position.set 1, 1, 1
+    @scene.add(light)
 
-    light = new THREE.DirectionalLight(0xffffff, 1.5)
-    light.position.set 1, 1, 1
-    @scene.add light
+    light = new THREE.DirectionalLight( 0xffffff, 0.75 );
+    light.position.set( -1, - 0.5, -1 );
+    @scene.add( light );
 
 
 
@@ -30,31 +30,15 @@ window.World = class World
     @stats.domElement.style.position = 'absolute';
     @stats.domElement.style.left = '0px';
     @stats.domElement.style.top = '0px';
+    document.body.appendChild(@stats.domElement);
 
     # floor
-    @geometry = new THREE.PlaneGeometry(2000, 2000, 100, 100)
-    @geometry.applyMatrix new THREE.Matrix4().makeRotationX(-Math.PI / 2)
-    i = 0
-    l = @geometry.vertices.length
-
-    while i < l
-      vertex = @geometry.vertices[i]
-      vertex.x += Math.random() * 20 - 10
-      vertex.y += Math.random() * 2
-      vertex.z += Math.random() * 20 - 10
-      i++
-    i = 0
-    l = @geometry.faces.length
-
-    while i < l
-      face = @geometry.faces[i]
-      face.vertexColors[0] = new THREE.Color().setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75)
-      face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75)
-      face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75)
-      i++
-    @material = new THREE.MeshBasicMaterial(vertexColors: THREE.VertexColors)
-    @mesh = new THREE.Mesh(@geometry, @material)
-    @scene.add @mesh
+    geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100)
+    geometry.applyMatrix new THREE.Matrix4().makeRotationX(-Math.PI / 2)
+    material = new THREE.MeshBasicMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
+    material.opacity = 0.6
+    mesh = new THREE.Mesh(geometry, material)
+    @scene.add mesh
     
     
     @renderer = new THREE.WebGLRenderer()
@@ -68,13 +52,11 @@ window.World = class World
 
    addEntity: (script)->
 
-
     # GROW3
     @g = new grow3.System(@scene, @camera, script)
     start = (new Date).getTime()
     @entities.push @g.build()
-    diff = (new Date).getTime() - start
-    console.debug "Building time: " + diff + "ms"
+
 
 
 
@@ -85,12 +67,10 @@ window.World = class World
 
   animate: =>
     requestAnimationFrame @animate
-    @stats.begin()
-
-    @controls.update Date.now() - @time
+    @stats.update()
+    @controls.update Date.now() - time
     @renderer.render @scene, @camera
-    @time = Date.now()
-    @stats.end()
+    time = Date.now()
 
 
 

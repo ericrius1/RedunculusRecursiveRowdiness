@@ -4,35 +4,23 @@ window.bush = function (grow3) {
         var mat1 = new THREE.MeshPhongMaterial({color: 0xddaa77});
         var mat2 = new THREE.MeshPhongMaterial({color: 0xaadd77});
 
-        maxDepth(120);
+        maxDepth(40);
 
         rules({
-            spiralElement: function () {
-                cube(scale(0.5).move(18));
-            },
-
-            spiral: function () {
-                for (var j = 0; j < 360; j += 0.5) {
-                    spiralElement(yaw(j * 0.5).roll(j * 6));
-                }
-            },
 
             arc: function () {
-                cube(scale(0.9));
-                arc(pitch(4.0).yaw(7.0).move(-1.3).s(0.97));
+                cube();
             },
 
             twistyObject: function () {
-                for (var i = -90; i <= 90; i += 60) {
-                    for (var j = 0; j < 360; j += 60) {
-                        arc(pitch(i).yaw(j));
-                    }
+               for(var i = 0; i < 100; i+=1.1){
+                arc(tH(i).pitch(i));
                 }
+               
             },
 
             start: function () {
                 twistyObject(material(mat2));
-                spiral(material(mat1));
             }
         });
     }

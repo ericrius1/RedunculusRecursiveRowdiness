@@ -3,22 +3,22 @@
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   window.World = World = (function() {
-    var onWindowResize, setUpControls;
+    var onWindowResize, setUpControls, time;
+
+    time = Date.now();
 
     function World() {
       this.animate = __bind(this.animate, this);
-      var face, i, l, light, vertex;
-      this.time = Date.now();
+      var geometry, light, material, mesh;
       this.blocker = document.getElementById("blocker");
       this.entities = [];
       this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-      this.camera.position.z = 100;
-      this.camera.position.y = 10;
       this.scene = new THREE.Scene();
       light = new THREE.DirectionalLight(0xffffff, 1.5);
       light.position.set(1, 1, 1);
-      light = new THREE.DirectionalLight(0xffffff, 1.5);
-      light.position.set(1, 1, 1);
+      this.scene.add(light);
+      light = new THREE.DirectionalLight(0xffffff, 0.75);
+      light.position.set(-1, -0.5, -1);
       this.scene.add(light);
       this.controls = new THREE.PointerLockControls(this.camera);
       this.scene.add(this.controls.getObject());
@@ -26,31 +26,17 @@
       this.stats.domElement.style.position = 'absolute';
       this.stats.domElement.style.left = '0px';
       this.stats.domElement.style.top = '0px';
-      this.geometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
-      this.geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
-      i = 0;
-      l = this.geometry.vertices.length;
-      while (i < l) {
-        vertex = this.geometry.vertices[i];
-        vertex.x += Math.random() * 20 - 10;
-        vertex.y += Math.random() * 2;
-        vertex.z += Math.random() * 20 - 10;
-        i++;
-      }
-      i = 0;
-      l = this.geometry.faces.length;
-      while (i < l) {
-        face = this.geometry.faces[i];
-        face.vertexColors[0] = new THREE.Color().setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        i++;
-      }
-      this.material = new THREE.MeshBasicMaterial({
-        vertexColors: THREE.VertexColors
+      document.body.appendChild(this.stats.domElement);
+      geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100);
+      geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
+      material = new THREE.MeshBasicMaterial({
+        color: 0xff00ff,
+        transparent: true,
+        blending: THREE.AdditiveBlending
       });
-      this.mesh = new THREE.Mesh(this.geometry, this.material);
-      this.scene.add(this.mesh);
+      material.opacity = 0.6;
+      mesh = new THREE.Mesh(geometry, material);
+      this.scene.add(mesh);
       this.renderer = new THREE.WebGLRenderer();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(this.renderer.domElement);
@@ -59,12 +45,10 @@
     }
 
     World.prototype.addEntity = function(script) {
-      var diff, start;
+      var start;
       this.g = new grow3.System(this.scene, this.camera, script);
       start = (new Date).getTime();
-      this.entities.push(this.g.build());
-      diff = (new Date).getTime() - start;
-      return console.debug("Building time: " + diff + "ms");
+      return this.entities.push(this.g.build());
     };
 
     onWindowResize = function() {
@@ -75,11 +59,10 @@
 
     World.prototype.animate = function() {
       requestAnimationFrame(this.animate);
-      this.stats.begin();
-      this.controls.update(Date.now() - this.time);
+      this.stats.update();
+      this.controls.update(Date.now() - time);
       this.renderer.render(this.scene, this.camera);
-      this.time = Date.now();
-      return this.stats.end();
+      return time = Date.now();
     };
 
     setUpControls = function() {
