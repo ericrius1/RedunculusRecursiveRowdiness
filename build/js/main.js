@@ -1,7 +1,8 @@
 (function() {
   window.onload = function() {
     window.myWorld = new World();
-    return myWorld.animate();
+    myWorld.animate();
+    return myWorld.addEntity(window.bush);
   };
 
 }).call(this);
