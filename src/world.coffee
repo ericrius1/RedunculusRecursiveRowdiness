@@ -5,7 +5,7 @@ window.World = class World
   constructor: ()->
     @entities = []
 
-    
+    @clock = new THREE.Clock()
     #CAMERA
     @camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
 
@@ -42,8 +42,8 @@ window.World = class World
 
     #CONTROLS
     @controls = new THREE.FirstPersonControls(@camera, @renderer.domElement)
-    @controls.movementSpeed = .05
-    @controls.lookSpeed = .0003
+    @controls.movementSpeed = .03
+    @controls.lookSpeed = .0002
     @scene.add @controls
     
     window.addEventListener "resize", onWindowResize, false
@@ -67,11 +67,17 @@ window.World = class World
     myWorld.renderer.setSize window.innerWidth, window.innerHeight
 
   animate: =>
+
     requestAnimationFrame @animate
+
+    delta = @clock.getDelta();
+
+    uniforms1.time.value += delta * 5;
     @stats.update()
     @controls.update Date.now() - time
     @renderer.render @scene, @camera
     time = Date.now()
+    uniforms1.time.value += delta * 5;
 
 
 

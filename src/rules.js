@@ -1,77 +1,64 @@
+window.uniforms1 = {
+  time: {
+    type: "f",
+    value: 1.0
+  },
+  resolution: {
+    type: "v2",
+    value: new THREE.Vector2()
+  }
+};
 
-window.bush = function (grow3) {
+var mat= new THREE.ShaderMaterial({
 
-    with (grow3) {
-        var shrink = 0.991;
-        var mat = new THREE.MeshPhongMaterial({color: 0xdddddd, specular: 0xffffff});
+  uniforms: uniforms1,
+  vertexShader: document.getElementById('vertexShader').textContent,
+  fragmentShader: document.getElementById('fragment_shader1').textContent
 
-        maxDepth(100);
+});
 
-        rules({
-            start: function() {
-                for (var x=0; x<20; x++) {
-                    material(mat).r();
-                }
-            },
+var gCube = new THREE.CubeGeometry(1,1,1);
+var cMesh = new THREE.Mesh(gCube, mat) 
 
-            r: [
-                function () { forward() },
-                function () { turn(); }
-                // function () { turn2(); },
-                // function () { turn3(); }
-                // function () { turn4(); }
-            ],
 
-            forward: function() {
-                if (depth%90 == 0) {
-                    r();
-                } else {
-                    dbox();
-                    rZ(11).move(rnd(2, 4)).tV(2).scale(shrink).forward();
-                }
-            },
+window.bush = function(grow3) {
 
-            turn: function() {
-                if (depth%90 == 0) {
-                  r();
-                } else {
-                    dbox();
-                    rZ(2).move(.2).scale(shrink).turn();
-                }
-            },
+  with(grow3) {
 
-            turn2: function() {
-                if (depth%90 == 0) {
-                    r();
-                } else {
-                    dbox();
-                    rZ(-2).move(10).scale(shrink).turn2();
-                }
-            },
+    var shrink = 0.981;
 
-            turn3: function() {
-                if (depth%90 == 0) {
-                    r();
-                } else {
-                    dbox();
-                    rY(-2).move(0.1).scale(shrink).turn3();
-                }
-            },
+    maxDepth(500);
 
-            turn4: function() {
-                if (depth%90 == 0) {
-                    r();
-                } else {
-                    dbox();
-                    rY(-2).move(0.1).scale(shrink).turn4();
-                }
-            },
+    rules({
+      start: function() {
+        for (var x = 0; x < 10; x++) {
+          r();
+        }
+      },
 
-            dbox: function() {
-                cube(scale(rnd(), rnd(), rnd()));
-            }
+      r: [
 
-        });
-    }
+        function() {
+          forward()
+        },
+      ],
+
+      forward: function() {
+        if (depth % 90 == 0) {
+          r();
+        } else {
+          dbox();
+          rZ(rnd(4, 100)).move(rnd(2, 5)).tV(2.1).scale(shrink).forward();
+        }
+      },
+
+     
+
+      dbox: function() {
+        mesh(material(mat), gCube)
+      }
+
+    });
+  }
 
 };

@@ -11,6 +11,7 @@
       this.animate = __bind(this.animate, this);
       var light;
       this.entities = [];
+      this.clock = new THREE.Clock();
       this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
       this.scene = new THREE.Scene();
       light = new THREE.DirectionalLight(0xffeeee, 1.0);
@@ -31,8 +32,8 @@
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(this.renderer.domElement);
       this.controls = new THREE.FirstPersonControls(this.camera, this.renderer.domElement);
-      this.controls.movementSpeed = .05;
-      this.controls.lookSpeed = .0003;
+      this.controls.movementSpeed = .03;
+      this.controls.lookSpeed = .0002;
       this.scene.add(this.controls);
       window.addEventListener("resize", onWindowResize, false);
     }
@@ -52,11 +53,15 @@
     };
 
     World.prototype.animate = function() {
+      var delta;
       requestAnimationFrame(this.animate);
+      delta = this.clock.getDelta();
+      uniforms1.time.value += delta * 5;
       this.stats.update();
       this.controls.update(Date.now() - time);
       this.renderer.render(this.scene, this.camera);
-      return time = Date.now();
+      time = Date.now();
+      return uniforms1.time.value += delta * 5;
     };
 
     return World;
