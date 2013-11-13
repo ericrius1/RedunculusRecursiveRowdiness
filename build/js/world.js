@@ -42,8 +42,7 @@
       var start;
       this.g = new grow3.System(this.scene, this.camera, script);
       start = (new Date).getTime();
-      this.entities.push(this.g.build());
-      return this.gameOn = true;
+      return this.entities.push(this.g.build());
     };
 
     onWindowResize = function() {

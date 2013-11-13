@@ -56,7 +56,6 @@ window.World = class World
     @g = new grow3.System(@scene, @camera, script)
     start = (new Date).getTime()
     @entities.push @g.build()
-    @gameOn = true
 
 
 
