@@ -7,7 +7,7 @@ window.World = class World
 
     @clock = new THREE.Clock()
     #CAMERA
-    @camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
+    @camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
 
 
     @scene = new THREE.Scene()
@@ -50,14 +50,16 @@ window.World = class World
 
 
 
-   addEntity: (script)->
+  addEntity: (script)->
 
     # GROW3
     @g = new grow3.System(@scene, @camera, script)
-    start = (new Date).getTime()
     @entities.push @g.build()
 
-
+  castSpell: (x, y)->
+    window.xPos = x;
+    window.yPos = y;
+    @addEntity(RULES.bush)
 
 
   onWindowResize = ->

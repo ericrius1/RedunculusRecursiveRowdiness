@@ -20,19 +20,21 @@ var mat= new THREE.ShaderMaterial({
 var gCube = new THREE.CubeGeometry(1,1,1);
 var cMesh = new THREE.Mesh(gCube, mat) 
 
+window.RULES = {}
 
-window.bush = function(grow3) {
+RULES.bush = function(grow3) {
 
   with(grow3) {
 
     var shrink = 0.981;
 
-    maxDepth(500);
+    maxDepth(100);
 
     rules({
       start: function() {
         for (var x = 0; x < 10; x++) {
-          r();
+          console.log(window.xPos)
+          r(tH(window.xPos/10).tV(window.yPos/10));
         }
       },
 
@@ -48,14 +50,14 @@ window.bush = function(grow3) {
           r();
         } else {
           dbox();
-          rZ(rnd(4, 100)).move(rnd(2, 5)).tV(2.1).scale(shrink).forward();
+          rZ(rnd(4, 100)).move(rnd(2, 5)).tV(10.1).scale(shrink).forward();
         }
       },
 
      
 
       dbox: function() {
-        mesh(material(mat), gCube)
+        mesh(scale(0.5).material(mat), gCube)
       }
 
     });

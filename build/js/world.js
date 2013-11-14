@@ -12,7 +12,7 @@
       var light;
       this.entities = [];
       this.clock = new THREE.Clock();
-      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
       this.scene = new THREE.Scene();
       light = new THREE.DirectionalLight(0xffeeee, 1.0);
       light.position.set(1, 1, 1);
@@ -39,10 +39,14 @@
     }
 
     World.prototype.addEntity = function(script) {
-      var start;
       this.g = new grow3.System(this.scene, this.camera, script);
-      start = (new Date).getTime();
       return this.entities.push(this.g.build());
+    };
+
+    World.prototype.castSpell = function(x, y) {
+      window.xPos = x;
+      window.yPos = y;
+      return this.addEntity(RULES.bush);
     };
 
     onWindowResize = function() {
