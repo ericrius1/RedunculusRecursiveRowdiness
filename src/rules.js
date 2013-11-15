@@ -28,13 +28,15 @@ RULES.bush = function(grow3) {
 
     var shrink = 0.981;
 
-    maxDepth(100);
+    maxDepth(10);
 
     rules({
       start: function() {
+        move(myWorld.camera.position.z)
+        tH(myWorld.camera.position.x)
+        tV(myWorld.camera.position.y)
         for (var x = 0; x < 10; x++) {
-          console.log(window.xPos)
-          r(tH(window.xPos/10).tV(window.yPos/10));
+          r();
         }
       },
 
@@ -53,8 +55,6 @@ RULES.bush = function(grow3) {
           rZ(rnd(4, 100)).move(rnd(2, 5)).tV(10.1).scale(shrink).forward();
         }
       },
-
-     
 
       dbox: function() {
         mesh(scale(0.5).material(mat), gCube)

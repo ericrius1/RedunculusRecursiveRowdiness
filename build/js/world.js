@@ -12,6 +12,7 @@
       var light;
       this.entities = [];
       this.clock = new THREE.Clock();
+      this.projector = new THREE.Projector();
       this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
       this.scene = new THREE.Scene();
       light = new THREE.DirectionalLight(0xffeeee, 1.0);
@@ -44,8 +45,9 @@
     };
 
     World.prototype.castSpell = function(x, y) {
-      window.xPos = x;
-      window.yPos = y;
+      var vector;
+      vector = new THREE.Vector3(x, y, 1);
+      this.projector.unprojectVector(vector, this.camera);
       return this.addEntity(RULES.bush);
     };
 

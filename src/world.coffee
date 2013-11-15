@@ -6,6 +6,7 @@ window.World = class World
     @entities = []
 
     @clock = new THREE.Clock()
+    @projector = new THREE.Projector()
     #CAMERA
     @camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
 
@@ -57,8 +58,9 @@ window.World = class World
     @entities.push @g.build()
 
   castSpell: (x, y)->
-    window.xPos = x;
-    window.yPos = y;
+    vector = new THREE.Vector3(x, y, 1) 
+    @projector.unprojectVector(vector, @camera)
+
     @addEntity(RULES.bush)
 
 
