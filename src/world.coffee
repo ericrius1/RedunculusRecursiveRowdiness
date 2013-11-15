@@ -11,6 +11,16 @@ window.World = class World
     @camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
 
 
+    #Training Cube
+    @bulletMat= new THREE.ShaderMaterial({
+    uniforms: uniforms1,
+    vertexShader: document.getElementById('vertexShader').textContent,
+    fragmentShader: document.getElementById('fragment_shader1').textContent
+
+    })
+    @bulletGeo = new THREE.CubeGeometry(1,1,1);
+
+
     @scene = new THREE.Scene()
     light = new THREE.DirectionalLight(0xffeeee, 1.0)
     light.position.set 1, 1, 1
@@ -60,8 +70,10 @@ window.World = class World
   castSpell: (x, y)->
     vector = new THREE.Vector3(x, y, 1) 
     @projector.unprojectVector(vector, @camera)
-
-    @addEntity(RULES.bush)
+    bullet = new THREE.Mesh(@bulletGeo, @bulletMat)
+    bullet.position.set(@camera.position.x, @camera.position.y, @camera.position.z)
+    @scene.add(bullet)
+    # @addEntity(RULES.bush)
 
 
   onWindowResize = ->

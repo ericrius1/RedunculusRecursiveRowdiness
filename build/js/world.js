@@ -14,6 +14,12 @@
       this.clock = new THREE.Clock();
       this.projector = new THREE.Projector();
       this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+      this.bulletMat = new THREE.ShaderMaterial({
+        uniforms: uniforms1,
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragment_shader1').textContent
+      });
+      this.bulletGeo = new THREE.CubeGeometry(1, 1, 1);
       this.scene = new THREE.Scene();
       light = new THREE.DirectionalLight(0xffeeee, 1.0);
       light.position.set(1, 1, 1);
@@ -45,10 +51,12 @@
     };
 
     World.prototype.castSpell = function(x, y) {
-      var vector;
+      var bullet, vector;
       vector = new THREE.Vector3(x, y, 1);
       this.projector.unprojectVector(vector, this.camera);
-      return this.addEntity(RULES.bush);
+      bullet = new THREE.Mesh(this.bulletGeo, this.bulletMat);
+      bullet.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
+      return this.scene.add(bullet);
     };
 
     onWindowResize = function() {
