@@ -75,10 +75,11 @@ FW.World = class World
     # GROW3
     @g = new grow3.System(@scene, @camera, RULES.bush)
     rootNode = @g.build(undefined, position)
-    @nodeExplode() for node in rootNode.children
-  nodeExplode: (position)=>
+    @nodeExplode(rootNode)
+  nodeExplode: (node)=>
     console.log 'explode'
-    #@firework.createExplosion(position)
+    @firework.createExplosion(node.position)
+    @nodeExplode(node) for node in node.children
 
   launchRocket: ()->
     rocket = new THREE.Mesh(@rocketGeo, @rocketMat)

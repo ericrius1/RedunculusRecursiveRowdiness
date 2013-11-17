@@ -61,20 +61,23 @@
     }
 
     World.prototype.explode = function(position) {
-      var node, rootNode, _i, _len, _ref, _results;
+      var rootNode;
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
       rootNode = this.g.build(void 0, position);
-      _ref = rootNode.children;
+      return this.nodeExplode(rootNode);
+    };
+
+    World.prototype.nodeExplode = function(node) {
+      var _i, _len, _ref, _results;
+      console.log('explode');
+      this.firework.createExplosion(node.position);
+      _ref = node.children;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-        _results.push(this.nodeExplode());
+        _results.push(this.nodeExplode(node));
       }
       return _results;
-    };
-
-    World.prototype.nodeExplode = function(position) {
-      return console.log('explode');
     };
 
     World.prototype.launchRocket = function() {
