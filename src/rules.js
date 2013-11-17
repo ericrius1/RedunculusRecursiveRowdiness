@@ -1,3 +1,4 @@
+var cMesh = new THREE.Mesh(gCube, mat) 
 window.uniforms1 = {
   time: {
     type: "f",
@@ -18,7 +19,6 @@ var mat= new THREE.ShaderMaterial({
 });
 
 var gCube = new THREE.CubeGeometry(1,1,1);
-var cMesh = new THREE.Mesh(gCube, mat) 
 
 window.RULES = {}
 
@@ -31,32 +31,27 @@ RULES.bush = function(grow3) {
     maxDepth(10);
 
     rules({
-      start: function() {
-        for (var x = 0; x < 1; x++) {
-          r();
-        }
-      },
+            seg: [
+                function () {
+                    cube(scale(0.5));
+                    seg(move(2.0).pitch(-45));
+                },
+                function () {
+                    mesh(material(mat), gCube).scale(0.5)
+                    seg(yaw(90).pitch(45).move(1.0));
+                },
+                function () {
+                    cube(scale(0.5));
+                    seg(yaw(-90).move(1.0));
+                }
+            ],
 
-      r: [
-
-        function() {
-          forward()
-        },
-      ],
-
-      forward: function() {
-
-        dbox();
-        tH(1)
-        forward()
-        
-      },
-
-      dbox: function() {
-        mesh(material(mat), gCube)
-      }
-
-    });
+            start: function () {
+                for (var i = 0; i < 35; i++) {
+                    seg();
+                }
+            }
+        });
   }
 
 };

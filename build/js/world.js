@@ -2,7 +2,7 @@
   var World,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  window.World = World = (function() {
+  FW.World = World = (function() {
     var onWindowResize, time;
 
     time = Date.now();
@@ -11,20 +11,21 @@
       this.animate = __bind(this.animate, this);
       this.explode = __bind(this.explode, this);
       var geometry, light, material, mesh;
-      this.entities = [];
       this.clock = new THREE.Clock();
       this.projector = new THREE.Projector();
       this.targetVec = new THREE.Vector3();
-      this.bulletVel = 15;
+      this.launchSpeed = 0.7;
+      this.explosionDelay = 700;
       this.shootDirection = new THREE.Vector3();
-      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-      this.camera.position.z = 100;
-      this.bulletMat = new THREE.ShaderMaterial({
+      this.firework = new FW.Firework();
+      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+      this.camera.position.z = 1;
+      this.rocketMat = new THREE.ShaderMaterial({
         uniforms: uniforms1,
         vertexShader: document.getElementById('vertexShader').textContent,
         fragmentShader: document.getElementById('fragment_shader1').textContent
       });
-      this.bulletGeo = new THREE.CubeGeometry(1, 1, 1);
+      this.rocketGeo = new THREE.CubeGeometry(1, 1, 1);
       this.scene = new THREE.Scene();
       light = new THREE.DirectionalLight(0xffeeee, 1.0);
       light.position.set(1, 1, 1);
@@ -46,7 +47,7 @@
       });
       material.opacity = 0.6;
       mesh = new THREE.Mesh(geometry, material);
-      mesh.position.y = -20;
+      mesh.position.y = -200;
       this.scene.add(mesh);
       this.renderer = new THREE.WebGLRenderer({
         antialias: true
@@ -61,50 +62,52 @@
 
     World.prototype.addEntity = function(position) {
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
-      return this.entities.push(this.g.build(void 0, position));
+      return this.g.build(void 0, position);
     };
 
     World.prototype.explode = function() {
-      return this.addEntity(this.bullet.position);
+      this.scene.remove(this.rocket);
+      return this.firework.explode(this.rocket.position);
     };
 
     World.prototype.launch = function() {
       var ray, vector;
-      this.bullet = new THREE.Mesh(this.bulletGeo, this.bulletMat);
-      this.bullet.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
+      this.rocket = new THREE.Mesh(this.rocketGeo, this.rocketMat);
+      this.rocket.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
       vector = this.shootDirection;
       this.shootDirection.set(0, 0, 1);
       this.projector.unprojectVector(vector, this.camera);
       ray = new THREE.Ray(this.camera.position, vector.sub(this.camera.position).normalize());
-      this.scene.add(this.bullet);
+      this.scene.add(this.rocket);
       this.target = vector.sub(this.camera.position).normalize();
       this.shootDirection.x = ray.direction.x;
       this.shootDirection.y = ray.direction.y;
       this.shootDirection.z = ray.direction.z;
-      return setTimeout(this.explode, 1000);
+      return setTimeout(this.explode, this.explosionDelay);
     };
 
     onWindowResize = function() {
-      myWorld.camera.aspect = window.innerWidth / window.innerHeight;
-      myWorld.camera.updateProjectionMatrix();
-      return myWorld.renderer.setSize(window.innerWidth, window.innerHeight);
+      FW.myWorld.camera.aspect = window.innerWidth / window.innerHeight;
+      FW.myWorld.camera.updateProjectionMatrix();
+      return FW.myWorld.renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
     World.prototype.animate = function() {
       var delta;
       requestAnimationFrame(this.animate);
       delta = this.clock.getDelta();
-      if (this.bullet != null) {
-        this.bullet.translateX(.1 * this.shootDirection.x);
-        this.bullet.translateY(.1 * this.shootDirection.y);
-        this.bullet.translateZ(.1 * this.shootDirection.z);
+      if (this.rocket != null) {
+        this.rocket.translateX(this.launchSpeed * this.shootDirection.x);
+        this.rocket.translateY(this.launchSpeed * this.shootDirection.y);
+        this.rocket.translateZ(this.launchSpeed * this.shootDirection.z);
       }
-      uniforms1.time.value += delta * 5;
+      if (this.firework.exploding) {
+        this.firework.tick();
+      }
       this.stats.update();
       this.controls.update();
       this.renderer.render(this.scene, this.camera);
-      time = Date.now();
-      return uniforms1.time.value += delta * 5;
+      return time = Date.now();
     };
 
     return World;

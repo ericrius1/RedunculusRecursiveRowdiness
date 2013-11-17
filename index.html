@@ -14,9 +14,13 @@
 
     varying vec2 vUv;
 
+    float rand(vec2 co) {
+      return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
+    }
     void main(void) {
 
         vec2 p = -1.0 + 2.0 * vUv;
+        float random= rand(vUv);
         float a = time * 40.0;
         float d, e, f, g = 1.0 / 40.0, h, i, r, q;
 
@@ -61,8 +65,9 @@
     <script src="lib/grow3.js"></script>
     <script src="lib/stats.js"></script>
     <script src="src/rules.js"></script>
-    <script src="build/js/world.js"></script>
     <script src="build/js/main.js"></script>
+    <script src="build/js/world.js"></script>
+    <script src="build/js/firework.js"></script>
 
 
 

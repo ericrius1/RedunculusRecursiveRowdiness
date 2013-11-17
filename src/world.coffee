@@ -1,28 +1,31 @@
 
-window.World = class World
+FW.World = class World
   
   time = Date.now() 
   constructor: ()->
-    @entities = []
 
     @clock = new THREE.Clock()
     @projector = new THREE.Projector()
     @targetVec = new THREE.Vector3()
-    @bulletVel = 15
+    @launchSpeed = 0.7
+    @explosionDelay = 700
     @shootDirection = new THREE.Vector3()
+    @firework = new FW.Firework()
+    
     #CAMERA
-    @camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
-    @camera.position.z = 100;
+    @camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
+    @camera.position.z = 1;
+
 
 
     #Training Cube
-    @bulletMat= new THREE.ShaderMaterial({
+    @rocketMat= new THREE.ShaderMaterial({
     uniforms: uniforms1,
     vertexShader: document.getElementById('vertexShader').textContent,
     fragmentShader: document.getElementById('fragment_shader1').textContent
 
     })
-    @bulletGeo = new THREE.CubeGeometry(1,1,1);
+    @rocketGeo = new THREE.CubeGeometry(1,1,1);
 
     @scene = new THREE.Scene()
     light = new THREE.DirectionalLight(0xffeeee, 1.0)
@@ -47,7 +50,7 @@ window.World = class World
     material.opacity = 0.6
 
     mesh = new THREE.Mesh(geometry, material)
-    mesh.position.y = -20
+    mesh.position.y = -200
     @scene.add mesh
     
     
@@ -68,29 +71,31 @@ window.World = class World
 
     # GROW3
     @g = new grow3.System(@scene, @camera, RULES.bush)
-    @entities.push @g.build(undefined, position)
+    @g.build(undefined, position)
 
   explode: ()=>
-    @addEntity(@bullet.position)
+    @scene.remove(@rocket)
+    @firework.explode(@rocket.position)
+    #@addEntity(@rocket.position)
 
   launch: ()->
-    @bullet = new THREE.Mesh(@bulletGeo, @bulletMat)
-    @bullet.position.set(@camera.position.x, @camera.position.y, @camera.position.z)
+    @rocket = new THREE.Mesh(@rocketGeo, @rocketMat)
+    @rocket.position.set(@camera.position.x, @camera.position.y, @camera.position.z)
     vector = @shootDirection
     @shootDirection.set(0,0,1)
     @projector.unprojectVector(vector, @camera)
     ray = new THREE.Ray(@camera.position, vector.sub(@camera.position).normalize() );
-    @scene.add(@bullet)
+    @scene.add(@rocket)
     @target =  vector.sub(@camera.position).normalize()
     @shootDirection.x = ray.direction.x;
     @shootDirection.y = ray.direction.y;
     @shootDirection.z = ray.direction.z;
-    setTimeout(@explode, 1000)
+    setTimeout(@explode, @explosionDelay)
 
   onWindowResize = ->
-    myWorld.camera.aspect = window.innerWidth / window.innerHeight
-    myWorld.camera.updateProjectionMatrix()
-    myWorld.renderer.setSize window.innerWidth, window.innerHeight
+    FW.myWorld.camera.aspect = window.innerWidth / window.innerHeight
+    FW.myWorld.camera.updateProjectionMatrix()
+    FW.myWorld.renderer.setSize window.innerWidth, window.innerHeight
 
   animate: =>
 
@@ -99,17 +104,17 @@ window.World = class World
     delta = @clock.getDelta();
 
     #bullet anim
-    if @bullet?
-      @bullet.translateX(.1 * @shootDirection.x)
-      @bullet.translateY( .1 * @shootDirection.y)
-      @bullet.translateZ(.1 * @shootDirection.z)
-
-    uniforms1.time.value += delta * 5;
+    if @rocket?
+      @rocket.translateX(@launchSpeed * @shootDirection.x)
+      @rocket.translateY( @launchSpeed * @shootDirection.y)
+      @rocket.translateZ(@launchSpeed * @shootDirection.z)
+    if @firework.exploding
+      @firework.tick()
+    # uniforms1.time.value += delta * 5;
     @stats.update()
     @controls.update()
     @renderer.render @scene, @camera
     time = Date.now()
-    uniforms1.time.value += delta * 5;
 
 
 

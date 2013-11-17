@@ -1,7 +1,9 @@
 (function() {
+  window.FW = {};
+
   window.onload = function() {
-    window.myWorld = new World();
-    return myWorld.animate();
+    FW.myWorld = new FW.World();
+    return FW.myWorld.animate();
   };
 
 }).call(this);

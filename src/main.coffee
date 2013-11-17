@@ -1,7 +1,7 @@
-
+window.FW = {}
 
 window.onload = ->
-  window.myWorld = new World()
-  myWorld.animate()
+  FW.myWorld = new FW.World()
+  FW.myWorld.animate()
 
 
