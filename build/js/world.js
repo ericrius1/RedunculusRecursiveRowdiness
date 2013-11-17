@@ -17,6 +17,7 @@
       this.launchSpeed = 3.7;
       this.explosionDelay = 2000;
       this.shootDirection = new THREE.Vector3();
+      this.rockets = [];
       this.scene = new THREE.Scene();
       this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
       this.camera.position.z = 1;
@@ -64,25 +65,29 @@
       return this.g.build(void 0, position);
     };
 
-    World.prototype.explode = function() {
-      this.scene.remove(this.rocket);
-      return this.firework.createExplosion(this.rocket.position);
+    World.prototype.explode = function(rocket) {
+      this.scene.remove(rocket);
+      return this.firework.createExplosion(rocket.position);
     };
 
-    World.prototype.launch = function() {
-      var ray, vector;
-      this.rocket = new THREE.Mesh(this.rocketGeo, this.rocketMat);
-      this.rocket.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
+    World.prototype.launchRocket = function() {
+      var ray, rocket, vector,
+        _this = this;
+      rocket = new THREE.Mesh(this.rocketGeo, this.rocketMat);
+      rocket.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
+      this.rockets.push(rocket);
       vector = this.shootDirection;
       this.shootDirection.set(0, 0, 1);
       this.projector.unprojectVector(vector, this.camera);
       ray = new THREE.Ray(this.camera.position, vector.sub(this.camera.position).normalize());
-      this.scene.add(this.rocket);
+      this.scene.add(rocket);
       this.target = vector.sub(this.camera.position).normalize();
       this.shootDirection.x = ray.direction.x;
       this.shootDirection.y = ray.direction.y;
       this.shootDirection.z = ray.direction.z;
-      return setTimeout(this.explode, this.explosionDelay);
+      return setTimeout(function() {
+        return _this.explode(rocket);
+      }, this.explosionDelay);
     };
 
     onWindowResize = function() {
@@ -92,13 +97,13 @@
     };
 
     World.prototype.animate = function() {
-      var delta;
+      var delta, rocket, _i, _len, _ref;
       requestAnimationFrame(this.animate);
       delta = this.clock.getDelta();
-      if (this.rocket != null) {
-        this.rocket.translateX(this.launchSpeed * this.shootDirection.x);
-        this.rocket.translateY(this.launchSpeed * this.shootDirection.y);
-        this.rocket.translateZ(this.launchSpeed * this.shootDirection.z);
+      _ref = this.rockets;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        rocket = _ref[_i];
+        this.updateRocket(rocket);
       }
       if (this.firework.exploding) {
         this.firework.tick();
@@ -107,6 +112,12 @@
       this.controls.update();
       this.renderer.render(this.scene, this.camera);
       return time = Date.now();
+    };
+
+    World.prototype.updateRocket = function(rocket) {
+      rocket.translateX(this.launchSpeed * this.shootDirection.x);
+      rocket.translateY(this.launchSpeed * this.shootDirection.y);
+      return rocket.translateZ(this.launchSpeed * this.shootDirection.z);
     };
 
     return World;

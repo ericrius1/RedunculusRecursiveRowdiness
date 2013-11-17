@@ -10,6 +10,7 @@ FW.World = class World
     @launchSpeed = 3.7
     @explosionDelay = 2000
     @shootDirection = new THREE.Vector3()
+    @rockets = []
   
     #scene
     @scene = new THREE.Scene()
@@ -21,7 +22,7 @@ FW.World = class World
 
 
 
-    #Training Cube
+    #ROCKET
     @rocketMat= new THREE.ShaderMaterial({
     uniforms: uniforms1,
     vertexShader: document.getElementById('vertexShader').textContent,
@@ -75,24 +76,25 @@ FW.World = class World
     @g = new grow3.System(@scene, @camera, RULES.bush)
     @g.build(undefined, position)
 
-  explode: ()=>
-    @scene.remove(@rocket)
-    @firework.createExplosion(@rocket.position)
-    #@addEntity(@rocket.position)
+  explode: (rocket)=>
+    @scene.remove(rocket)
+    @firework.createExplosion(rocket.position)
 
-  launch: ()->
-    @rocket = new THREE.Mesh(@rocketGeo, @rocketMat)
-    @rocket.position.set(@camera.position.x, @camera.position.y, @camera.position.z)
+  launchRocket: ()->
+    rocket = new THREE.Mesh(@rocketGeo, @rocketMat)
+    rocket.position.set(@camera.position.x, @camera.position.y, @camera.position.z)
+    @rockets.push(rocket)
     vector = @shootDirection
     @shootDirection.set(0,0,1)
     @projector.unprojectVector(vector, @camera)
     ray = new THREE.Ray(@camera.position, vector.sub(@camera.position).normalize() );
-    @scene.add(@rocket)
+    @scene.add(rocket)
     @target =  vector.sub(@camera.position).normalize()
     @shootDirection.x = ray.direction.x;
     @shootDirection.y = ray.direction.y;
     @shootDirection.z = ray.direction.z;
-    setTimeout(@explode, @explosionDelay)
+    setTimeout(()=>@explode(rocket), 
+    @explosionDelay)
 
   onWindowResize = ->
     FW.myWorld.camera.aspect = window.innerWidth / window.innerHeight
@@ -105,11 +107,11 @@ FW.World = class World
 
     delta = @clock.getDelta();
 
-    #bullet anim
-    if @rocket?
-      @rocket.translateX(@launchSpeed * @shootDirection.x)
-      @rocket.translateY( @launchSpeed * @shootDirection.y)
-      @rocket.translateZ(@launchSpeed * @shootDirection.z)
+    # if @rocket?
+    #   @rocket.translateX(@launchSpeed * @shootDirection.x)
+    #   @rocket.translateY( @launchSpeed * @shootDirection.y)
+    #   @rocket.translateZ(@launchSpeed * @shootDirection.z)
+    @updateRocket rocket for rocket in @rockets
  
     if @firework.exploding
       @firework.tick()
@@ -120,4 +122,7 @@ FW.World = class World
     time = Date.now()
 
 
-
+  updateRocket: (rocket)->
+    rocket.translateX(@launchSpeed * @shootDirection.x)
+    rocket.translateY( @launchSpeed * @shootDirection.y)
+    rocket.translateZ(@launchSpeed * @shootDirection.z)
