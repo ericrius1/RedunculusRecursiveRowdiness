@@ -32,10 +32,7 @@ RULES.bush = function(grow3) {
 
     rules({
       start: function() {
-        move(myWorld.camera.position.z)
-        tH(myWorld.camera.position.x)
-        tV(myWorld.camera.position.y)
-        for (var x = 0; x < 10; x++) {
+        for (var x = 0; x < 1; x++) {
           r();
         }
       },
@@ -48,16 +45,15 @@ RULES.bush = function(grow3) {
       ],
 
       forward: function() {
-        if (depth % 90 == 0) {
-          r();
-        } else {
-          dbox();
-          rZ(rnd(4, 100)).move(rnd(2, 5)).tV(10.1).scale(shrink).forward();
-        }
+
+        dbox();
+        m(10)
+        forward()
+        
       },
 
       dbox: function() {
-        mesh(scale(0.5).material(mat), gCube)
+        mesh(material(mat), gCube)
       }
 
     });

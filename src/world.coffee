@@ -11,8 +11,8 @@ window.World = class World
     @bulletVel = 15
     @shootDirection = new THREE.Vector3()
     #CAMERA
-    @camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
-    @camera.position.z = 1;
+    @camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
+    @camera.position.z = 100;
 
 
     #Training Cube
@@ -41,14 +41,14 @@ window.World = class World
     document.body.appendChild(@stats.domElement);
 
     # floor
-    geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100)
-    geometry.applyMatrix new THREE.Matrix4().makeRotationX(-Math.PI / 2)
-    material = new THREE.MeshBasicMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
-    material.opacity = 0.6
+    # geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100)
+    # geometry.applyMatrix new THREE.Matrix4().makeRotationX(-Math.PI / 2)
+    # material = new THREE.MeshBasicMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
+    # material.opacity = 0.6
 
-    mesh = new THREE.Mesh(geometry, material)
-    mesh.position.y = -20
-    @scene.add mesh
+    # mesh = new THREE.Mesh(geometry, material)
+    # mesh.position.y = -20
+    # @scene.add mesh
     
     
     @renderer = new THREE.WebGLRenderer({antialias: true})
@@ -66,14 +66,15 @@ window.World = class World
 
 
 
-  addEntity: (script)->
+  addEntity: ()->
 
     # GROW3
-    @g = new grow3.System(@scene, @camera, script)
+    @g = new grow3.System(@scene, @camera, RULES.bush)
     @entities.push @g.build()
 
   castSpell: ()->
     @bullet = new THREE.Mesh(@bulletGeo, @bulletMat)
+    @bullet.position.set(@camera.position)
     vector = @shootDirection
     @shootDirection.set(0,0,1)
     @projector.unprojectVector(vector, @camera)
@@ -83,6 +84,7 @@ window.World = class World
     @shootDirection.x = ray.direction.x;
     @shootDirection.y = ray.direction.y;
     @shootDirection.z = ray.direction.z;
+    @addEntity()
 
   onWindowResize = ->
     myWorld.camera.aspect = window.innerWidth / window.innerHeight
@@ -103,7 +105,6 @@ window.World = class World
 
     uniforms1.time.value += delta * 5;
     @stats.update()
-    # @controls.update Date.now() - time
     @controls.update()
     @renderer.render @scene, @camera
     time = Date.now()

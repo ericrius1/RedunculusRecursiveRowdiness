@@ -9,15 +9,15 @@
 
     function World() {
       this.animate = __bind(this.animate, this);
-      var geometry, light, material, mesh;
+      var light;
       this.entities = [];
       this.clock = new THREE.Clock();
       this.projector = new THREE.Projector();
       this.targetVec = new THREE.Vector3();
       this.bulletVel = 15;
       this.shootDirection = new THREE.Vector3();
-      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-      this.camera.position.z = 1;
+      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+      this.camera.position.z = 100;
       this.bulletMat = new THREE.ShaderMaterial({
         uniforms: uniforms1,
         vertexShader: document.getElementById('vertexShader').textContent,
@@ -36,17 +36,6 @@
       this.stats.domElement.style.left = '0px';
       this.stats.domElement.style.top = '0px';
       document.body.appendChild(this.stats.domElement);
-      geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100);
-      geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
-      material = new THREE.MeshBasicMaterial({
-        color: 0xff00ff,
-        transparent: true,
-        blending: THREE.AdditiveBlending
-      });
-      material.opacity = 0.6;
-      mesh = new THREE.Mesh(geometry, material);
-      mesh.position.y = -20;
-      this.scene.add(mesh);
       this.renderer = new THREE.WebGLRenderer({
         antialias: true
       });
@@ -58,14 +47,15 @@
       window.addEventListener("resize", onWindowResize, false);
     }
 
-    World.prototype.addEntity = function(script) {
-      this.g = new grow3.System(this.scene, this.camera, script);
+    World.prototype.addEntity = function() {
+      this.g = new grow3.System(this.scene, this.camera, RULES.bush);
       return this.entities.push(this.g.build());
     };
 
     World.prototype.castSpell = function() {
       var ray, vector;
       this.bullet = new THREE.Mesh(this.bulletGeo, this.bulletMat);
+      this.bullet.position.set(this.camera.position);
       vector = this.shootDirection;
       this.shootDirection.set(0, 0, 1);
       this.projector.unprojectVector(vector, this.camera);
@@ -74,7 +64,8 @@
       this.target = vector.sub(this.camera.position).normalize();
       this.shootDirection.x = ray.direction.x;
       this.shootDirection.y = ray.direction.y;
-      return this.shootDirection.z = ray.direction.z;
+      this.shootDirection.z = ray.direction.z;
+      return this.addEntity();
     };
 
     onWindowResize = function() {
