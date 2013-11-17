@@ -7,8 +7,12 @@ window.World = class World
 
     @clock = new THREE.Clock()
     @projector = new THREE.Projector()
+    @targetVec = new THREE.Vector3()
+    @bulletVel = 15
+    @shootDirection = new THREE.Vector3()
     #CAMERA
-    @camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
+    @camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
+    @camera.position.z = 1;
 
 
     #Training Cube
@@ -19,7 +23,6 @@ window.World = class World
 
     })
     @bulletGeo = new THREE.CubeGeometry(1,1,1);
-
 
     @scene = new THREE.Scene()
     light = new THREE.DirectionalLight(0xffeeee, 1.0)
@@ -37,13 +40,15 @@ window.World = class World
     @stats.domElement.style.top = '0px';
     document.body.appendChild(@stats.domElement);
 
-    # # floor
-    # geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100)
-    # geometry.applyMatrix new THREE.Matrix4().makeRotationX(-Math.PI / 2)
-    # material = new THREE.MeshBasicMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
-    # material.opacity = 0.6
-    # mesh = new THREE.Mesh(geometry, material)
-    # @scene.add mesh
+    # floor
+    geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100)
+    geometry.applyMatrix new THREE.Matrix4().makeRotationX(-Math.PI / 2)
+    material = new THREE.MeshBasicMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
+    material.opacity = 0.6
+
+    mesh = new THREE.Mesh(geometry, material)
+    mesh.position.y = -20
+    @scene.add mesh
     
     
     @renderer = new THREE.WebGLRenderer({antialias: true})
@@ -52,9 +57,9 @@ window.World = class World
     document.body.appendChild @renderer.domElement
 
     #CONTROLS
-    @controls = new THREE.FirstPersonControls(@camera, @renderer.domElement)
-    @controls.movementSpeed = .03
-    @controls.lookSpeed = .0002
+    @controls = new THREE.OrbitControls(@camera, @renderer.domElement)
+    # @controls.movementSpeed = .03
+    # @controls.lookSpeed = .0002
     @scene.add @controls
     
     window.addEventListener "resize", onWindowResize, false
@@ -67,14 +72,17 @@ window.World = class World
     @g = new grow3.System(@scene, @camera, script)
     @entities.push @g.build()
 
-  castSpell: (x, y)->
-    vector = new THREE.Vector3(x, y, 1) 
+  castSpell: ()->
+    @bullet = new THREE.Mesh(@bulletGeo, @bulletMat)
+    vector = @shootDirection
+    @shootDirection.set(0,0,1)
     @projector.unprojectVector(vector, @camera)
-    bullet = new THREE.Mesh(@bulletGeo, @bulletMat)
-    bullet.position.set(@camera.position.x, @camera.position.y, @camera.position.z)
-    @scene.add(bullet)
-    # @addEntity(RULES.bush)
-
+    ray = new THREE.Ray(@camera.position, vector.sub(@camera.position).normalize() );
+    @scene.add(@bullet)
+    @target =  vector.sub(@camera.position).normalize()
+    @shootDirection.x = ray.direction.x;
+    @shootDirection.y = ray.direction.y;
+    @shootDirection.z = ray.direction.z;
 
   onWindowResize = ->
     myWorld.camera.aspect = window.innerWidth / window.innerHeight
@@ -87,9 +95,16 @@ window.World = class World
 
     delta = @clock.getDelta();
 
+    #bullet anim
+    if @bullet?
+      @bullet.translateX(.1 * @shootDirection.x)
+      @bullet.translateY( .1 * @shootDirection.y)
+      @bullet.translateZ(.1 * @shootDirection.z)
+
     uniforms1.time.value += delta * 5;
     @stats.update()
-    @controls.update Date.now() - time
+    # @controls.update Date.now() - time
+    @controls.update()
     @renderer.render @scene, @camera
     time = Date.now()
     uniforms1.time.value += delta * 5;
