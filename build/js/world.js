@@ -61,8 +61,10 @@
     }
 
     World.prototype.addEntity = function(position) {
+      var rootNode;
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
-      return this.g.build(void 0, position);
+      rootNode = this.g.build(void 0, position, false);
+      debugger;
     };
 
     World.prototype.explode = function(rocket) {
@@ -86,8 +88,9 @@
       this.shootDirection.y = ray.direction.y;
       this.shootDirection.z = ray.direction.z;
       return setTimeout(function() {
-        return _this.explode(rocket);
-      }, this.explosionDelay);
+        _this.explode(rocket);
+        return _this.addEntity(rocket.position);
+      }, FW.rnd(100, 1000));
     };
 
     onWindowResize = function() {
@@ -108,6 +111,7 @@
       if (this.firework.exploding) {
         this.firework.tick();
       }
+      uniforms1.time.value += delta * 5;
       this.stats.update();
       this.controls.update();
       this.renderer.render(this.scene, this.camera);

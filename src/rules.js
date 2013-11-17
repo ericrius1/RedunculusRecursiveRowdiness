@@ -33,15 +33,15 @@ RULES.bush = function(grow3) {
     rules({
             seg: [
                 function () {
-                    cube(scale(0.5));
+                    // cube(scale(0.5));
                     seg(move(2.0).pitch(-45));
                 },
                 function () {
-                    mesh(material(mat), gCube).scale(0.5)
+                    // mesh(material(mat), gCube).scale(0.5)
                     seg(yaw(90).pitch(45).move(1.0));
                 },
                 function () {
-                    cube(scale(0.5));
+                    // cube(scale(0.5));
                     seg(yaw(-90).move(1.0));
                 }
             ],

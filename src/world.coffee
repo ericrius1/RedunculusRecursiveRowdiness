@@ -74,7 +74,8 @@ FW.World = class World
 
     # GROW3
     @g = new grow3.System(@scene, @camera, RULES.bush)
-    @g.build(undefined, position)
+    rootNode = @g.build(undefined, position, false)
+    debugger
 
   explode: (rocket)=>
     @scene.remove(rocket)
@@ -93,8 +94,11 @@ FW.World = class World
     @shootDirection.x = ray.direction.x;
     @shootDirection.y = ray.direction.y;
     @shootDirection.z = ray.direction.z;
-    setTimeout(()=>@explode(rocket), 
-    @explosionDelay)
+    setTimeout(()=>
+      @explode(rocket)
+      @addEntity(rocket.position)
+    FW.rnd(100, 1000))
+
 
   onWindowResize = ->
     FW.myWorld.camera.aspect = window.innerWidth / window.innerHeight
@@ -111,7 +115,7 @@ FW.World = class World
  
     if @firework.exploding
       @firework.tick()
-    # uniforms1.time.value += delta * 5;
+    uniforms1.time.value += delta * 5;
     @stats.update()
     @controls.update()
     @renderer.render @scene, @camera

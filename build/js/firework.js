@@ -16,13 +16,13 @@
       this.emitterSettings = {
         size: 0.1,
         accelerationSpread: new THREE.Vector3(.2, .2, .2),
-        colorSpread: new THREE.Vector3(200, 0, 200),
+        color: new THREE.Vector3(rnd(255), rnd(255), rnd(255)),
+        colorSpread: new THREE.Vector3(rnd(100), rnd(100), rnd(100)),
         particlesPerSecond: 100,
         alive: 0,
-        opacityEnd: .2,
-        emitterDuration: 2.0
+        emitterDuration: 1.0
       };
-      this.particleGroup.addPool(10, this.emitterSettings, false);
+      this.particleGroup.addPool(100, this.emitterSettings, false);
       FW.myWorld.scene.add(this.particleGroup.mesh);
     }
 
