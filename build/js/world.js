@@ -58,8 +58,8 @@
       window.addEventListener("resize", onWindowResize, false);
     }
 
-    World.prototype.addEntity = function(script) {
-      this.g = new grow3.System(this.scene, this.camera, script);
+    World.prototype.addEntity = function() {
+      this.g = new grow3.System(this.scene, this.camera, RULES.bush);
       return this.entities.push(this.g.build());
     };
 
@@ -75,7 +75,8 @@
       this.target = vector.sub(this.camera.position).normalize();
       this.shootDirection.x = ray.direction.x;
       this.shootDirection.y = ray.direction.y;
-      return this.shootDirection.z = ray.direction.z;
+      this.shootDirection.z = ray.direction.z;
+      return this.addEntity();
     };
 
     onWindowResize = function() {

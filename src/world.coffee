@@ -64,10 +64,10 @@ window.World = class World
 
 
 
-  addEntity: (script)->
+  addEntity: ()->
 
     # GROW3
-    @g = new grow3.System(@scene, @camera, script)
+    @g = new grow3.System(@scene, @camera, RULES.bush)
     @entities.push @g.build()
 
   castSpell: ()->
@@ -82,6 +82,7 @@ window.World = class World
     @shootDirection.x = ray.direction.x;
     @shootDirection.y = ray.direction.y;
     @shootDirection.z = ray.direction.z;
+    @addEntity()
 
   onWindowResize = ->
     myWorld.camera.aspect = window.innerWidth / window.innerHeight
