@@ -14,10 +14,10 @@
       this.clock = new THREE.Clock();
       this.projector = new THREE.Projector();
       this.targetVec = new THREE.Vector3();
-      this.launchSpeed = 0.7;
-      this.explosionDelay = 700;
+      this.launchSpeed = 3.7;
+      this.explosionDelay = 2000;
       this.shootDirection = new THREE.Vector3();
-      this.firework = new FW.Firework();
+      this.scene = new THREE.Scene();
       this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
       this.camera.position.z = 1;
       this.rocketMat = new THREE.ShaderMaterial({
@@ -26,7 +26,6 @@
         fragmentShader: document.getElementById('fragment_shader1').textContent
       });
       this.rocketGeo = new THREE.CubeGeometry(1, 1, 1);
-      this.scene = new THREE.Scene();
       light = new THREE.DirectionalLight(0xffeeee, 1.0);
       light.position.set(1, 1, 1);
       this.scene.add(light);
@@ -67,7 +66,7 @@
 
     World.prototype.explode = function() {
       this.scene.remove(this.rocket);
-      return this.firework.explode(this.rocket.position);
+      return this.firework.createExplosion(this.rocket.position);
     };
 
     World.prototype.launch = function() {

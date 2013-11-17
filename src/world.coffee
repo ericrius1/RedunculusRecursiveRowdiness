@@ -7,14 +7,17 @@ FW.World = class World
     @clock = new THREE.Clock()
     @projector = new THREE.Projector()
     @targetVec = new THREE.Vector3()
-    @launchSpeed = 0.7
-    @explosionDelay = 700
+    @launchSpeed = 3.7
+    @explosionDelay = 2000
     @shootDirection = new THREE.Vector3()
-    @firework = new FW.Firework()
-    
+  
+    #scene
+    @scene = new THREE.Scene()
+
     #CAMERA
     @camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)
     @camera.position.z = 1;
+
 
 
 
@@ -27,7 +30,6 @@ FW.World = class World
     })
     @rocketGeo = new THREE.CubeGeometry(1,1,1);
 
-    @scene = new THREE.Scene()
     light = new THREE.DirectionalLight(0xffeeee, 1.0)
     light.position.set 1, 1, 1
     @scene.add(light)
@@ -75,7 +77,7 @@ FW.World = class World
 
   explode: ()=>
     @scene.remove(@rocket)
-    @firework.explode(@rocket.position)
+    @firework.createExplosion(@rocket.position)
     #@addEntity(@rocket.position)
 
   launch: ()->
@@ -108,6 +110,7 @@ FW.World = class World
       @rocket.translateX(@launchSpeed * @shootDirection.x)
       @rocket.translateY( @launchSpeed * @shootDirection.y)
       @rocket.translateZ(@launchSpeed * @shootDirection.z)
+ 
     if @firework.exploding
       @firework.tick()
     # uniforms1.time.value += delta * 5;

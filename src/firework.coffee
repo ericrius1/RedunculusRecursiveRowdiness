@@ -1,30 +1,40 @@
 FW.Firework = class Firework
   constructor: ()->
-    @fireworkGroup = new ShaderParticleGroup({
+    @particleGroup = new ShaderParticleGroup({
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
       maxAge: 100,
       blending: THREE.AdditiveBlending
     });
-    @fireworkEmitter = new ShaderParticleEmitter({
+    @exploding = false
+
+
+    @emitterSettings =
       type: 'sphere',
-
-      radius: 0.3,
-      speed: 2,
-
-      colorStart: new THREE.Color('red'),
-      colorSpread: new THREE.Vector3(0, 0.5, 0),
-      colorEnd: new THREE.Color('red'),
-      size: 1,
+      positionSpread: new THREE.Vector3(10, 10, 10),
+      radius: 1,
+      speed: 100,
+      size: 30,
+      sizeSpread: 30,
       sizeEnd: 0,
+      opacityStart: 1,
+      opacityEnd: 0,
+      colorStart: new THREE.Color('yellow'),
+      colorSpread: new THREE.Vector3(0, 10, 0),
+      colorEnd: new THREE.Color('red'),
+      particlesPerSecond: 2000,
+      alive: 0,
+      emitterDuration: 0.05
 
-      particlesPerSecond: 1000
-    });
-    @fireworkGroup.addEmitter(@fireworkEmitter)
+  init: ->
+    @particleGroup = new ShaderParticleGroup({
+      texture: THREE.ImageUtils.loadTexture('./assets/star.png'),
+      })
+    @particleGroup.addPool( 10, @emitterSettings, false );
+    FW.myWorld.scene.add(@particleGroup.mesh)
 
-  explode: (pos)->
-    FW.myWorld.scene.add(@fireworkGroup.mesh)
-    @fireworkEmitter.position.set(pos.x, pos.y, pos.z)
+  createExplosion: (pos)->
     @exploding = true
+    @particleGroup.triggerPoolEmitter(1, pos)
     
   tick: ->
-    @fireworkGroup.tick(0.16)
+    @particleGroup.tick(0.16)
