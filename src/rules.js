@@ -47,7 +47,7 @@ RULES.bush = function(grow3) {
       forward: function() {
 
         dbox();
-        m(10)
+        tH(1)
         forward()
         
       },

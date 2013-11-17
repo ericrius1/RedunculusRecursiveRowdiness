@@ -9,6 +9,7 @@
 
     function World() {
       this.animate = __bind(this.animate, this);
+      this.explode = __bind(this.explode, this);
       var geometry, light, material, mesh;
       this.entities = [];
       this.clock = new THREE.Clock();
@@ -58,9 +59,13 @@
       window.addEventListener("resize", onWindowResize, false);
     }
 
-    World.prototype.addEntity = function() {
+    World.prototype.addEntity = function(position) {
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
-      return this.entities.push(this.g.build());
+      return this.entities.push(this.g.build(void 0, position));
+    };
+
+    World.prototype.explode = function() {
+      return this.addEntity(this.bullet.position);
     };
 
     World.prototype.castSpell = function() {
@@ -76,7 +81,7 @@
       this.shootDirection.x = ray.direction.x;
       this.shootDirection.y = ray.direction.y;
       this.shootDirection.z = ray.direction.z;
-      return this.addEntity();
+      return setTimeout(this.explode, 1000);
     };
 
     onWindowResize = function() {

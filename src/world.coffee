@@ -64,11 +64,14 @@ window.World = class World
 
 
 
-  addEntity: ()->
+  addEntity: (position)->
 
     # GROW3
     @g = new grow3.System(@scene, @camera, RULES.bush)
-    @entities.push @g.build()
+    @entities.push @g.build(undefined, position)
+
+  explode: ()=>
+    @addEntity(@bullet.position)
 
   castSpell: ()->
     @bullet = new THREE.Mesh(@bulletGeo, @bulletMat)
@@ -82,7 +85,7 @@ window.World = class World
     @shootDirection.x = ray.direction.x;
     @shootDirection.y = ray.direction.y;
     @shootDirection.z = ray.direction.z;
-    @addEntity()
+    setTimeout(@explode, 1000)
 
   onWindowResize = ->
     myWorld.camera.aspect = window.innerWidth / window.innerHeight
