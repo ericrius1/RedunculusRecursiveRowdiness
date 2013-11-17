@@ -68,7 +68,7 @@
       return this.addEntity(this.bullet.position);
     };
 
-    World.prototype.castSpell = function() {
+    World.prototype.launch = function() {
       var ray, vector;
       this.bullet = new THREE.Mesh(this.bulletGeo, this.bulletMat);
       this.bullet.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);

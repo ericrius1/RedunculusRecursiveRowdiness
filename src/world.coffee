@@ -73,7 +73,7 @@ window.World = class World
   explode: ()=>
     @addEntity(@bullet.position)
 
-  castSpell: ()->
+  launch: ()->
     @bullet = new THREE.Mesh(@bulletGeo, @bulletMat)
     @bullet.position.set(@camera.position.x, @camera.position.y, @camera.position.z)
     vector = @shootDirection
@@ -106,7 +106,6 @@ window.World = class World
 
     uniforms1.time.value += delta * 5;
     @stats.update()
-    # @controls.update Date.now() - time
     @controls.update()
     @renderer.render @scene, @camera
     time = Date.now()
