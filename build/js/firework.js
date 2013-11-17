@@ -2,34 +2,29 @@
   var Firework;
 
   FW.Firework = Firework = (function() {
+    var rnd;
+
+    rnd = FW.rnd;
+
     function Firework() {
       this.particleGroup = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
-        maxAge: 4
+        maxAge: 5
       });
       this.exploding = false;
       this.emitterSettings = {
-        type: 'sphere',
-        radius: 10,
         size: 0.1,
-        acceleration: new THREE.Vector3(1, 1, 1),
-        colorStart: new THREE.Color('yellow'),
-        colorEnd: new THREE.Color('purple'),
-        particlesPerSecond: 1000,
+        accelerationSpread: new THREE.Vector3(.2, .2, .2),
+        colorSpread: new THREE.Vector3(200, 0, 200),
+        particlesPerSecond: 100,
         alive: 0,
-        opacityEnd: 1,
-        emitterDuration: 1.15
+        opacityEnd: .2,
+        emitterDuration: 2.0
       };
-    }
-
-    Firework.prototype.init = function() {
-      this.particleGroup = new ShaderParticleGroup({
-        texture: THREE.ImageUtils.loadTexture('./assets/star.png')
-      });
       this.particleGroup.addPool(10, this.emitterSettings, false);
-      return FW.myWorld.scene.add(this.particleGroup.mesh);
-    };
+      FW.myWorld.scene.add(this.particleGroup.mesh);
+    }
 
     Firework.prototype.createExplosion = function(pos) {
       this.exploding = true;
