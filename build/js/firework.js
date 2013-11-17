@@ -5,26 +5,21 @@
     function Firework() {
       this.particleGroup = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
-        maxAge: 100,
-        blending: THREE.AdditiveBlending
+        blending: THREE.AdditiveBlending,
+        maxAge: 4
       });
       this.exploding = false;
       this.emitterSettings = {
         type: 'sphere',
-        positionSpread: new THREE.Vector3(10, 10, 10),
-        radius: 1,
-        speed: 100,
-        size: 30,
-        sizeSpread: 30,
-        sizeEnd: 0,
-        opacityStart: 1,
-        opacityEnd: 0,
+        radius: 10,
+        size: 0.1,
+        acceleration: new THREE.Vector3(1, 1, 1),
         colorStart: new THREE.Color('yellow'),
-        colorSpread: new THREE.Vector3(0, 10, 0),
-        colorEnd: new THREE.Color('red'),
-        particlesPerSecond: 2000,
+        colorEnd: new THREE.Color('purple'),
+        particlesPerSecond: 1000,
         alive: 0,
-        emitterDuration: 0.05
+        opacityEnd: 1,
+        emitterDuration: 1.15
       };
     }
 

@@ -7,8 +7,8 @@ FW.World = class World
     @clock = new THREE.Clock()
     @projector = new THREE.Projector()
     @targetVec = new THREE.Vector3()
-    @launchSpeed = 3.7
-    @explosionDelay = 2000
+    @launchSpeed = 1.0
+    @explosionDelay = 500
     @shootDirection = new THREE.Vector3()
     @rockets = []
   
@@ -107,10 +107,6 @@ FW.World = class World
 
     delta = @clock.getDelta();
 
-    # if @rocket?
-    #   @rocket.translateX(@launchSpeed * @shootDirection.x)
-    #   @rocket.translateY( @launchSpeed * @shootDirection.y)
-    #   @rocket.translateZ(@launchSpeed * @shootDirection.z)
     @updateRocket rocket for rocket in @rockets
  
     if @firework.exploding

@@ -14,8 +14,8 @@
       this.clock = new THREE.Clock();
       this.projector = new THREE.Projector();
       this.targetVec = new THREE.Vector3();
-      this.launchSpeed = 3.7;
-      this.explosionDelay = 2000;
+      this.launchSpeed = 1.0;
+      this.explosionDelay = 500;
       this.shootDirection = new THREE.Vector3();
       this.rockets = [];
       this.scene = new THREE.Scene();
