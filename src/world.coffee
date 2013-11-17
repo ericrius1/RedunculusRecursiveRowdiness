@@ -69,17 +69,16 @@ FW.World = class World
     window.addEventListener "resize", onWindowResize, false
 
 
-
-  addEntity: (position)->
+  #origin of explosion. Goes through all points in recursive structure and explodes those points
+  explode: (position)->
 
     # GROW3
     @g = new grow3.System(@scene, @camera, RULES.bush)
-    rootNode = @g.build(undefined, position, false)
-    debugger
-
-  explode: (rocket)=>
-    @scene.remove(rocket)
-    @firework.createExplosion(rocket.position)
+    rootNode = @g.build(undefined, position)
+    @nodeExplode() for node in rootNode.children
+  nodeExplode: (position)=>
+    console.log 'explode'
+    #@firework.createExplosion(position)
 
   launchRocket: ()->
     rocket = new THREE.Mesh(@rocketGeo, @rocketMat)
@@ -95,9 +94,9 @@ FW.World = class World
     @shootDirection.y = ray.direction.y;
     @shootDirection.z = ray.direction.z;
     setTimeout(()=>
-      @explode(rocket)
-      @addEntity(rocket.position)
-    FW.rnd(100, 1000))
+      @scene.remove(rocket)
+      @explode(rocket.position)
+    FW.rnd(1000, 2000))
 
 
   onWindowResize = ->

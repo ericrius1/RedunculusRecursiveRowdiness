@@ -9,7 +9,7 @@
 
     function World() {
       this.animate = __bind(this.animate, this);
-      this.explode = __bind(this.explode, this);
+      this.nodeExplode = __bind(this.nodeExplode, this);
       var geometry, light, material, mesh;
       this.clock = new THREE.Clock();
       this.projector = new THREE.Projector();
@@ -60,16 +60,21 @@
       window.addEventListener("resize", onWindowResize, false);
     }
 
-    World.prototype.addEntity = function(position) {
-      var rootNode;
+    World.prototype.explode = function(position) {
+      var node, rootNode, _i, _len, _ref, _results;
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
-      rootNode = this.g.build(void 0, position, false);
-      debugger;
+      rootNode = this.g.build(void 0, position);
+      _ref = rootNode.children;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        node = _ref[_i];
+        _results.push(this.nodeExplode());
+      }
+      return _results;
     };
 
-    World.prototype.explode = function(rocket) {
-      this.scene.remove(rocket);
-      return this.firework.createExplosion(rocket.position);
+    World.prototype.nodeExplode = function(position) {
+      return console.log('explode');
     };
 
     World.prototype.launchRocket = function() {
@@ -88,9 +93,9 @@
       this.shootDirection.y = ray.direction.y;
       this.shootDirection.z = ray.direction.z;
       return setTimeout(function() {
-        _this.explode(rocket);
-        return _this.addEntity(rocket.position);
-      }, FW.rnd(100, 1000));
+        _this.scene.remove(rocket);
+        return _this.explode(rocket.position);
+      }, FW.rnd(1000, 2000));
     };
 
     onWindowResize = function() {
