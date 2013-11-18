@@ -71,15 +71,8 @@ FW.World = class World
 
   #origin of explosion. Goes through all points in recursive structure and explodes those points
   explode: (position)->
-
     # GROW3
-    @g = new grow3.System(@scene, @camera, RULES.bush)
-    rootNode = @g.build(undefined, position)
-    @nodeExplode(rootNode)
-  nodeExplode: (node)=>
-    console.log 'explode'
-    @firework.createExplosion(node.position)
-    @nodeExplode(node) for node in node.children
+    @firework.createExplosion(position)
 
   launchRocket: ()->
     rocket = new THREE.Mesh(@rocketGeo, @rocketMat)

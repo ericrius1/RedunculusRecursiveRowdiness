@@ -9,7 +9,6 @@
 
     function World() {
       this.animate = __bind(this.animate, this);
-      this.nodeExplode = __bind(this.nodeExplode, this);
       var geometry, light, material, mesh;
       this.clock = new THREE.Clock();
       this.projector = new THREE.Projector();
@@ -61,23 +60,7 @@
     }
 
     World.prototype.explode = function(position) {
-      var rootNode;
-      this.g = new grow3.System(this.scene, this.camera, RULES.bush);
-      rootNode = this.g.build(void 0, position);
-      return this.nodeExplode(rootNode);
-    };
-
-    World.prototype.nodeExplode = function(node) {
-      var _i, _len, _ref, _results;
-      console.log('explode');
-      this.firework.createExplosion(node.position);
-      _ref = node.children;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        node = _ref[_i];
-        _results.push(this.nodeExplode(node));
-      }
-      return _results;
+      return this.firework.createExplosion(position);
     };
 
     World.prototype.launchRocket = function() {
