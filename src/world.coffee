@@ -8,7 +8,7 @@ FW.World = class World
     @projector = new THREE.Projector()
     @targetVec = new THREE.Vector3()
     @launchSpeed = 1.0
-    @explosionDelay = 500
+    @explosionDelay = 300
     @shootDirection = new THREE.Vector3()
     @rockets = []
   
@@ -30,14 +30,13 @@ FW.World = class World
 
     })
     @rocketGeo = new THREE.CubeGeometry(1,1,1);
+    
 
-    light = new THREE.DirectionalLight(0xffeeee, 1.0)
-    light.position.set 1, 1, 1
-    @scene.add(light)
+    
+    @light = new THREE.DirectionalLight(0xffeeee, 0.0)
+    @light.position.set(1, 1, 1);
+    @scene.add(@light)
 
-    light = new THREE.DirectionalLight( 0xffffff, 0.75 );
-    light.position.set( -1, - 0.5, -1 );
-    @scene.add( light );
 
 
     @stats = new Stats()
@@ -49,8 +48,9 @@ FW.World = class World
     # floor
     geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100)
     geometry.applyMatrix new THREE.Matrix4().makeRotationX(-Math.PI / 2)
-    material = new THREE.MeshBasicMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
+    material = new THREE.MeshPhongMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
     material.opacity = 0.6
+    material.needsUpdate = true
 
     mesh = new THREE.Mesh(geometry, material)
     mesh.position.y = -200
@@ -71,26 +71,32 @@ FW.World = class World
 
   #origin of explosion. Goes through all points in recursive structure and explodes those points
   explode: (position)->
-    # GROW3
+    @light.intensity = 5.0
+    setTimeout(@turnOffLight, 2000)
     @firework.createExplosion(position)
+
+  turnOffLight: ()=>
+    @light.intensity = 0;
+
 
   launchRocket: ()->
     rocket = new THREE.Mesh(@rocketGeo, @rocketMat)
     rocket.position.set(@camera.position.x, @camera.position.y, @camera.position.z)
     @rockets.push(rocket)
-    vector = @shootDirection
-    @shootDirection.set(0,0,1)
+    vector = new THREE.Vector3()
+    vector.set(0,0,1)
     @projector.unprojectVector(vector, @camera)
     ray = new THREE.Ray(@camera.position, vector.sub(@camera.position).normalize() );
     @scene.add(rocket)
     @target =  vector.sub(@camera.position).normalize()
-    @shootDirection.x = ray.direction.x;
-    @shootDirection.y = ray.direction.y;
-    @shootDirection.z = ray.direction.z;
+    rocket.shootDirection = new THREE.Vector3()
+    rocket.shootDirection.x = ray.direction.x;
+    rocket.shootDirection.y = ray.direction.y;
+    rocket.shootDirection.z = ray.direction.z;
     setTimeout(()=>
       @scene.remove(rocket)
       @explode(rocket.position)
-    FW.rnd(1000, 2000))
+    @explosionDelay)
 
 
   onWindowResize = ->
@@ -99,7 +105,8 @@ FW.World = class World
     FW.myWorld.renderer.setSize window.innerWidth, window.innerHeight
 
   animate: =>
-
+    if @light.intensity > 0
+      @light.intensity-= 0.1
     requestAnimationFrame @animate
 
     delta = @clock.getDelta();
@@ -116,6 +123,6 @@ FW.World = class World
 
 
   updateRocket: (rocket)->
-    rocket.translateX(@launchSpeed * @shootDirection.x)
-    rocket.translateY( @launchSpeed * @shootDirection.y)
-    rocket.translateZ(@launchSpeed * @shootDirection.z)
+    rocket.translateX(@launchSpeed * rocket.shootDirection.x)
+    rocket.translateY( @launchSpeed * rocket.shootDirection.y)
+    rocket.translateZ(@launchSpeed * rocket.shootDirection.z)
