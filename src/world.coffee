@@ -32,8 +32,8 @@ FW.World = class World
     @rocketGeo = new THREE.CubeGeometry(1,1,1);
     
 
-    
-    @light = new THREE.DirectionalLight(0xffeeee, 0.0)
+    #LIGHTS
+    @light = new THREE.PointLight(0xffeeee, 0.0, 500)
     @light.position.set(1, 1, 1);
     @scene.add(@light)
 
@@ -69,14 +69,10 @@ FW.World = class World
     window.addEventListener "resize", onWindowResize, false
 
 
-  #origin of explosion. Goes through all points in recursive structure and explodes those points
   explode: (position)->
-    @light.intensity = 5.0
-    setTimeout(@turnOffLight, 2000)
+    @light.intensity = 2.0
+    @light.position.set position.x, position.y, position.z
     @firework.createExplosion(position)
-
-  turnOffLight: ()=>
-    @light.intensity = 0;
 
 
   launchRocket: ()->
@@ -106,7 +102,7 @@ FW.World = class World
 
   animate: =>
     if @light.intensity > 0
-      @light.intensity-= 0.1
+      @light.intensity-= 0.01
     requestAnimationFrame @animate
 
     delta = @clock.getDelta();

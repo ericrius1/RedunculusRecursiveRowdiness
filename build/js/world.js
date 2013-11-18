@@ -9,7 +9,6 @@
 
     function World() {
       this.animate = __bind(this.animate, this);
-      this.turnOffLight = __bind(this.turnOffLight, this);
       var geometry, material, mesh;
       this.clock = new THREE.Clock();
       this.projector = new THREE.Projector();
@@ -27,7 +26,7 @@
         fragmentShader: document.getElementById('fragment_shader1').textContent
       });
       this.rocketGeo = new THREE.CubeGeometry(1, 1, 1);
-      this.light = new THREE.DirectionalLight(0xffeeee, 0.0);
+      this.light = new THREE.PointLight(0xffeeee, 0.0, 500);
       this.light.position.set(1, 1, 1);
       this.scene.add(this.light);
       this.stats = new Stats();
@@ -59,13 +58,9 @@
     }
 
     World.prototype.explode = function(position) {
-      this.light.intensity = 5.0;
-      setTimeout(this.turnOffLight, 2000);
+      this.light.intensity = 2.0;
+      this.light.position.set(position.x, position.y, position.z);
       return this.firework.createExplosion(position);
-    };
-
-    World.prototype.turnOffLight = function() {
-      return this.light.intensity = 0;
     };
 
     World.prototype.launchRocket = function() {
@@ -99,7 +94,7 @@
     World.prototype.animate = function() {
       var delta, rocket, _i, _len, _ref;
       if (this.light.intensity > 0) {
-        this.light.intensity -= 0.1;
+        this.light.intensity -= 0.01;
       }
       requestAnimationFrame(this.animate);
       delta = this.clock.getDelta();
