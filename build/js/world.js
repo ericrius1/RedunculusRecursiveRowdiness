@@ -9,26 +9,38 @@
 
     function World() {
       this.animate = __bind(this.animate, this);
-      var geometry, material, mesh;
+      var geometry, light, material, mesh, moonlight, rnd;
       this.clock = new THREE.Clock();
       this.projector = new THREE.Projector();
       this.targetVec = new THREE.Vector3();
       this.launchSpeed = 1.0;
-      this.explosionDelay = 300;
+      this.explosionDelay = 1000;
       this.shootDirection = new THREE.Vector3();
       this.rockets = [];
+      rnd = FW.rnd;
       this.scene = new THREE.Scene();
-      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
       this.camera.position.z = 1;
       this.rocketMat = new THREE.ShaderMaterial({
         uniforms: uniforms1,
         vertexShader: document.getElementById('vertexShader').textContent,
         fragmentShader: document.getElementById('fragment_shader1').textContent
       });
-      this.rocketGeo = new THREE.CubeGeometry(1, 1, 1);
+      this.rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
+      light = new THREE.DirectionalLight(0xff00ff);
       this.light = new THREE.PointLight(0xffeeee, 0.0, 500);
       this.light.position.set(1, 1, 1);
       this.scene.add(this.light);
+      geometry = new THREE.SphereGeometry(0.5, 32, 32);
+      material = new THREE.MeshBasicMaterial({
+        color: 0xffffff
+      });
+      mesh = new THREE.Mesh(geometry, material);
+      mesh.scale.multiplyScalar(17);
+      mesh.position.set(-50, 20, -100);
+      moonlight = new THREE.DirectionalLight(0xffeeee, 1.0);
+      this.scene.add(mesh);
+      mesh.add(moonlight);
       this.stats = new Stats();
       this.stats.domElement.style.position = 'absolute';
       this.stats.domElement.style.left = '0px';
@@ -46,6 +58,8 @@
       mesh = new THREE.Mesh(geometry, material);
       mesh.position.y = -200;
       this.scene.add(mesh);
+      this.g = new grow3.System(this.scene, this.camera, RULES.bush);
+      this.g.build(void 0, new THREE.Vector3(rnd(100, 300), 10, 10));
       this.renderer = new THREE.WebGLRenderer({
         antialias: true
       });
@@ -58,7 +72,7 @@
     }
 
     World.prototype.explode = function(position) {
-      this.light.intensity = 2.0;
+      this.light.intensity = 1.0;
       this.light.position.set(position.x, position.y, position.z);
       return this.firework.createExplosion(position);
     };
