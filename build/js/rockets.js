@@ -2,13 +2,17 @@
   var Rockets;
 
   FW.Rockets = Rockets = (function() {
+    var rnd;
+
+    rnd = FW.rnd;
+
     function Rockets() {
-      var rnd;
       rnd = FW.rnd;
       this.rockets = [];
       this.launchSound = new Audio('./assets/launch.mp3');
       this.explodeSound = new Audio('./assets/explosion.mp3');
       this.crackleSound = new Audio('./assets/crackle.mp3');
+      this.firework = new FW.Firework();
       this.projector = new THREE.Projector();
       this.targetVec = new THREE.Vector3();
       this.launchSpeed = 1;
@@ -22,7 +26,7 @@
       this.rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
       this.light = new THREE.PointLight(0xffeeee, 0.0, 500);
       this.light.position.set(1, 1, 1);
-      this.scene.add(this.light);
+      FW.myWorld.scene.add(this.light);
     }
 
     Rockets.prototype.explode = function(position) {
@@ -45,30 +49,28 @@
       this.explodeSound.load();
       this.crackleSound.load();
       rocket = new THREE.Mesh(this.rocketGeo, this.rocketMat);
-      rocket.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
+      rocket.position.set(FW.myWorld.camera.position.x, FW.myWorld.camera.position.y, FW.myWorld.camera.position.z);
       this.rockets.push(rocket);
       vector = new THREE.Vector3();
       vector.set(0, 0, 1);
-      this.projector.unprojectVector(vector, this.camera);
-      ray = new THREE.Ray(this.camera.position, vector.sub(this.camera.position).normalize());
-      this.scene.add(rocket);
-      this.target = vector.sub(this.camera.position).normalize();
+      this.projector.unprojectVector(vector, FW.myWorld.camera);
+      ray = new THREE.Ray(FW.myWorld.camera.position, vector.sub(FW.myWorld.camera.position).normalize());
+      FW.myWorld.scene.add(rocket);
+      this.target = vector.sub(FW.myWorld.camera.position).normalize();
       rocket.shootDirection = new THREE.Vector3();
       rocket.shootDirection.x = ray.direction.x;
       rocket.shootDirection.y = ray.direction.y;
       rocket.shootDirection.z = ray.direction.z;
       this.launchSound.play();
+      this.rockets.push(rocket);
       return setTimeout(function() {
-        _this.scene.remove(rocket);
+        FW.myWorld.scene.remove(rocket);
         return _this.explode(rocket.position);
       }, this.explosionDelay);
     };
 
     Rockets.prototype.update = function() {
       var rocket, _i, _len, _ref;
-      if (this.light.intensity > 0) {
-        this.light.intensity -= 0.01;
-      }
       _ref = this.rockets;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         rocket = _ref[_i];
