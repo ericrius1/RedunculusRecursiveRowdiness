@@ -43,8 +43,8 @@ FW.World = class World
     @scene.add mesh
 
     #RECURSIVE STRUCTURES
-    # @g = new grow3.System(@scene, @camera, RULES.bush)
-    # @g.build(undefined, new THREE.Vector3(rnd(100,300), 10, 10))
+    @g = new grow3.System(@scene, @camera, RULES.bush)
+    @g.build(undefined, new THREE.Vector3(rnd(100,300), 10, 10))
     
     @renderer = new THREE.WebGLRenderer({antialias: true})
     @renderer.setClearColor( 0x000000, 1 );

@@ -12,12 +12,14 @@
       this.launchSound = new Audio('./assets/launch.mp3');
       this.explodeSound = new Audio('./assets/explosion.mp3');
       this.crackleSound = new Audio('./assets/crackle.mp3');
+      this.soundOn = false;
       this.firework = new FW.Firework();
       this.projector = new THREE.Projector();
       this.targetVec = new THREE.Vector3();
-      this.launchSpeed = 1;
+      this.launchSpeed = 0.8;
       this.explosionDelay = 1000;
       this.shootDirection = new THREE.Vector3();
+      this.explosionLightIntensity = 2.0;
       this.rocketMat = new THREE.ShaderMaterial({
         uniforms: uniforms1,
         vertexShader: document.getElementById('vertexShader').textContent,
@@ -31,15 +33,17 @@
 
     Rockets.prototype.explode = function(position) {
       var _this = this;
-      this.light.intensity = 1.0;
+      this.light.intensity = this.explosionLightIntensity;
       this.light.position.set(position.x, position.y, position.z);
       this.firework.createExplosion(position);
-      return setTimeout(function() {
-        _this.explodeSound.play();
+      if (this.soundOn) {
         return setTimeout(function() {
-          return _this.crackleSound.play();
-        }, 400);
-      }, 800);
+          _this.explodeSound.play();
+          return setTimeout(function() {
+            return _this.crackleSound.play();
+          }, 400);
+        }, 800);
+      }
     };
 
     Rockets.prototype.launchRocket = function() {
@@ -61,7 +65,9 @@
       rocket.shootDirection.x = ray.direction.x;
       rocket.shootDirection.y = ray.direction.y;
       rocket.shootDirection.z = ray.direction.z;
-      this.launchSound.play();
+      if (this.soundOn) {
+        this.launchSound.play();
+      }
       this.rockets.push(rocket);
       return setTimeout(function() {
         FW.myWorld.scene.remove(rocket);
@@ -77,7 +83,10 @@
         this.updateRocket(rocket);
       }
       if (this.firework.exploding) {
-        return this.firework.tick();
+        this.firework.tick();
+      }
+      if (this.light.intensity > 0) {
+        return this.light.intensity -= 0.01 * this.explosionLightIntensity;
       }
     };
 

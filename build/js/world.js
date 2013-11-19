@@ -43,6 +43,8 @@
       mesh = new THREE.Mesh(geometry, material);
       mesh.position.y = -200;
       this.scene.add(mesh);
+      this.g = new grow3.System(this.scene, this.camera, RULES.bush);
+      this.g.build(void 0, new THREE.Vector3(rnd(100, 300), 10, 10));
       this.renderer = new THREE.WebGLRenderer({
         antialias: true
       });
