@@ -9,8 +9,11 @@ FW.Rockets = class Rockets
     @explodeSound = new Audio('./assets/explosion.mp3');
     @crackleSound = new Audio('./assets/crackle.mp3');
     @soundOn = false
+    @color = new THREE.Color()
+    @color.setRGB(200, 10, 0)
 
-    @firework = new FW.Firework()
+
+    @firework = new FW.Firework(@color)
 
     @projector = new THREE.Projector()
     @targetVec = new THREE.Vector3()
@@ -27,14 +30,18 @@ FW.Rockets = class Rockets
     })
     @rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
 
+    #LIGHTS
     @light = new THREE.PointLight(0xffeeee, 0.0, 500)
     @light.position.set(1, 1, 1);
     FW.myWorld.scene.add(@light)
 
 
+
+
   explode: (position)->
     @light.intensity = @explosionLightIntensity
     @light.position.set position.x, position.y, position.z
+    @light.color = @color
     @firework.createExplosion(position)
     
     #set timeout for speed of sound delay!
@@ -73,11 +80,11 @@ FW.Rockets = class Rockets
     @explosionDelay)
 
   update: ()->
-    @updateRocket rocket for rocket in @rockets
-    if @firework.exploding
-      @firework.tick()
     if @light.intensity > 0
-        @light.intensity -= 0.01 * @explosionLightIntensity
+      @light.intensity -= 0.01 * @explosionLightIntensity
+    @updateRocket rocket for rocket in @rockets
+    @firework.tick()
+
 
   updateRocket: (rocket)->
     rocket.translateX(@launchSpeed * rocket.shootDirection.x)

@@ -54,6 +54,9 @@ FW.World = class World
     #CONTROLS
     @controls = new THREE.OrbitControls(@camera, @renderer.domElement)
     @scene.add @controls
+
+    #FOG
+    # @scene.fog = new THREE.Fog( 0xff00ff );
     
     window.addEventListener "resize", onWindowResize, false
 
