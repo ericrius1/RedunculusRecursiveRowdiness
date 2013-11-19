@@ -17,7 +17,7 @@
       this.projector = new THREE.Projector();
       this.targetVec = new THREE.Vector3();
       this.launchSpeed = 0.8;
-      this.explosionDelay = 1000;
+      this.explosionDelay = 500;
       this.shootDirection = new THREE.Vector3();
       this.explosionLightIntensity = 2.0;
       this.rocketMat = new THREE.ShaderMaterial({

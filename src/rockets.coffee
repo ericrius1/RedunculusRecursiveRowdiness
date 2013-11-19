@@ -15,7 +15,7 @@ FW.Rockets = class Rockets
     @projector = new THREE.Projector()
     @targetVec = new THREE.Vector3()
     @launchSpeed = 0.8
-    @explosionDelay = 1000
+    @explosionDelay = 500
     @shootDirection = new THREE.Vector3()
     @explosionLightIntensity = 2.0
 
