@@ -10,7 +10,6 @@ FW.Firework = class Firework
 
     @emitterSettings =
       size: 0.1,
-      sizeEnd: 0.09, 
       acceleration: new THREE.Vector3(0, -0.1, 0),
       accelerationSpread: new THREE.Vector3(.2, .2, .2),
       color: new THREE.Vector3(rnd(255), rnd(255), rnd(255))
@@ -18,7 +17,7 @@ FW.Firework = class Firework
       particlesPerSecond: 200,
       alive: 0,  
       emitterDuration: 1.0
-      opacityEnd: 0.1
+      opacityEnd: 0.1 
 
     @particleGroup.addPool( 100, @emitterSettings, false );
     FW.myWorld.scene.add(@particleGroup.mesh)

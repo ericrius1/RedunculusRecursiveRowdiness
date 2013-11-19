@@ -15,7 +15,6 @@
       this.exploding = false;
       this.emitterSettings = {
         size: 0.1,
-        sizeEnd: 0.09,
         acceleration: new THREE.Vector3(0, -0.1, 0),
         accelerationSpread: new THREE.Vector3(.2, .2, .2),
         color: new THREE.Vector3(rnd(255), rnd(255), rnd(255)),

@@ -7,11 +7,15 @@ FW.World = class World
     @clock = new THREE.Clock()
     @projector = new THREE.Projector()
     @targetVec = new THREE.Vector3()
-    @launchSpeed = 1.0
+    @launchSpeed = 1
     @explosionDelay = 1000
     @shootDirection = new THREE.Vector3()
     @rockets = []
     rnd = FW.rnd
+    @launchSound = new Audio('./assets/launch.mp3');
+    @explodeSound = new Audio('./assets/explosion.mp3');
+    @crackleSound = new Audio('./assets/crackle.mp3');
+
   
     #scene
     @scene = new THREE.Scene()
@@ -92,9 +96,20 @@ FW.World = class World
     @light.intensity = 1.0
     @light.position.set position.x, position.y, position.z
     @firework.createExplosion(position)
+    
+    #set timeout for speed of sound delay!
+    setTimeout(()=>
+      @explodeSound.play()
+      setTimeout(()=>
+        @crackleSound.play()
+      400)
+    800)
 
 
   launchRocket: ()->
+    @launchSound.load();
+    @explodeSound.load()
+    @crackleSound.load()
     rocket = new THREE.Mesh(@rocketGeo, @rocketMat)
     rocket.position.set(@camera.position.x, @camera.position.y, @camera.position.z)
     @rockets.push(rocket)
@@ -108,6 +123,7 @@ FW.World = class World
     rocket.shootDirection.x = ray.direction.x;
     rocket.shootDirection.y = ray.direction.y;
     rocket.shootDirection.z = ray.direction.z;
+    @launchSound.play();
     setTimeout(()=>
       @scene.remove(rocket)
       @explode(rocket.position)

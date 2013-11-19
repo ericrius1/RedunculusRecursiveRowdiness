@@ -13,11 +13,14 @@
       this.clock = new THREE.Clock();
       this.projector = new THREE.Projector();
       this.targetVec = new THREE.Vector3();
-      this.launchSpeed = 1.0;
+      this.launchSpeed = 1;
       this.explosionDelay = 1000;
       this.shootDirection = new THREE.Vector3();
       this.rockets = [];
       rnd = FW.rnd;
+      this.launchSound = new Audio('./assets/launch.mp3');
+      this.explodeSound = new Audio('./assets/explosion.mp3');
+      this.crackleSound = new Audio('./assets/crackle.mp3');
       this.scene = new THREE.Scene();
       this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
       this.camera.position.z = 1;
@@ -72,14 +75,24 @@
     }
 
     World.prototype.explode = function(position) {
+      var _this = this;
       this.light.intensity = 1.0;
       this.light.position.set(position.x, position.y, position.z);
-      return this.firework.createExplosion(position);
+      this.firework.createExplosion(position);
+      return setTimeout(function() {
+        _this.explodeSound.play();
+        return setTimeout(function() {
+          return _this.crackleSound.play();
+        }, 400);
+      }, 800);
     };
 
     World.prototype.launchRocket = function() {
       var ray, rocket, vector,
         _this = this;
+      this.launchSound.load();
+      this.explodeSound.load();
+      this.crackleSound.load();
       rocket = new THREE.Mesh(this.rocketGeo, this.rocketMat);
       rocket.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
       this.rockets.push(rocket);
@@ -93,6 +106,7 @@
       rocket.shootDirection.x = ray.direction.x;
       rocket.shootDirection.y = ray.direction.y;
       rocket.shootDirection.z = ray.direction.z;
+      this.launchSound.play();
       return setTimeout(function() {
         _this.scene.remove(rocket);
         return _this.explode(rocket.position);
