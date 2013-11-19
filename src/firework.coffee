@@ -1,14 +1,15 @@
 FW.Firework = class Firework
   rnd = FW.rnd
-  constructor: (color)->
-
-    @color = color
+  constructor: ()->
+    @groups = []
+    #create a few different emmitters and add to pool
+    @color = new THREE.Color()
+    @color.setRGB(200, 0, 0)
     @particleGroup = new ShaderParticleGroup({
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
       blending: THREE.AdditiveBlending,
       maxAge: 7
     });
-    console.log color, @color
     @emitterSettings = 
       size: 0.2,
       acceleration: new THREE.Vector3(0, -0.1, 0),
@@ -18,7 +19,10 @@ FW.Firework = class Firework
       alive: 0,  
       emitterDuration: 1.0
    
-    @particleGroup.addPool( 10, @emitterSettings, false );
+    @particleGroup.addPool( 5, @emitterSettings, false );
+    @color.setRGB(0, 0, 200)
+    @emitterSettings.colorStart = @color
+    @particleGroup.addPool( 5, @emitterSettings, false );
     FW.myWorld.scene.add(@particleGroup.mesh)
 
 

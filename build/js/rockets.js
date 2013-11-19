@@ -21,7 +21,7 @@
       this.launchSpeed = 0.8;
       this.explosionDelay = 500;
       this.shootDirection = new THREE.Vector3();
-      this.explosionLightIntensity = 2.0;
+      this.explosionLightIntensity = 1.0;
       this.rocketMat = new THREE.ShaderMaterial({
         uniforms: uniforms1,
         vertexShader: document.getElementById('vertexShader').textContent,
@@ -37,7 +37,6 @@
       var _this = this;
       this.light.intensity = this.explosionLightIntensity;
       this.light.position.set(position.x, position.y, position.z);
-      this.light.color = this.color;
       this.firework.createExplosion(position);
       if (this.soundOn) {
         return setTimeout(function() {

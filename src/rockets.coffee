@@ -20,7 +20,7 @@ FW.Rockets = class Rockets
     @launchSpeed = 0.8
     @explosionDelay = 500
     @shootDirection = new THREE.Vector3()
-    @explosionLightIntensity = 2.0
+    @explosionLightIntensity = 1.0
 
     @rocketMat= new THREE.ShaderMaterial({
     uniforms: uniforms1,
@@ -41,7 +41,6 @@ FW.Rockets = class Rockets
   explode: (position)->
     @light.intensity = @explosionLightIntensity
     @light.position.set position.x, position.y, position.z
-    @light.color = @color
     @firework.createExplosion(position)
     
     #set timeout for speed of sound delay!
