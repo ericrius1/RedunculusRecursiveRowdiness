@@ -3,8 +3,7 @@
 
   window.onload = function() {
     FW.myWorld = new FW.World();
-    FW.myWorld.firework = new FW.Firework();
-    FW.myWorld.groundControl = new FW.Rockets();
+    FW.myWorld.init();
     return FW.myWorld.animate();
   };
 

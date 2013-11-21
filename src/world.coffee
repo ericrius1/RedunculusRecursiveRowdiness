@@ -4,11 +4,17 @@ FW.World = class World
   time = Date.now() 
   constructor: ()->
     @clock = new THREE.Clock()
-    rnd = FW.rnd
+    @rnd = FW.rnd
 
 
+    
+
+  init: ->
     #scene
     @scene = new THREE.Scene()
+
+    @firework = new FW.Firework()
+    @groundControl = new FW.Rockets()
 
     #CAMERA
     @camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
@@ -30,20 +36,12 @@ FW.World = class World
     @stats.domElement.style.top = '0px';
     document.body.appendChild(@stats.domElement);
 
-    # TERRAIN
-    geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256)
-    material = new THREE.MeshPhongMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
-    material.opacity = 0.6
-    material.needsUpdate = true
-
-    @terrain = new THREE.Mesh(geometryTerrain, material)
-    @terrain.rotation.x = -Math.PI / 2;
-    @terrain.position.y = -200
-    @scene.add @terrain
+    #TERRAIN
+    @terrain = new FW.Terrain()
 
     #RECURSIVE STRUCTURES
     @g = new grow3.System(@scene, @camera, RULES.bush)
-    @g.build(undefined, new THREE.Vector3(rnd(100,300), 10, 10))
+    @g.build(undefined, new THREE.Vector3(@rnd(100,300), 10, 10))
     
     @renderer = new THREE.WebGLRenderer({antialias: true})
     @renderer.setClearColor( 0x000000, 1 );

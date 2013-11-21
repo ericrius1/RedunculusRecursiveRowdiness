@@ -9,10 +9,15 @@
 
     function World() {
       this.animate = __bind(this.animate, this);
-      var geometry, geometryTerrain, material, mesh, moonlight, rnd;
       this.clock = new THREE.Clock();
-      rnd = FW.rnd;
+      this.rnd = FW.rnd;
+    }
+
+    World.prototype.init = function() {
+      var geometry, material, mesh, moonlight;
       this.scene = new THREE.Scene();
+      this.firework = new FW.Firework();
+      this.groundControl = new FW.Rockets();
       this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
       this.camera.position.z = 1;
       geometry = new THREE.SphereGeometry(0.5, 32, 32);
@@ -29,20 +34,9 @@
       this.stats.domElement.style.left = '0px';
       this.stats.domElement.style.top = '0px';
       document.body.appendChild(this.stats.domElement);
-      geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
-      material = new THREE.MeshPhongMaterial({
-        color: 0xff00ff,
-        transparent: true,
-        blending: THREE.AdditiveBlending
-      });
-      material.opacity = 0.6;
-      material.needsUpdate = true;
-      this.terrain = new THREE.Mesh(geometryTerrain, material);
-      this.terrain.rotation.x = -Math.PI / 2;
-      this.terrain.position.y = -200;
-      this.scene.add(this.terrain);
+      this.terrain = new FW.Terrain();
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
-      this.g.build(void 0, new THREE.Vector3(rnd(100, 300), 10, 10));
+      this.g.build(void 0, new THREE.Vector3(this.rnd(100, 300), 10, 10));
       this.renderer = new THREE.WebGLRenderer({
         antialias: true
       });
@@ -51,8 +45,8 @@
       document.body.appendChild(this.renderer.domElement);
       this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
       this.scene.add(this.controls);
-      window.addEventListener("resize", onWindowResize, false);
-    }
+      return window.addEventListener("resize", onWindowResize, false);
+    };
 
     onWindowResize = function() {
       FW.myWorld.camera.aspect = window.innerWidth / window.innerHeight;
