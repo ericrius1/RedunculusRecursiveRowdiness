@@ -9,22 +9,20 @@
 
     function World() {
       this.animate = __bind(this.animate, this);
-      var geometry, light, material, mesh, moonlight, rnd;
+      var geometry, material, mesh, moonlight, rnd;
       this.clock = new THREE.Clock();
       rnd = FW.rnd;
       this.scene = new THREE.Scene();
       this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
       this.camera.position.z = 1;
-      light = new THREE.DirectionalLight(0xff00ff);
       geometry = new THREE.SphereGeometry(0.5, 32, 32);
       material = new THREE.MeshBasicMaterial({
         color: 0xffffff
       });
       mesh = new THREE.Mesh(geometry, material);
-      mesh.scale.multiplyScalar(17);
       mesh.position.set(-50, 20, -100);
-      moonlight = new THREE.DirectionalLight(0xffeeee, 1.0);
       this.scene.add(mesh);
+      moonlight = new THREE.DirectionalLight(0xffeeee, 1.0);
       mesh.add(moonlight);
       this.stats = new Stats();
       this.stats.domElement.style.position = 'absolute';

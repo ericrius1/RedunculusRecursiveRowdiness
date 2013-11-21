@@ -16,11 +16,10 @@ FW.Rockets = class Rockets
     @firework = new FW.Firework(@color)
 
     @projector = new THREE.Projector()
-    @targetVec = new THREE.Vector3()
     @launchSpeed = 0.8
     @explosionDelay = 500
     @shootDirection = new THREE.Vector3()
-    @explosionLightIntensity = 1.0
+    @explosionLightIntensity = 2.0
 
     @rocketMat= new THREE.ShaderMaterial({
     uniforms: uniforms1,
@@ -65,11 +64,13 @@ FW.Rockets = class Rockets
     @projector.unprojectVector(vector, FW.myWorld.camera)
     ray = new THREE.Ray(FW.myWorld.camera.position, vector.sub(FW.myWorld.camera.position).normalize() );
     FW.myWorld.scene.add(rocket)
-    @target =  vector.sub(FW.myWorld.camera.position).normalize()
     rocket.shootDirection = new THREE.Vector3()
     rocket.shootDirection.x = ray.direction.x;
     rocket.shootDirection.y = ray.direction.y;
     rocket.shootDirection.z = ray.direction.z;
+    rocket.translateX(rocket.shootDirection.x)
+    rocket.translateY(rocket.shootDirection.y)
+    rocket.translateZ(rocket.shootDirection.z)
     if @soundOn
         @launchSound.play();
     @rockets.push(rocket)

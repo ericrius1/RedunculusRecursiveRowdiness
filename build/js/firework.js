@@ -13,21 +13,21 @@
       this.particleGroup = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
-        maxAge: 7
+        maxAge: 13
       });
       this.emitterSettings = {
         size: 0.2,
-        acceleration: new THREE.Vector3(0, -0.1, 0),
-        accelerationSpread: new THREE.Vector3(.2, .2, .2),
+        acceleration: new THREE.Vector3(0, -0.01, 0),
+        accelerationSpread: new THREE.Vector3(.2, .2, .02),
         colorStart: this.color,
-        particlesPerSecond: 500,
+        particlesPerSecond: 100,
         alive: 0,
-        emitterDuration: 1.0
+        emitterDuration: 2.0
       };
-      this.particleGroup.addPool(5, this.emitterSettings, false);
+      this.particleGroup.addPool(20, this.emitterSettings, true);
       this.color.setRGB(0, 0, 200);
       this.emitterSettings.colorStart = this.color;
-      this.particleGroup.addPool(5, this.emitterSettings, false);
+      this.particleGroup.addPool(1, this.emitterSettings, true);
       FW.myWorld.scene.add(this.particleGroup.mesh);
     }
 

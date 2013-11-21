@@ -17,11 +17,10 @@
       this.color.setRGB(200, 10, 0);
       this.firework = new FW.Firework(this.color);
       this.projector = new THREE.Projector();
-      this.targetVec = new THREE.Vector3();
       this.launchSpeed = 0.8;
       this.explosionDelay = 500;
       this.shootDirection = new THREE.Vector3();
-      this.explosionLightIntensity = 1.0;
+      this.explosionLightIntensity = 2.0;
       this.rocketMat = new THREE.ShaderMaterial({
         uniforms: uniforms1,
         vertexShader: document.getElementById('vertexShader').textContent,
@@ -62,11 +61,13 @@
       this.projector.unprojectVector(vector, FW.myWorld.camera);
       ray = new THREE.Ray(FW.myWorld.camera.position, vector.sub(FW.myWorld.camera.position).normalize());
       FW.myWorld.scene.add(rocket);
-      this.target = vector.sub(FW.myWorld.camera.position).normalize();
       rocket.shootDirection = new THREE.Vector3();
       rocket.shootDirection.x = ray.direction.x;
       rocket.shootDirection.y = ray.direction.y;
       rocket.shootDirection.z = ray.direction.z;
+      rocket.translateX(rocket.shootDirection.x);
+      rocket.translateY(rocket.shootDirection.y);
+      rocket.translateZ(rocket.shootDirection.z);
       if (this.soundOn) {
         this.launchSound.play();
       }

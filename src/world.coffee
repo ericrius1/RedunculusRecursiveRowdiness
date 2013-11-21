@@ -14,15 +14,14 @@ FW.World = class World
     @camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
     @camera.position.z = 1;
 
-    #MOON
-    light = new THREE.DirectionalLight(0xff00ff)
+    # #MOON
     geometry = new THREE.SphereGeometry(0.5, 32, 32)
     material = new THREE.MeshBasicMaterial({color: 0xffffff})
     mesh = new THREE.Mesh(geometry, material );
-    mesh.scale.multiplyScalar(17);
+    # mesh.scale.multiplyScalar(17);
     mesh.position.set(-50, 20, -100)
-    moonlight = new THREE.DirectionalLight(0xffeeee, 1.0)
     @scene.add( mesh );
+    moonlight = new THREE.DirectionalLight(0xffeeee, 1.0)
     mesh.add(moonlight)
 
     @stats = new Stats()

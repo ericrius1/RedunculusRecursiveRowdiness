@@ -8,21 +8,22 @@ FW.Firework = class Firework
     @particleGroup = new ShaderParticleGroup({
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
       blending: THREE.AdditiveBlending,
-      maxAge: 7
+      maxAge: 13
     });
     @emitterSettings = 
       size: 0.2,
-      acceleration: new THREE.Vector3(0, -0.1, 0),
-      accelerationSpread: new THREE.Vector3(.2, .2, .2),
+      acceleration: new THREE.Vector3(0, -0.01, 0),
+      accelerationSpread: new THREE.Vector3(.2, .2, .02),
       colorStart: @color,
-      particlesPerSecond: 500,
+      particlesPerSecond: 100,
       alive: 0,  
-      emitterDuration: 1.0
+      emitterDuration: 2.0
    
-    @particleGroup.addPool( 5, @emitterSettings, false );
+   #Might want to get rid of pools
+    @particleGroup.addPool( 20, @emitterSettings, true );
     @color.setRGB(0, 0, 200)
     @emitterSettings.colorStart = @color
-    @particleGroup.addPool( 5, @emitterSettings, false );
+    @particleGroup.addPool( 1, @emitterSettings, true );
     FW.myWorld.scene.add(@particleGroup.mesh)
 
 
