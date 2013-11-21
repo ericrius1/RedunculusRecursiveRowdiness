@@ -31,15 +31,15 @@ FW.World = class World
     document.body.appendChild(@stats.domElement);
 
     # TERRAIN
-    @terrain = new THREE.PlaneGeometry(6000, 6000, 256, 256)
-    @terrain.applyMatrix new THREE.Matrix4().makeRotationX(-Math.PI / 2)
+    geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256)
     material = new THREE.MeshPhongMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
     material.opacity = 0.6
     material.needsUpdate = true
 
-    mesh = new THREE.Mesh(@terrain, material)
-    mesh.position.y = -200
-    @scene.add mesh
+    @terrain = new THREE.Mesh(geometryTerrain, material)
+    @terrain.rotation.x = -Math.PI / 2;
+    @terrain.position.y = -200
+    @scene.add @terrain
 
     #RECURSIVE STRUCTURES
     @g = new grow3.System(@scene, @camera, RULES.bush)

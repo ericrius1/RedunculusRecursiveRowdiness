@@ -9,7 +9,7 @@
 
     function World() {
       this.animate = __bind(this.animate, this);
-      var geometry, material, mesh, moonlight, rnd;
+      var geometry, geometryTerrain, material, mesh, moonlight, rnd;
       this.clock = new THREE.Clock();
       rnd = FW.rnd;
       this.scene = new THREE.Scene();
@@ -29,8 +29,7 @@
       this.stats.domElement.style.left = '0px';
       this.stats.domElement.style.top = '0px';
       document.body.appendChild(this.stats.domElement);
-      this.terrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
-      this.terrain.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
+      geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
       material = new THREE.MeshPhongMaterial({
         color: 0xff00ff,
         transparent: true,
@@ -38,9 +37,10 @@
       });
       material.opacity = 0.6;
       material.needsUpdate = true;
-      mesh = new THREE.Mesh(this.terrain, material);
-      mesh.position.y = -200;
-      this.scene.add(mesh);
+      this.terrain = new THREE.Mesh(geometryTerrain, material);
+      this.terrain.rotation.x = -Math.PI / 2;
+      this.terrain.position.y = -200;
+      this.scene.add(this.terrain);
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
       this.g.build(void 0, new THREE.Vector3(rnd(100, 300), 10, 10));
       this.renderer = new THREE.WebGLRenderer({
