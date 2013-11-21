@@ -30,14 +30,14 @@ FW.World = class World
     @stats.domElement.style.top = '0px';
     document.body.appendChild(@stats.domElement);
 
-    # FLOOR
-    geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100)
-    geometry.applyMatrix new THREE.Matrix4().makeRotationX(-Math.PI / 2)
+    # TERRAIN
+    @terrain = new THREE.PlaneGeometry(6000, 6000, 256, 256)
+    @terrain.applyMatrix new THREE.Matrix4().makeRotationX(-Math.PI / 2)
     material = new THREE.MeshPhongMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
     material.opacity = 0.6
     material.needsUpdate = true
 
-    mesh = new THREE.Mesh(geometry, material)
+    mesh = new THREE.Mesh(@terrain, material)
     mesh.position.y = -200
     @scene.add mesh
 

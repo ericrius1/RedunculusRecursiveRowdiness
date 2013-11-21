@@ -29,8 +29,8 @@
       this.stats.domElement.style.left = '0px';
       this.stats.domElement.style.top = '0px';
       document.body.appendChild(this.stats.domElement);
-      geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100);
-      geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
+      this.terrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
+      this.terrain.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
       material = new THREE.MeshPhongMaterial({
         color: 0xff00ff,
         transparent: true,
@@ -38,7 +38,7 @@
       });
       material.opacity = 0.6;
       material.needsUpdate = true;
-      mesh = new THREE.Mesh(geometry, material);
+      mesh = new THREE.Mesh(this.terrain, material);
       mesh.position.y = -200;
       this.scene.add(mesh);
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
