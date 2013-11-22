@@ -32,7 +32,6 @@
       directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       directionalLight.position.set(500, 2000, 0);
       this.scene.add(directionalLight);
-      this.terrain = new FW.Terrain();
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
       this.g.build(void 0, new THREE.Vector3(100, 10, 10));
       this.renderer = new THREE.WebGLRenderer({
@@ -41,6 +40,7 @@
       this.renderer.setClearColor(0x000000, 1);
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(this.renderer.domElement);
+      this.terrain = new FW.Terrain();
       this.controls = new THREE.OrbitControls(this.camera);
       return window.addEventListener("resize", onWindowResize, false);
     };
@@ -56,6 +56,9 @@
       requestAnimationFrame(this.animate);
       this.groundControl.update();
       delta = this.clock.getDelta();
+      if (this.terrain.visible) {
+        this.terrain.update();
+      }
       uniforms1.time.value += delta * 5;
       this.stats.update();
       this.controls.update();

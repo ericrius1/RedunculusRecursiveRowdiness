@@ -31,8 +31,6 @@ FW.World = class World
     directionalLight.position.set( 500, 2000, 0 );
     @scene.add( directionalLight );
 
-    #TERRAIN
-    @terrain = new FW.Terrain()
 
     #RECURSIVE STRUCTURES
     @g = new grow3.System(@scene, @camera, RULES.bush)
@@ -43,6 +41,9 @@ FW.World = class World
     @renderer.setSize window.innerWidth, window.innerHeight
     document.body.appendChild @renderer.domElement
 
+    #TERRAIN
+    @terrain = new FW.Terrain()
+    
     #CONTROLS
     @controls = new THREE.OrbitControls( @camera );
 
@@ -62,6 +63,10 @@ FW.World = class World
     requestAnimationFrame @animate
     @groundControl.update()
     delta = @clock.getDelta();
+
+    if @terrain.visible
+        @terrain.update()
+
 
     uniforms1.time.value += delta * 5;
     @stats.update()
