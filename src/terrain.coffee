@@ -6,19 +6,15 @@ FW.Terrain= class Terrain
     @updateNoise = true
     @textureCounter = 0
 
-    geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256)
-    material = new THREE.MeshPhongMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
-    material.opacity = 0.6
-    material.needsUpdate = true
+
+
+  init: ->
+
     @sceneRenderTarget = new THREE.Scene();
 
     @cameraOrtho = new THREE.OrthographicCamera( SCREEN_WIDTH / - 2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_HEIGHT / - 2, -10000, 10000 );
     @cameraOrtho.position.z = 100;
     @sceneRenderTarget.add( @cameraOrtho );
-
-
-  init: ->
-
     normalShader = THREE.NormalMapShader
     rx = 256
     ry = 256
@@ -108,16 +104,28 @@ FW.Terrain= class Terrain
     geometryTerrain.computeFaceNormals()
     geometryTerrain.computeVertexNormals()
     geometryTerrain.computeTangents()
-    terrain = new THREE.Mesh(geometryTerrain, @mlib["terrain"])
+    # terrain = new THREE.Mesh(geometryTerrain, @mlib["terrain"])
+    terrain = new THREE.Mesh(geometryTerrain, new THREE.MeshPhongMaterial({color: 0xaadd77}))
+
     terrain.position.set 0, -125, 0
     terrain.rotation.x = -Math.PI / 2
     terrain.visible = false
     FW.myWorld.scene.add terrain
 
+    # RENDERER
+
+    @renderer = new THREE.WebGLRenderer();
+    @renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+    @renderer.setClearColor( FW.myWorld.scene.fog.color, 1 );
+
+    document.body.appendChild( @renderer.domElement );
+    @renderer.gammaInput = true;
+    @renderer.gammaOutput = true;
+
   
 
     # COMPOSER
-    FW.myWorld.renderer.autoClear = false
+    @renderer.autoClear = false
     renderTargetParameters =
       minFilter: THREE.LinearFilter
       magFilter: THREE.LinearFilter
@@ -134,10 +142,10 @@ FW.Terrain= class Terrain
     vblur.uniforms["v"].value = bluriness / SCREEN_HEIGHT
     hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5
     effectBleach.uniforms["opacity"].value = 0.65
-    @composer = new THREE.EffectComposer(FW.myWorld.renderer, renderTarget)
+    @composer = new THREE.EffectComposer(@renderer, renderTarget)
     renderModel = new THREE.RenderPass(FW.myWorld.scene, FW.myWorld.camera)
     vblur.renderToScreen = true
-    @composer = new THREE.EffectComposer(FW.myWorld.renderer, renderTarget)
+    @composer = new THREE.EffectComposer(@renderer, renderTarget)
     @composer.addPass renderModel
     @composer.addPass effectBloom
 
@@ -147,7 +155,7 @@ FW.Terrain= class Terrain
     startX = -3000
 
     # PRE-INIT
-    FW.myWorld.renderer.initWebGLObjects FW.myWorld.scene
+    @renderer.initWebGLObjects FW.myWorld.scene
 
   applyShader : (shader, texture, target) ->
     shaderMaterial = new THREE.ShaderMaterial(
@@ -160,7 +168,7 @@ FW.Terrain= class Terrain
     meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT), shaderMaterial)
     meshTmp.position.z = -500
     sceneTmp.add meshTmp
-    FW.myWorld.renderer.render sceneTmp, @cameraOrtho, target, true
+    @renderer.render sceneTmp, @cameraOrtho, target, true
 
   loadTextures : ->
     @textureCounter += 1
@@ -175,22 +183,22 @@ FW.Terrain= class Terrain
     lightVal = THREE.Math.clamp(lightVal + 0.5 * delta * @lightDir, fLow, fHigh)
     valNorm = (lightVal - fLow) / (fHigh - fLow)
     FW.myWorld.scene.fog.color.setHSL 0.1, 0.5, lightVal
-    # FW.myWorld.renderer.setClearColor FW.myWorld.scene.fog.color, 1
+    @renderer.setClearColor FW.myWorld.scene.fog.color, 1
     FW.myWorld.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15)
     FW.myWorld.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5)
     @uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5)
     if @updateNoise
-
       animDelta = THREE.Math.clamp(animDelta + 0.00075 * @animDeltaDir, 0, 0.05)
       @uniformsNoise["time"].value += delta * animDelta
       @uniformsNoise["offset"].value.x += delta * 0.05
       @uniformsTerrain["uOffset"].value.x = 4 * @uniformsNoise["offset"].value.x
       @quadTarget.material = @mlib["heightmap"]
-      FW.myWorld.renderer.render @sceneRenderTarget, @cameraOrtho, @heightMap, true
+      @renderer.render @sceneRenderTarget, @cameraOrtho, @heightMap, true
       @quadTarget.material = @mlib["normal"]
-      FW.myWorld.renderer.render @sceneRenderTarget, @cameraOrtho, @normalMap, true
+      @renderer.render @sceneRenderTarget, @cameraOrtho, @normalMap, true
+      debugger
 
     #@updateNoise = false;
 
-    # FW.myWorld.renderer.render( FW.myWorld.scene, FW.myWorld.camera );
+    # @renderer.render( FW.myWorld.scene, FW.myWorld.camera );
     @composer.render 0.1

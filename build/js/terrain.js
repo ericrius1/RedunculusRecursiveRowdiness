@@ -3,29 +3,20 @@
 
   FW.Terrain = Terrain = (function() {
     function Terrain() {
-      var geometryTerrain, material;
       this.mlib = {};
       this.lightDir = 1;
       this.animDeltaDir = -1;
       this.updateNoise = true;
       this.textureCounter = 0;
-      geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
-      material = new THREE.MeshPhongMaterial({
-        color: 0xff00ff,
-        transparent: true,
-        blending: THREE.AdditiveBlending
-      });
-      material.opacity = 0.6;
-      material.needsUpdate = true;
-      this.sceneRenderTarget = new THREE.Scene();
-      this.cameraOrtho = new THREE.OrthographicCamera(SCREEN_WIDTH / -2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_HEIGHT / -2, -10000, 10000);
-      this.cameraOrtho.position.z = 100;
-      this.sceneRenderTarget.add(this.cameraOrtho);
     }
 
     Terrain.prototype.init = function() {
       var bluriness, detailTexture, diffuseTexture1, diffuseTexture2, effectBleach, effectBloom, geometryTerrain, hblur, i, material, normalShader, params, pars, plane, renderModel, renderTarget, renderTargetParameters, rx, ry, specularMap, startX, terrain, terrainShader, uniformsNormal, vblur, vertexShader,
         _this = this;
+      this.sceneRenderTarget = new THREE.Scene();
+      this.cameraOrtho = new THREE.OrthographicCamera(SCREEN_WIDTH / -2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_HEIGHT / -2, -10000, 10000);
+      this.cameraOrtho.position.z = 100;
+      this.sceneRenderTarget.add(this.cameraOrtho);
       normalShader = THREE.NormalMapShader;
       rx = 256;
       ry = 256;
@@ -111,12 +102,20 @@
       geometryTerrain.computeFaceNormals();
       geometryTerrain.computeVertexNormals();
       geometryTerrain.computeTangents();
-      terrain = new THREE.Mesh(geometryTerrain, this.mlib["terrain"]);
+      terrain = new THREE.Mesh(geometryTerrain, new THREE.MeshPhongMaterial({
+        color: 0xaadd77
+      }));
       terrain.position.set(0, -125, 0);
       terrain.rotation.x = -Math.PI / 2;
       terrain.visible = false;
       FW.myWorld.scene.add(terrain);
-      FW.myWorld.renderer.autoClear = false;
+      this.renderer = new THREE.WebGLRenderer();
+      this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+      this.renderer.setClearColor(FW.myWorld.scene.fog.color, 1);
+      document.body.appendChild(this.renderer.domElement);
+      this.renderer.gammaInput = true;
+      this.renderer.gammaOutput = true;
+      this.renderer.autoClear = false;
       renderTargetParameters = {
         minFilter: THREE.LinearFilter,
         magFilter: THREE.LinearFilter,
@@ -133,16 +132,16 @@
       vblur.uniforms["v"].value = bluriness / SCREEN_HEIGHT;
       hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5;
       effectBleach.uniforms["opacity"].value = 0.65;
-      this.composer = new THREE.EffectComposer(FW.myWorld.renderer, renderTarget);
+      this.composer = new THREE.EffectComposer(this.renderer, renderTarget);
       renderModel = new THREE.RenderPass(FW.myWorld.scene, FW.myWorld.camera);
       vblur.renderToScreen = true;
-      this.composer = new THREE.EffectComposer(FW.myWorld.renderer, renderTarget);
+      this.composer = new THREE.EffectComposer(this.renderer, renderTarget);
       this.composer.addPass(renderModel);
       this.composer.addPass(effectBloom);
       this.composer.addPass(hblur);
       this.composer.addPass(vblur);
       startX = -3000;
-      return FW.myWorld.renderer.initWebGLObjects(FW.myWorld.scene);
+      return this.renderer.initWebGLObjects(FW.myWorld.scene);
     };
 
     Terrain.prototype.applyShader = function(shader, texture, target) {
@@ -157,7 +156,7 @@
       meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT), shaderMaterial);
       meshTmp.position.z = -500;
       sceneTmp.add(meshTmp);
-      return FW.myWorld.renderer.render(sceneTmp, this.cameraOrtho, target, true);
+      return this.renderer.render(sceneTmp, this.cameraOrtho, target, true);
     };
 
     Terrain.prototype.loadTextures = function() {
@@ -176,6 +175,7 @@
       lightVal = THREE.Math.clamp(lightVal + 0.5 * delta * this.lightDir, fLow, fHigh);
       valNorm = (lightVal - fLow) / (fHigh - fLow);
       FW.myWorld.scene.fog.color.setHSL(0.1, 0.5, lightVal);
+      this.renderer.setClearColor(FW.myWorld.scene.fog.color, 1);
       FW.myWorld.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15);
       FW.myWorld.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5);
       this.uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5);
@@ -185,9 +185,10 @@
         this.uniformsNoise["offset"].value.x += delta * 0.05;
         this.uniformsTerrain["uOffset"].value.x = 4 * this.uniformsNoise["offset"].value.x;
         this.quadTarget.material = this.mlib["heightmap"];
-        FW.myWorld.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.heightMap, true);
+        this.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.heightMap, true);
         this.quadTarget.material = this.mlib["normal"];
-        FW.myWorld.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.normalMap, true);
+        this.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.normalMap, true);
+        debugger;
       }
       return this.composer.render(0.1);
     };

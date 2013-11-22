@@ -20,14 +20,14 @@
       this.launchSpeed = 0.8;
       this.explosionDelay = 500;
       this.shootDirection = new THREE.Vector3();
-      this.explosionLightIntensity = 2.0;
+      this.explosionLightIntensity = 20.0;
       this.rocketMat = new THREE.ShaderMaterial({
         uniforms: uniforms1,
         vertexShader: document.getElementById('rocketVertexShader').textContent,
         fragmentShader: document.getElementById('fragment_shader1').textContent
       });
       this.rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
-      this.light = new THREE.PointLight(0xffeeee, 0.0, 500);
+      this.light = new THREE.PointLight(0xffeeee, 0.0, 4000);
       this.light.position.set(1, 1, 1);
       FW.myWorld.scene.add(this.light);
     }

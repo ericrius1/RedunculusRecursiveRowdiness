@@ -19,7 +19,7 @@ FW.Rockets = class Rockets
     @launchSpeed = 0.8
     @explosionDelay = 500
     @shootDirection = new THREE.Vector3()
-    @explosionLightIntensity = 2.0
+    @explosionLightIntensity = 20.0
 
     @rocketMat= new THREE.ShaderMaterial({
     uniforms: uniforms1,
@@ -30,7 +30,7 @@ FW.Rockets = class Rockets
     @rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
 
     #LIGHTS
-    @light = new THREE.PointLight(0xffeeee, 0.0, 500)
+    @light = new THREE.PointLight(0xffeeee, 0.0, 4000)
     @light.position.set(1, 1, 1);
     FW.myWorld.scene.add(@light)
 

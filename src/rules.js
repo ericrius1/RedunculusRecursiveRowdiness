@@ -9,15 +9,6 @@ window.uniforms1 = {
   }
 };
 
-// var mat= new THREE.ShaderMaterial({
-
-//   uniforms: uniforms1,
-//   vertexShader: document.getElementById('vertexShader').textContent,
-//   fragmentShader: document.getElementById('fragment_shader1').textContent
-
-// });
-
-
 
 window.RULES = {}
 

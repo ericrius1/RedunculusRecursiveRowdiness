@@ -30,47 +30,38 @@ FW.World = class World
 
     #RECURSIVE STRUCTURES
     @g = new grow3.System(@scene, @camera, RULES.bush)
-    @g.build(undefined, new THREE.Vector3(100, 10, 10))
+    thing = @g.build(undefined, new THREE.Vector3(-1300, 900, 1300))
+    @camera.lookAt(new THREE.Vector3(thing.position))
     
-
-    #RENDERER
-    @renderer = new THREE.WebGLRenderer()
-    @renderer.setClearColor(@scene.fog.color, 1 );
-    @renderer.setSize SCREEN_WIDTH, SCREEN_HEIGHT
-    document.body.appendChild @renderer.domElement
-    @renderer.gammaInput = true;
-    @renderer.gammaOutput = true;
-
     #LIGHTS
 
     @scene.add new THREE.AmbientLight(0x111111)
-    @directionalLight = new THREE.DirectionalLight(0xffffff, 1.15)
+    @directionalLight = new THREE.DirectionalLight(0xffffff, 10.15)
     @directionalLight.position.set 500, 2000, 0
     @scene.add @directionalLight
     @pointLight = new THREE.PointLight(0xff4400, 1.5)
     @pointLight.position.set 0, 0, 0
     @scene.add @pointLight
+
     #TERRAIN
     @terrain = new FW.Terrain()
     @terrain.init()
 
     #CONTROLS
     @controls = new THREE.OrbitControls( @camera );
+    @controls.target.set(0, 0, 0)
 
-
-    #FOG
-    # @scene.fog = new THREE.Fog( 0xff00ff );
     
     window.addEventListener "resize", @onWindowResize, false
 
   onWindowResize : =>
     SCREEN_WIDTH = window.innerWidth;
     SCREEN_HEIGHT = window.innerHeight
-    @renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT )
+    @terrain.renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT )
 
     @camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
     @camera.updateProjectionMatrix();
-    @renderer.setSize SCREEN_WIDTH, SCREEN_HEIGHT
+    @terrain.renderer.setSize SCREEN_WIDTH, SCREEN_HEIGHT
 
   animate: =>
 
@@ -81,8 +72,5 @@ FW.World = class World
         @terrain.update()
 
 
-    uniforms1.time.value += @delta * 5;
     @stats.update()
     @controls.update()
-    # @renderer.render @scene, @camera
-    time = Date.now()
