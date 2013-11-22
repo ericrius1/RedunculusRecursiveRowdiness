@@ -1,5 +1,6 @@
 FW.Terrain= class Terrain
 	constructor: ->
+		@mlib = {}
 		geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256)
 		material = new THREE.MeshPhongMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
 		material.opacity = 0.6
@@ -58,6 +59,44 @@ FW.Terrain= class Terrain
 		diffuseTexture2.wrapS = diffuseTexture2.wrapT = THREE.RepeatWrapping
 		detailTexture.wrapS = detailTexture.wrapT = THREE.RepeatWrapping
 		specularMap.wrapS = specularMap.wrapT = THREE.RepeatWrapping
+
+		#TERRAIN SHADER
+
+		terrainShader = THREE.ShaderTerrain["terrain"]
+		uniformsTerrain = THREE.UniformsUtils.clone(terrainShader.uniforms)
+		uniformsTerrain["tNormal"].value = normalMap
+		uniformsTerrain["uNormalScale"].value = 3.5
+		uniformsTerrain["tDisplacement"].value = heightMap
+		uniformsTerrain["tDiffuse1"].value = diffuseTexture1
+		uniformsTerrain["tDiffuse2"].value = diffuseTexture2
+		uniformsTerrain["tSpecular"].value = specularMap
+		uniformsTerrain["tDetail"].value = detailTexture
+		uniformsTerrain["enableDiffuse1"].value = true
+		uniformsTerrain["enableDiffuse2"].value = true
+		uniformsTerrain["enableSpecular"].value = true
+		uniformsTerrain["uDiffuseColor"].value.setHex 0xffffff
+		uniformsTerrain["uSpecularColor"].value.setHex 0xffffff
+		uniformsTerrain["uAmbientColor"].value.setHex 0x111111
+		uniformsTerrain["uShininess"].value = 30
+		uniformsTerrain["uDisplacementScale"].value = 375
+		uniformsTerrain["uRepeatOverlay"].value.set 6, 6
+		params = [["heightmap", document.getElementById("fragmentShaderNoise").textContent, vertexShader, uniformsNoise, false], ["normal", normalShader.fragmentShader, normalShader.vertexShader, uniformsNormal, false], ["terrain", terrainShader.fragmentShader, terrainShader.vertexShader, uniformsTerrain, true]]
+		i = 0
+
+		while i < params.length
+		  material = new THREE.ShaderMaterial(
+		    uniforms: params[i][3]
+		    vertexShader: params[i][2]
+		    fragmentShader: params[i][1]
+		    lights: params[i][4]
+		    fog: true
+		  )
+		  @mlib[params[i][0]] = material
+		  i++
+		plane = new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT)
+		quadTarget = new THREE.Mesh(plane, new THREE.MeshBasicMaterial(color: 0x000000))
+		quadTarget.position.z = -500
+		sceneRenderTarget.add quadTarget
 
 		applyShader = (shader, texture, target) ->
 			shaderMaterial = new THREE.ShaderMaterial(

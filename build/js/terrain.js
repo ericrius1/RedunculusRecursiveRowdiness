@@ -3,7 +3,8 @@
 
   FW.Terrain = Terrain = (function() {
     function Terrain() {
-      var applyShader, cameraOrtho, detailTexture, diffuseTexture1, diffuseTexture2, geometryTerrain, heightMap, loadTextures, material, normalMap, normalShader, pars, rx, ry, sceneRenderTarget, specularMap, textureCounter, uniformsNoise, uniformsNormal, vertexShader;
+      var applyShader, cameraOrtho, detailTexture, diffuseTexture1, diffuseTexture2, geometryTerrain, heightMap, i, loadTextures, material, normalMap, normalShader, params, pars, plane, quadTarget, rx, ry, sceneRenderTarget, specularMap, terrainShader, textureCounter, uniformsNoise, uniformsNormal, uniformsTerrain, vertexShader;
+      this.mlib = {};
       geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
       material = new THREE.MeshPhongMaterial({
         color: 0xff00ff,
@@ -61,6 +62,43 @@
       diffuseTexture2.wrapS = diffuseTexture2.wrapT = THREE.RepeatWrapping;
       detailTexture.wrapS = detailTexture.wrapT = THREE.RepeatWrapping;
       specularMap.wrapS = specularMap.wrapT = THREE.RepeatWrapping;
+      terrainShader = THREE.ShaderTerrain["terrain"];
+      uniformsTerrain = THREE.UniformsUtils.clone(terrainShader.uniforms);
+      uniformsTerrain["tNormal"].value = normalMap;
+      uniformsTerrain["uNormalScale"].value = 3.5;
+      uniformsTerrain["tDisplacement"].value = heightMap;
+      uniformsTerrain["tDiffuse1"].value = diffuseTexture1;
+      uniformsTerrain["tDiffuse2"].value = diffuseTexture2;
+      uniformsTerrain["tSpecular"].value = specularMap;
+      uniformsTerrain["tDetail"].value = detailTexture;
+      uniformsTerrain["enableDiffuse1"].value = true;
+      uniformsTerrain["enableDiffuse2"].value = true;
+      uniformsTerrain["enableSpecular"].value = true;
+      uniformsTerrain["uDiffuseColor"].value.setHex(0xffffff);
+      uniformsTerrain["uSpecularColor"].value.setHex(0xffffff);
+      uniformsTerrain["uAmbientColor"].value.setHex(0x111111);
+      uniformsTerrain["uShininess"].value = 30;
+      uniformsTerrain["uDisplacementScale"].value = 375;
+      uniformsTerrain["uRepeatOverlay"].value.set(6, 6);
+      params = [["heightmap", document.getElementById("fragmentShaderNoise").textContent, vertexShader, uniformsNoise, false], ["normal", normalShader.fragmentShader, normalShader.vertexShader, uniformsNormal, false], ["terrain", terrainShader.fragmentShader, terrainShader.vertexShader, uniformsTerrain, true]];
+      i = 0;
+      while (i < params.length) {
+        material = new THREE.ShaderMaterial({
+          uniforms: params[i][3],
+          vertexShader: params[i][2],
+          fragmentShader: params[i][1],
+          lights: params[i][4],
+          fog: true
+        });
+        this.mlib[params[i][0]] = material;
+        i++;
+      }
+      plane = new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT);
+      quadTarget = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({
+        color: 0x000000
+      }));
+      quadTarget.position.z = -500;
+      sceneRenderTarget.add(quadTarget);
       applyShader = function(shader, texture, target) {
         var meshTmp, sceneTmp, shaderMaterial;
         shaderMaterial = new THREE.ShaderMaterial({
