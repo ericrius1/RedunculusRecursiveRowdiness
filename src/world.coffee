@@ -17,8 +17,9 @@ FW.World = class World
     @groundControl = new FW.Rockets()
 
     #CAMERA
-    @camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
-    @camera.position.z = 1;
+    
+    @camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 2, 4000 );
+    @camera.position.set( -1200, 800, 1200 );
 
     # #MOON
     geometry = new THREE.SphereGeometry(0.5, 32, 32)
@@ -41,7 +42,7 @@ FW.World = class World
 
     #RECURSIVE STRUCTURES
     @g = new grow3.System(@scene, @camera, RULES.bush)
-    @g.build(undefined, new THREE.Vector3(@rnd(100,300), 10, 10))
+    @g.build(undefined, new THREE.Vector3(100, 10, 10))
     
     @renderer = new THREE.WebGLRenderer({antialias: true})
     @renderer.setClearColor( 0x000000, 1 );
@@ -49,20 +50,8 @@ FW.World = class World
     document.body.appendChild @renderer.domElement
 
     #CONTROLS
-    @controls = new THREE.TrackballControls( @camera );
-    @controls.target.set( 0, 0, 0 );
+    @controls = new THREE.OrbitControls( @camera );
 
-    @controls.rotateSpeed = 1.0;
-    @controls.zoomSpeed = 1.2;
-    @controls.panSpeed = 0.8;
-
-    @controls.noZoom = false;
-    @controls.noPan = false;
-
-    @controls.staticMoving = false;
-    @controls.dynamicDampingFactor = 0.15;
-
-    @controls.keys = [ 65, 83, 68, 32 ];
 
     #FOG
     # @scene.fog = new THREE.Fog( 0xff00ff );

@@ -18,8 +18,8 @@
       this.scene = new THREE.Scene();
       this.firework = new FW.Firework();
       this.groundControl = new FW.Rockets();
-      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-      this.camera.position.z = 1;
+      this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 2, 4000);
+      this.camera.position.set(-1200, 800, 1200);
       geometry = new THREE.SphereGeometry(0.5, 32, 32);
       material = new THREE.MeshBasicMaterial({
         color: 0xffffff
@@ -36,23 +36,14 @@
       document.body.appendChild(this.stats.domElement);
       this.terrain = new FW.Terrain();
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
-      this.g.build(void 0, new THREE.Vector3(this.rnd(100, 300), 10, 10));
+      this.g.build(void 0, new THREE.Vector3(100, 10, 10));
       this.renderer = new THREE.WebGLRenderer({
         antialias: true
       });
       this.renderer.setClearColor(0x000000, 1);
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(this.renderer.domElement);
-      this.controls = new THREE.TrackballControls(this.camera);
-      this.controls.target.set(0, 0, 0);
-      this.controls.rotateSpeed = 1.0;
-      this.controls.zoomSpeed = 1.2;
-      this.controls.panSpeed = 0.8;
-      this.controls.noZoom = false;
-      this.controls.noPan = false;
-      this.controls.staticMoving = false;
-      this.controls.dynamicDampingFactor = 0.15;
-      this.controls.keys = [65, 83, 68, 32];
+      this.controls = new THREE.OrbitControls(this.camera);
       return window.addEventListener("resize", onWindowResize, false);
     };
 

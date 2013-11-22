@@ -3,7 +3,7 @@
 
   FW.Terrain = Terrain = (function() {
     function Terrain() {
-      var geometryTerrain, material;
+      var cameraOrtho, geometryTerrain, material, sceneRenderTarget;
       geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
       material = new THREE.MeshPhongMaterial({
         color: 0xff00ff,
@@ -12,10 +12,14 @@
       });
       material.opacity = 0.6;
       material.needsUpdate = true;
-      this.terrain = new THREE.Mesh(geometryTerrain, material);
-      this.terrain.rotation.x = -Math.PI / 2;
-      this.terrain.position.y = -200;
-      FW.myWorld.scene.add(this.terrain);
+      sceneRenderTarget = new THREE.Scene();
+      cameraOrtho = new THREE.OrthographicCamera(SCREEN_WIDTH / -2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_HEIGHT / -2, -10000, 10000);
+      cameraOrtho.position.z = 100;
+      sceneRenderTarget.add(cameraOrtho);
+      this.ground = new THREE.Mesh(geometryTerrain, material);
+      this.ground.rotation.x = -Math.PI / 2;
+      this.ground.position.set(0, -125, 0);
+      FW.myWorld.scene.add(this.groun);
     }
 
     return Terrain;

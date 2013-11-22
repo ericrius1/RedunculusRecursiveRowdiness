@@ -5,7 +5,6 @@ window.FW = {}
 window.onload = ->
   FW.myWorld = new FW.World()
   FW.myWorld.init()
-
   FW.myWorld.animate()
 
 
