@@ -3,7 +3,7 @@
 
   FW.Terrain = Terrain = (function() {
     function Terrain() {
-      var applyShader, cameraOrtho, detailTexture, diffuseTexture1, diffuseTexture2, geometryTerrain, heightMap, i, loadTextures, material, normalMap, normalShader, params, pars, plane, quadTarget, rx, ry, sceneRenderTarget, specularMap, terrain, terrainShader, textureCounter, uniformsNoise, uniformsNormal, uniformsTerrain, vertexShader;
+      var applyShader, bluriness, cameraOrtho, composer, detailTexture, diffuseTexture1, diffuseTexture2, effectBleach, effectBloom, geometryTerrain, hblur, heightMap, i, loadTextures, material, normalMap, normalShader, params, pars, plane, quadTarget, renderModel, renderTarget, renderTargetParameters, rx, ry, sceneRenderTarget, specularMap, startX, terrain, terrainShader, textureCounter, uniformsNoise, uniformsNormal, uniformsTerrain, vblur, vertexShader;
       this.mlib = {};
       geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
       material = new THREE.MeshPhongMaterial({
@@ -104,6 +104,33 @@
       terrain.rotation.x = -Math.PI / 2;
       terrain.visible = false;
       FW.myWorld.scene.add(terrain);
+      FW.myWorld.renderer.autoClear = false;
+      renderTargetParameters = {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBFormat,
+        stencilBuffer: false
+      };
+      renderTarget = new THREE.WebGLRenderTarget(SCREEN_WIDTH, SCREEN_HEIGHT, renderTargetParameters);
+      effectBloom = new THREE.BloomPass(0.6);
+      effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader);
+      hblur = new THREE.ShaderPass(THREE.HorizontalTiltShiftShader);
+      vblur = new THREE.ShaderPass(THREE.VerticalTiltShiftShader);
+      bluriness = 6;
+      hblur.uniforms["h"].value = bluriness / SCREEN_WIDTH;
+      vblur.uniforms["v"].value = bluriness / SCREEN_HEIGHT;
+      hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5;
+      effectBleach.uniforms["opacity"].value = 0.65;
+      composer = new THREE.EffectComposer(FW.myWorld.renderer, renderTarget);
+      renderModel = new THREE.RenderPass(FW.myWorld.scene, FW.myWorld.camera);
+      vblur.renderToScreen = true;
+      composer = new THREE.EffectComposer(FW.myWorld.renderer, renderTarget);
+      composer.addPass(renderModel);
+      composer.addPass(effectBloom);
+      composer.addPass(hblur);
+      composer.addPass(vblur);
+      startX = -3000;
+      FW.myWorld.renderer.initWebGLObjects(FW.myWorld.scene);
       applyShader = function(shader, texture, target) {
         var meshTmp, sceneTmp, shaderMaterial;
         shaderMaterial = new THREE.ShaderMaterial({

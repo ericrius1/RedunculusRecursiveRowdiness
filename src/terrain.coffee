@@ -105,6 +105,39 @@ FW.Terrain= class Terrain
 		terrain.visible = false
 		FW.myWorld.scene.add terrain
 
+		# COMPOSER
+		FW.myWorld.renderer.autoClear = false
+		renderTargetParameters =
+			minFilter: THREE.LinearFilter
+			magFilter: THREE.LinearFilter
+			format: THREE.RGBFormat
+			stencilBuffer: false
+
+		renderTarget = new THREE.WebGLRenderTarget(SCREEN_WIDTH, SCREEN_HEIGHT, renderTargetParameters)
+		effectBloom = new THREE.BloomPass(0.6)
+		effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader)
+		hblur = new THREE.ShaderPass(THREE.HorizontalTiltShiftShader)
+		vblur = new THREE.ShaderPass(THREE.VerticalTiltShiftShader)
+		bluriness = 6
+		hblur.uniforms["h"].value = bluriness / SCREEN_WIDTH
+		vblur.uniforms["v"].value = bluriness / SCREEN_HEIGHT
+		hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5
+		effectBleach.uniforms["opacity"].value = 0.65
+		composer = new THREE.EffectComposer(FW.myWorld.renderer, renderTarget)
+		renderModel = new THREE.RenderPass(FW.myWorld.scene, FW.myWorld.camera)
+		vblur.renderToScreen = true
+		composer = new THREE.EffectComposer(FW.myWorld.renderer, renderTarget)
+		composer.addPass renderModel
+		composer.addPass effectBloom
+
+		#composer.addPass( effectBleach );
+		composer.addPass hblur
+		composer.addPass vblur
+		startX = -3000
+
+		# PRE-INIT
+		FW.myWorld.renderer.initWebGLObjects FW.myWorld.scene
+
 		applyShader = (shader, texture, target) ->
 			shaderMaterial = new THREE.ShaderMaterial(
 				fragmentShader: shader.fragmentShader
