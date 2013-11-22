@@ -18,8 +18,9 @@
     }
 
     World.prototype.init = function() {
-      var directionalLight;
+      var directionalLight, pointLight;
       this.scene = new THREE.Scene();
+      this.scene.fog = new THREE.Fog(0x050505, 2000, 4000);
       this.firework = new FW.Firework();
       this.groundControl = new FW.Rockets();
       this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 2, 4000);
@@ -29,16 +30,20 @@
       this.stats.domElement.style.left = '0px';
       this.stats.domElement.style.top = '0px';
       document.body.appendChild(this.stats.domElement);
+      this.scene.add(new THREE.AmbientLight(0x111111));
       directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       directionalLight.position.set(500, 2000, 0);
       this.scene.add(directionalLight);
+      pointLight = new THREE.PointLight(0xff4400, 1.5);
+      pointLight.position.set(0, 0, 0);
+      this.scene.add(pointLight);
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
       this.g.build(void 0, new THREE.Vector3(100, 10, 10));
-      this.renderer = new THREE.WebGLRenderer({
-        antialias: true
-      });
-      this.renderer.setClearColor(0x000000, 1);
+      this.renderer = new THREE.WebGLRenderer();
+      this.renderer.setClearColor(this.scene.fog.color, 1);
       this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.gammaInput = true;
+      this.renderer.gammaOutput = true;
       document.body.appendChild(this.renderer.domElement);
       this.terrain = new FW.Terrain();
       this.controls = new THREE.OrbitControls(this.camera);

@@ -12,10 +12,6 @@ FW.Terrain= class Terrain
 		cameraOrtho.position.z = 100;
 		sceneRenderTarget.add( cameraOrtho );
 
-		@ground = new THREE.Mesh(geometryTerrain, material)
-		@ground.rotation.x = -Math.PI / 2;
-		@ground.position.set 0, -125, 0
-		FW.myWorld.scene.add @ground
 
 
 		normalShader = THREE.NormalMapShader
@@ -97,6 +93,17 @@ FW.Terrain= class Terrain
 		quadTarget = new THREE.Mesh(plane, new THREE.MeshBasicMaterial(color: 0x000000))
 		quadTarget.position.z = -500
 		sceneRenderTarget.add quadTarget
+
+		# TERRAIN MESH
+		geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256)
+		geometryTerrain.computeFaceNormals()
+		geometryTerrain.computeVertexNormals()
+		geometryTerrain.computeTangents()
+		terrain = new THREE.Mesh(geometryTerrain, @mlib["terrain"])
+		terrain.position.set 0, -125, 0
+		terrain.rotation.x = -Math.PI / 2
+		terrain.visible = false
+		FW.myWorld.scene.add terrain
 
 		applyShader = (shader, texture, target) ->
 			shaderMaterial = new THREE.ShaderMaterial(

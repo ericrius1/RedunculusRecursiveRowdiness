@@ -11,6 +11,7 @@ FW.World = class World
   init: ->
     #scene
     @scene = new THREE.Scene()
+    @scene.fog = new THREE.Fog( 0x050505, 2000, 4000 );
 
     @firework = new FW.Firework()
     @groundControl = new FW.Rockets()
@@ -26,19 +27,25 @@ FW.World = class World
     @stats.domElement.style.top = '0px';
     document.body.appendChild(@stats.domElement);
 
-    #LIGHTS
-    directionalLight = new THREE.DirectionalLight( 0xffffff, 1.15 );
-    directionalLight.position.set( 500, 2000, 0 );
-    @scene.add( directionalLight );
-
+    # LIGHTS
+    @scene.add new THREE.AmbientLight(0x111111)
+    directionalLight = new THREE.DirectionalLight(0xffffff, 1.15)
+    directionalLight.position.set 500, 2000, 0
+    @scene.add directionalLight
+    pointLight = new THREE.PointLight(0xff4400, 1.5)
+    pointLight.position.set 0, 0, 0
+    @scene.add pointLight
 
     #RECURSIVE STRUCTURES
     @g = new grow3.System(@scene, @camera, RULES.bush)
     @g.build(undefined, new THREE.Vector3(100, 10, 10))
     
-    @renderer = new THREE.WebGLRenderer({antialias: true})
-    @renderer.setClearColor( 0x000000, 1 );
+    #RENDERER
+    @renderer = new THREE.WebGLRenderer()
+    @renderer.setClearColor(@scene.fog.color, 1 );
     @renderer.setSize window.innerWidth, window.innerHeight
+    @renderer.gammaInput = true;
+    @renderer.gammaOutput = true;
     document.body.appendChild @renderer.domElement
 
     #TERRAIN

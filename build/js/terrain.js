@@ -3,7 +3,7 @@
 
   FW.Terrain = Terrain = (function() {
     function Terrain() {
-      var applyShader, cameraOrtho, detailTexture, diffuseTexture1, diffuseTexture2, geometryTerrain, heightMap, i, loadTextures, material, normalMap, normalShader, params, pars, plane, quadTarget, rx, ry, sceneRenderTarget, specularMap, terrainShader, textureCounter, uniformsNoise, uniformsNormal, uniformsTerrain, vertexShader;
+      var applyShader, cameraOrtho, detailTexture, diffuseTexture1, diffuseTexture2, geometryTerrain, heightMap, i, loadTextures, material, normalMap, normalShader, params, pars, plane, quadTarget, rx, ry, sceneRenderTarget, specularMap, terrain, terrainShader, textureCounter, uniformsNoise, uniformsNormal, uniformsTerrain, vertexShader;
       this.mlib = {};
       geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
       material = new THREE.MeshPhongMaterial({
@@ -18,10 +18,6 @@
       cameraOrtho = new THREE.OrthographicCamera(SCREEN_WIDTH / -2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_HEIGHT / -2, -10000, 10000);
       cameraOrtho.position.z = 100;
       sceneRenderTarget.add(cameraOrtho);
-      this.ground = new THREE.Mesh(geometryTerrain, material);
-      this.ground.rotation.x = -Math.PI / 2;
-      this.ground.position.set(0, -125, 0);
-      FW.myWorld.scene.add(this.ground);
       normalShader = THREE.NormalMapShader;
       rx = 256;
       ry = 256;
@@ -99,6 +95,15 @@
       }));
       quadTarget.position.z = -500;
       sceneRenderTarget.add(quadTarget);
+      geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
+      geometryTerrain.computeFaceNormals();
+      geometryTerrain.computeVertexNormals();
+      geometryTerrain.computeTangents();
+      terrain = new THREE.Mesh(geometryTerrain, this.mlib["terrain"]);
+      terrain.position.set(0, -125, 0);
+      terrain.rotation.x = -Math.PI / 2;
+      terrain.visible = false;
+      FW.myWorld.scene.add(terrain);
       applyShader = function(shader, texture, target) {
         var meshTmp, sceneTmp, shaderMaterial;
         shaderMaterial = new THREE.ShaderMaterial({
