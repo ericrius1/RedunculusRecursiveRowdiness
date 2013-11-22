@@ -36,10 +36,10 @@ FW.World = class World
     #RENDERER
     @renderer = new THREE.WebGLRenderer()
     @renderer.setClearColor(@scene.fog.color, 1 );
-    @renderer.setSize window.innerWidth, window.innerHeight
+    @renderer.setSize SCREEN_WIDTH, SCREEN_HEIGHT
+    document.body.appendChild @renderer.domElement
     @renderer.gammaInput = true;
     @renderer.gammaOutput = true;
-    document.body.appendChild @renderer.domElement
 
     #LIGHTS
 
@@ -61,12 +61,16 @@ FW.World = class World
     #FOG
     # @scene.fog = new THREE.Fog( 0xff00ff );
     
-    window.addEventListener "resize", onWindowResize, false
+    window.addEventListener "resize", @onWindowResize, false
 
-  onWindowResize = ->
-    FW.myWorld.camera.aspect = window.innerWidth / window.innerHeight
-    FW.myWorld.camera.updateProjectionMatrix()
-    FW.myWorld.renderer.setSize window.innerWidth, window.innerHeight
+  onWindowResize : =>
+    SCREEN_WIDTH = window.innerWidth;
+    SCREEN_HEIGHT = window.innerHeight
+    @renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT )
+
+    @camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+    @camera.updateProjectionMatrix();
+    @renderer.setSize SCREEN_WIDTH, SCREEN_HEIGHT
 
   animate: =>
 

@@ -7,12 +7,13 @@
   window.SCREEN_HEIGHT = window.innerHeight;
 
   FW.World = World = (function() {
-    var onWindowResize, time;
+    var time;
 
     time = Date.now();
 
     function World() {
       this.animate = __bind(this.animate, this);
+      this.onWindowResize = __bind(this.onWindowResize, this);
       this.clock = new THREE.Clock();
       this.rnd = FW.rnd;
     }
@@ -33,10 +34,10 @@
       this.g.build(void 0, new THREE.Vector3(100, 10, 10));
       this.renderer = new THREE.WebGLRenderer();
       this.renderer.setClearColor(this.scene.fog.color, 1);
-      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+      document.body.appendChild(this.renderer.domElement);
       this.renderer.gammaInput = true;
       this.renderer.gammaOutput = true;
-      document.body.appendChild(this.renderer.domElement);
       this.scene.add(new THREE.AmbientLight(0x111111));
       this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       this.directionalLight.position.set(500, 2000, 0);
@@ -47,13 +48,17 @@
       this.terrain = new FW.Terrain();
       this.terrain.init();
       this.controls = new THREE.OrbitControls(this.camera);
-      return window.addEventListener("resize", onWindowResize, false);
+      return window.addEventListener("resize", this.onWindowResize, false);
     };
 
-    onWindowResize = function() {
-      FW.myWorld.camera.aspect = window.innerWidth / window.innerHeight;
-      FW.myWorld.camera.updateProjectionMatrix();
-      return FW.myWorld.renderer.setSize(window.innerWidth, window.innerHeight);
+    World.prototype.onWindowResize = function() {
+      var SCREEN_HEIGHT, SCREEN_WIDTH;
+      SCREEN_WIDTH = window.innerWidth;
+      SCREEN_HEIGHT = window.innerHeight;
+      this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+      this.camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+      this.camera.updateProjectionMatrix();
+      return this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     };
 
     World.prototype.animate = function() {

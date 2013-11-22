@@ -157,7 +157,6 @@
       meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT), shaderMaterial);
       meshTmp.position.z = -500;
       sceneTmp.add(meshTmp);
-      console.log(this.cameraOrtho);
       return FW.myWorld.renderer.render(sceneTmp, this.cameraOrtho, target, true);
     };
 
@@ -177,7 +176,6 @@
       lightVal = THREE.Math.clamp(lightVal + 0.5 * delta * this.lightDir, fLow, fHigh);
       valNorm = (lightVal - fLow) / (fHigh - fLow);
       FW.myWorld.scene.fog.color.setHSL(0.1, 0.5, lightVal);
-      FW.myWorld.renderer.setClearColor(FW.myWorld.scene.fog.color, 1);
       FW.myWorld.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15);
       FW.myWorld.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5);
       this.uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5);
@@ -191,7 +189,7 @@
         this.quadTarget.material = this.mlib["normal"];
         FW.myWorld.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.normalMap, true);
       }
-      return FW.myWorld.renderer.render(FW.myWorld.scene, FW.myWorld.camera);
+      return this.composer.render(0.1);
     };
 
     return Terrain;
