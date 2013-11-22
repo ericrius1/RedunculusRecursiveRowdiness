@@ -27,14 +27,6 @@ FW.World = class World
     @stats.domElement.style.top = '0px';
     document.body.appendChild(@stats.domElement);
 
-    # LIGHTS
-    @scene.add new THREE.AmbientLight(0x111111)
-    directionalLight = new THREE.DirectionalLight(0xffffff, 1.15)
-    directionalLight.position.set 500, 2000, 0
-    @scene.add directionalLight
-    pointLight = new THREE.PointLight(0xff4400, 1.5)
-    pointLight.position.set 0, 0, 0
-    @scene.add pointLight
 
     #RECURSIVE STRUCTURES
     @g = new grow3.System(@scene, @camera, RULES.bush)
@@ -69,13 +61,12 @@ FW.World = class World
 
     requestAnimationFrame @animate
     @groundControl.update()
-    delta = @clock.getDelta();
-
-    if @terrain.visible
+    @delta = @clock.getDelta();
+    if @terrainVisible
         @terrain.update()
 
 
-    uniforms1.time.value += delta * 5;
+    uniforms1.time.value += @delta * 5;
     @stats.update()
     @controls.update()
     @renderer.render @scene, @camera

@@ -18,7 +18,6 @@
     }
 
     World.prototype.init = function() {
-      var directionalLight, pointLight;
       this.scene = new THREE.Scene();
       this.scene.fog = new THREE.Fog(0x050505, 2000, 4000);
       this.firework = new FW.Firework();
@@ -30,13 +29,6 @@
       this.stats.domElement.style.left = '0px';
       this.stats.domElement.style.top = '0px';
       document.body.appendChild(this.stats.domElement);
-      this.scene.add(new THREE.AmbientLight(0x111111));
-      directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
-      directionalLight.position.set(500, 2000, 0);
-      this.scene.add(directionalLight);
-      pointLight = new THREE.PointLight(0xff4400, 1.5);
-      pointLight.position.set(0, 0, 0);
-      this.scene.add(pointLight);
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
       this.g.build(void 0, new THREE.Vector3(100, 10, 10));
       this.renderer = new THREE.WebGLRenderer();
@@ -57,14 +49,13 @@
     };
 
     World.prototype.animate = function() {
-      var delta;
       requestAnimationFrame(this.animate);
       this.groundControl.update();
-      delta = this.clock.getDelta();
-      if (this.terrain.visible) {
+      this.delta = this.clock.getDelta();
+      if (this.terrainVisible) {
         this.terrain.update();
       }
-      uniforms1.time.value += delta * 5;
+      uniforms1.time.value += this.delta * 5;
       this.stats.update();
       this.controls.update();
       this.renderer.render(this.scene, this.camera);
