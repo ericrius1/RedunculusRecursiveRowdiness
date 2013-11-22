@@ -49,7 +49,7 @@
     }
     </script>
 
-    <script id="vertexShader" type="x-shader/x-vertex">
+    <script id="rocketVertexShader" type="x-shader/x-vertex">
     varying vec2 vUv;
 
     void main() {
@@ -58,17 +58,51 @@
         gl_Position = projectionMatrix * mvPosition;
     }
     </script>
+
+    
+    <script id="terrainVertexShader" type="x-shader/x-vertex">
+
+            varying vec2 vUv;
+            uniform vec2 scale;
+            uniform vec2 offset;
+
+            void main( void ) {
+
+                vUv = uv * scale + offset;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+            }
+
+    </script>
+
     <script src="lib/three.min.js"></script>
     <script src="lib/OrbitControls.js"></script>
-<!--     // <script src="lib/ParticleEngine/Pool.js"></script>
-    // <script src="lib/ParticleEngine/ShaderParticleGroup.js"></script>
-    // <script src="lib/ParticleEngine/ShaderParticleEmitter.js"></script> -->
 
     <script src="lib/grow3.js"></script>
 <!--     // <script src="lib/ParticleEngine/ShaderParticles.min.js"></script> -->
     <script src="lib/ParticleEngine/Pool.js"></script>
     <script src="lib/ParticleEngine/ShaderParticleEmitter.js"></script>
     <script src="lib/ParticleEngine/ShaderParticleGroup.js"></script>
+
+
+    <script src="lib/shaders/BleachBypassShader.js"></script>
+    <script src="lib/shaders/ConvolutionShader.js"></script>
+    <script src="lib/shaders/CopyShader.js"></script>
+    <script src="lib/shaders/HorizontalTiltShiftShader.js"></script>
+    <script src="lib/shaders/LuminosityShader.js"></script>
+    <script src="lib/shaders/NormalMapShader.js"></script>
+    <script src="lib/shaders/VerticalTiltShiftShader.js"></script>
+
+    <script src="lib/shaders/EffectComposer.js"></script>
+    <script src="lib/shaders/RenderPass.js"></script>
+    <script src="lib/shaders/BloomPass.js"></script>
+    <script src="lib/shaders/ShaderPass.js"></script>
+    <script src="lib/shaders/MaskPass.js"></script>
+    <script src="lib/shaders/SavePass.js"></script>
+
+    <script src="lib/shaders/ShaderTerrain.js"></script>
+
+
     <script src="lib/stats.js"></script>
     <script src="src/rules.js"></script>
     <script src="build/js/main.js"></script>

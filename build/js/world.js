@@ -2,6 +2,10 @@
   var World,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
+  window.SCREEN_WIDTH = window.innerWidth;
+
+  window.SCREEN_HEIGHT = window.innerHeight;
+
   FW.World = World = (function() {
     var onWindowResize, time;
 
@@ -14,26 +18,20 @@
     }
 
     World.prototype.init = function() {
-      var geometry, material, mesh, moonlight;
+      var directionalLight;
       this.scene = new THREE.Scene();
       this.firework = new FW.Firework();
       this.groundControl = new FW.Rockets();
       this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 2, 4000);
       this.camera.position.set(-1200, 800, 1200);
-      geometry = new THREE.SphereGeometry(0.5, 32, 32);
-      material = new THREE.MeshBasicMaterial({
-        color: 0xffffff
-      });
-      mesh = new THREE.Mesh(geometry, material);
-      mesh.position.set(-50, 20, -100);
-      this.scene.add(mesh);
-      moonlight = new THREE.DirectionalLight(0xffeeee, 1.0);
-      mesh.add(moonlight);
       this.stats = new Stats();
       this.stats.domElement.style.position = 'absolute';
       this.stats.domElement.style.left = '0px';
       this.stats.domElement.style.top = '0px';
       document.body.appendChild(this.stats.domElement);
+      directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
+      directionalLight.position.set(500, 2000, 0);
+      this.scene.add(directionalLight);
       this.terrain = new FW.Terrain();
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
       this.g.build(void 0, new THREE.Vector3(100, 10, 10));

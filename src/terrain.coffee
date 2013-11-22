@@ -13,4 +13,34 @@ FW.Terrain= class Terrain
 		@ground = new THREE.Mesh(geometryTerrain, material)
 		@ground.rotation.x = -Math.PI / 2;
 		@ground.position.set 0, -125, 0
-		FW.myWorld.scene.add @groun
+		FW.myWorld.scene.add @ground
+
+
+		normalShader = THREE.NormalMapShader
+		rx = 256
+		ry = 256
+		pars =
+		  minFilter: THREE.LinearMipmapLinearFilter
+		  magFilter: THREE.LinearFilter
+		  format: THREE.RGBFormat
+
+		heightMap = new THREE.WebGLRenderTarget(rx, ry, pars)
+		normalMap = new THREE.WebGLRenderTarget(rx, ry, pars)
+		uniformsNoise =
+		  time:
+		    type: "f"
+		    value: 1.0
+
+		  scale:
+		    type: "v2"
+		    value: new THREE.Vector2(1.5, 1.5)
+
+		  offset:
+		    type: "v2"
+		    value: new THREE.Vector2(0, 0)
+
+		uniformsNormal = THREE.UniformsUtils.clone(normalShader.uniforms)
+		uniformsNormal.height.value = 0.05
+		uniformsNormal.resolution.value.set rx, ry
+		uniformsNormal.heightMap.value = heightMap
+		vertexShader = document.getElementById("terrainVertexShader").textContent

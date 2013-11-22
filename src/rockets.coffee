@@ -23,7 +23,7 @@ FW.Rockets = class Rockets
 
     @rocketMat= new THREE.ShaderMaterial({
     uniforms: uniforms1,
-    vertexShader: document.getElementById('vertexShader').textContent,
+    vertexShader: document.getElementById('rocketVertexShader').textContent,
     fragmentShader: document.getElementById('fragment_shader1').textContent
 
     })

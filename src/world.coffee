@@ -1,4 +1,5 @@
-
+window.SCREEN_WIDTH = window.innerWidth
+window.SCREEN_HEIGHT = window.innerHeight
 FW.World = class World
   
   time = Date.now() 
@@ -6,8 +7,6 @@ FW.World = class World
     @clock = new THREE.Clock()
     @rnd = FW.rnd
 
-
-    
 
   init: ->
     #scene
@@ -21,21 +20,16 @@ FW.World = class World
     @camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 2, 4000 );
     @camera.position.set( -1200, 800, 1200 );
 
-    # #MOON
-    geometry = new THREE.SphereGeometry(0.5, 32, 32)
-    material = new THREE.MeshBasicMaterial({color: 0xffffff})
-    mesh = new THREE.Mesh(geometry, material );
-    # mesh.scale.multiplyScalar(17);
-    mesh.position.set(-50, 20, -100)
-    @scene.add( mesh );
-    moonlight = new THREE.DirectionalLight(0xffeeee, 1.0)
-    mesh.add(moonlight)
-
     @stats = new Stats()
     @stats.domElement.style.position = 'absolute';
     @stats.domElement.style.left = '0px';
     @stats.domElement.style.top = '0px';
     document.body.appendChild(@stats.domElement);
+
+    #LIGHTS
+    directionalLight = new THREE.DirectionalLight( 0xffffff, 1.15 );
+    directionalLight.position.set( 500, 2000, 0 );
+    @scene.add( directionalLight );
 
     #TERRAIN
     @terrain = new FW.Terrain()
