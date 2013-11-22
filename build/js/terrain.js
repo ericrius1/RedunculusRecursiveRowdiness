@@ -3,11 +3,12 @@
 
   FW.Terrain = Terrain = (function() {
     function Terrain() {
-      var applyShader, bluriness, detailTexture, diffuseTexture1, diffuseTexture2, effectBleach, effectBloom, geometryTerrain, hblur, i, loadTextures, material, normalShader, params, pars, plane, renderModel, renderTarget, renderTargetParameters, rx, ry, specularMap, startX, terrain, terrainShader, textureCounter, uniformsNormal, vblur, vertexShader;
+      var geometryTerrain, material;
       this.mlib = {};
       this.lightDir = 1;
       this.animDeltaDir = -1;
       this.updateNoise = true;
+      this.textureCounter = 0;
       geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
       material = new THREE.MeshPhongMaterial({
         color: 0xff00ff,
@@ -17,10 +18,14 @@
       material.opacity = 0.6;
       material.needsUpdate = true;
       this.sceneRenderTarget = new THREE.Scene();
-      textureCounter = 0;
       this.cameraOrtho = new THREE.OrthographicCamera(SCREEN_WIDTH / -2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_HEIGHT / -2, -10000, 10000);
       this.cameraOrtho.position.z = 100;
       this.sceneRenderTarget.add(this.cameraOrtho);
+    }
+
+    Terrain.prototype.init = function() {
+      var bluriness, detailTexture, diffuseTexture1, diffuseTexture2, effectBleach, effectBloom, geometryTerrain, hblur, i, material, normalShader, params, pars, plane, renderModel, renderTarget, renderTargetParameters, rx, ry, specularMap, startX, terrain, terrainShader, uniformsNormal, vblur, vertexShader,
+        _this = this;
       normalShader = THREE.NormalMapShader;
       rx = 256;
       ry = 256;
@@ -52,14 +57,14 @@
       vertexShader = document.getElementById("terrainVertexShader").textContent;
       specularMap = new THREE.WebGLRenderTarget(2048, 2048, pars);
       diffuseTexture1 = THREE.ImageUtils.loadTexture("lib/textures/grasslight-big.jpg", null, function() {
-        loadTextures();
-        return applyShader(THREE.LuminosityShader, diffuseTexture1, specularMap);
+        _this.loadTextures();
+        return _this.applyShader(THREE.LuminosityShader, diffuseTexture1, specularMap);
       });
       diffuseTexture2 = THREE.ImageUtils.loadTexture("lib/textures/backgrounddetailed6.jpg", null, function() {
-        return loadTextures();
+        return _this.loadTextures();
       });
       detailTexture = THREE.ImageUtils.loadTexture("lib/textures/grasslight-big-nm.jpg", null, function() {
-        return loadTextures();
+        return _this.loadTextures();
       });
       diffuseTexture1.wrapS = diffuseTexture1.wrapT = THREE.RepeatWrapping;
       diffuseTexture2.wrapS = diffuseTexture2.wrapT = THREE.RepeatWrapping;
@@ -111,13 +116,6 @@
       terrain.rotation.x = -Math.PI / 2;
       terrain.visible = false;
       FW.myWorld.scene.add(terrain);
-      FW.myWorld.scene.add(new THREE.AmbientLight(0x111111));
-      this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
-      this.directionalLight.position.set(500, 2000, 0);
-      FW.myWorld.scene.add(this.directionalLight);
-      this.pointLight = new THREE.PointLight(0xff4400, 1.5);
-      this.pointLight.position.set(0, 0, 0);
-      FW.myWorld.scene.add(this.pointLight);
       FW.myWorld.renderer.autoClear = false;
       renderTargetParameters = {
         minFilter: THREE.LinearFilter,
@@ -144,29 +142,31 @@
       this.composer.addPass(hblur);
       this.composer.addPass(vblur);
       startX = -3000;
-      FW.myWorld.renderer.initWebGLObjects(FW.myWorld.scene);
-      applyShader = function(shader, texture, target) {
-        var meshTmp, sceneTmp, shaderMaterial;
-        shaderMaterial = new THREE.ShaderMaterial({
-          fragmentShader: shader.fragmentShader,
-          vertexShader: shader.vertexShader,
-          uniforms: THREE.UniformsUtils.clone(shader.uniforms)
-        });
-        shaderMaterial.uniforms["tDiffuse"].value = texture;
-        sceneTmp = new THREE.Scene();
-        meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT), shaderMaterial);
-        meshTmp.position.z = -500;
-        sceneTmp.add(meshTmp);
-        console.log(this.cameraOrtho);
-        return FW.myWorld.renderer.render(sceneTmp, this.cameraOrtho, target, true);
-      };
-      loadTextures = function() {
-        textureCounter += 1;
-        if (textureCounter === 3) {
-          return FW.myWorld.terrainVisible = true;
-        }
-      };
-    }
+      return FW.myWorld.renderer.initWebGLObjects(FW.myWorld.scene);
+    };
+
+    Terrain.prototype.applyShader = function(shader, texture, target) {
+      var meshTmp, sceneTmp, shaderMaterial;
+      shaderMaterial = new THREE.ShaderMaterial({
+        fragmentShader: shader.fragmentShader,
+        vertexShader: shader.vertexShader,
+        uniforms: THREE.UniformsUtils.clone(shader.uniforms)
+      });
+      shaderMaterial.uniforms["tDiffuse"].value = texture;
+      sceneTmp = new THREE.Scene();
+      meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT), shaderMaterial);
+      meshTmp.position.z = -500;
+      sceneTmp.add(meshTmp);
+      console.log(this.cameraOrtho);
+      return FW.myWorld.renderer.render(sceneTmp, this.cameraOrtho, target, true);
+    };
+
+    Terrain.prototype.loadTextures = function() {
+      this.textureCounter += 1;
+      if (this.textureCounter === 3) {
+        return FW.myWorld.terrainVisible = true;
+      }
+    };
 
     Terrain.prototype.update = function() {
       var animDelta, delta, fHigh, fLow, lightVal, time, valNorm;
@@ -178,8 +178,8 @@
       valNorm = (lightVal - fLow) / (fHigh - fLow);
       FW.myWorld.scene.fog.color.setHSL(0.1, 0.5, lightVal);
       FW.myWorld.renderer.setClearColor(FW.myWorld.scene.fog.color, 1);
-      this.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15);
-      this.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5);
+      FW.myWorld.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15);
+      FW.myWorld.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5);
       this.uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5);
       if (this.updateNoise) {
         animDelta = THREE.Math.clamp(animDelta + 0.00075 * this.animDeltaDir, 0, 0.05);
@@ -191,7 +191,7 @@
         this.quadTarget.material = this.mlib["normal"];
         FW.myWorld.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.normalMap, true);
       }
-      return this.composer.render(0.1);
+      return FW.myWorld.renderer.render(FW.myWorld.scene, FW.myWorld.camera);
     };
 
     return Terrain;

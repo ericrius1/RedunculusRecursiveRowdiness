@@ -37,7 +37,15 @@
       this.renderer.gammaInput = true;
       this.renderer.gammaOutput = true;
       document.body.appendChild(this.renderer.domElement);
+      this.scene.add(new THREE.AmbientLight(0x111111));
+      this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
+      this.directionalLight.position.set(500, 2000, 0);
+      this.scene.add(this.directionalLight);
+      this.pointLight = new THREE.PointLight(0xff4400, 1.5);
+      this.pointLight.position.set(0, 0, 0);
+      this.scene.add(this.pointLight);
       this.terrain = new FW.Terrain();
+      this.terrain.init();
       this.controls = new THREE.OrbitControls(this.camera);
       return window.addEventListener("resize", onWindowResize, false);
     };
@@ -58,7 +66,6 @@
       uniforms1.time.value += this.delta * 5;
       this.stats.update();
       this.controls.update();
-      this.renderer.render(this.scene, this.camera);
       return time = Date.now();
     };
 

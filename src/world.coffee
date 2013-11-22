@@ -32,6 +32,7 @@ FW.World = class World
     @g = new grow3.System(@scene, @camera, RULES.bush)
     @g.build(undefined, new THREE.Vector3(100, 10, 10))
     
+
     #RENDERER
     @renderer = new THREE.WebGLRenderer()
     @renderer.setClearColor(@scene.fog.color, 1 );
@@ -40,9 +41,19 @@ FW.World = class World
     @renderer.gammaOutput = true;
     document.body.appendChild @renderer.domElement
 
+    #LIGHTS
+
+    @scene.add new THREE.AmbientLight(0x111111)
+    @directionalLight = new THREE.DirectionalLight(0xffffff, 1.15)
+    @directionalLight.position.set 500, 2000, 0
+    @scene.add @directionalLight
+    @pointLight = new THREE.PointLight(0xff4400, 1.5)
+    @pointLight.position.set 0, 0, 0
+    @scene.add @pointLight
     #TERRAIN
     @terrain = new FW.Terrain()
-    
+    @terrain.init()
+
     #CONTROLS
     @controls = new THREE.OrbitControls( @camera );
 
@@ -69,5 +80,5 @@ FW.World = class World
     uniforms1.time.value += @delta * 5;
     @stats.update()
     @controls.update()
-    @renderer.render @scene, @camera
+    # @renderer.render @scene, @camera
     time = Date.now()

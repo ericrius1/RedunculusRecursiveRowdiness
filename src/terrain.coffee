@@ -4,20 +4,20 @@ FW.Terrain= class Terrain
 		@lightDir = 1
 		@animDeltaDir= -1
 		@updateNoise = true
+		@textureCounter = 0
 
 		geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256)
 		material = new THREE.MeshPhongMaterial( { color: 0xff00ff, transparent: true, blending: THREE.AdditiveBlending } ) 
 		material.opacity = 0.6
 		material.needsUpdate = true
 		@sceneRenderTarget = new THREE.Scene();
-		textureCounter = 0
 
 		@cameraOrtho = new THREE.OrthographicCamera( SCREEN_WIDTH / - 2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_HEIGHT / - 2, -10000, 10000 );
 		@cameraOrtho.position.z = 100;
 		@sceneRenderTarget.add( @cameraOrtho );
 
 
-	
+	init: ->
 		normalShader = THREE.NormalMapShader
 		rx = 256
 		ry = 256
@@ -49,15 +49,15 @@ FW.Terrain= class Terrain
 
 		#TEXTURES
 		specularMap = new THREE.WebGLRenderTarget(2048, 2048, pars)
-		diffuseTexture1 = THREE.ImageUtils.loadTexture("lib/textures/grasslight-big.jpg", null, ->
-		  loadTextures()
-		  applyShader THREE.LuminosityShader, diffuseTexture1, specularMap
+		diffuseTexture1 = THREE.ImageUtils.loadTexture("lib/textures/grasslight-big.jpg", null, =>
+		  @loadTextures()
+		  @applyShader THREE.LuminosityShader, diffuseTexture1, specularMap
 		)
-		diffuseTexture2 = THREE.ImageUtils.loadTexture("lib/textures/backgrounddetailed6.jpg", null, ->
-			loadTextures()
+		diffuseTexture2 = THREE.ImageUtils.loadTexture("lib/textures/backgrounddetailed6.jpg", null, =>
+			@loadTextures()
 		)
-		detailTexture = THREE.ImageUtils.loadTexture("lib/textures/grasslight-big-nm.jpg", null, ->
-			loadTextures()
+		detailTexture = THREE.ImageUtils.loadTexture("lib/textures/grasslight-big-nm.jpg", null, =>
+			@loadTextures()
 		)
 		diffuseTexture1.wrapS = diffuseTexture1.wrapT = THREE.RepeatWrapping
 		diffuseTexture2.wrapS = diffuseTexture2.wrapT = THREE.RepeatWrapping
@@ -113,15 +113,7 @@ FW.Terrain= class Terrain
 		terrain.visible = false
 		FW.myWorld.scene.add terrain
 
-		#LIGHTS
-
-		FW.myWorld.scene.add new THREE.AmbientLight(0x111111)
-		@directionalLight = new THREE.DirectionalLight(0xffffff, 1.15)
-		@directionalLight.position.set 500, 2000, 0
-		FW.myWorld.scene.add @directionalLight
-		@pointLight = new THREE.PointLight(0xff4400, 1.5)
-		@pointLight.position.set 0, 0, 0
-		FW.myWorld.scene.add @pointLight
+	
 
 		# COMPOSER
 		FW.myWorld.renderer.autoClear = false
@@ -156,24 +148,24 @@ FW.Terrain= class Terrain
 		# PRE-INIT
 		FW.myWorld.renderer.initWebGLObjects FW.myWorld.scene
 
-		applyShader = (shader, texture, target) ->
-			shaderMaterial = new THREE.ShaderMaterial(
-				fragmentShader: shader.fragmentShader
-				vertexShader: shader.vertexShader
-				uniforms: THREE.UniformsUtils.clone(shader.uniforms)
-			)
-			shaderMaterial.uniforms["tDiffuse"].value = texture
-			sceneTmp = new THREE.Scene()
-			meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT), shaderMaterial)
-			meshTmp.position.z = -500
-			sceneTmp.add meshTmp
-			console.log @cameraOrtho
-			FW.myWorld.renderer.render sceneTmp, @cameraOrtho, target, true
+	applyShader : (shader, texture, target) ->
+		shaderMaterial = new THREE.ShaderMaterial(
+			fragmentShader: shader.fragmentShader
+			vertexShader: shader.vertexShader
+			uniforms: THREE.UniformsUtils.clone(shader.uniforms)
+		)
+		shaderMaterial.uniforms["tDiffuse"].value = texture
+		sceneTmp = new THREE.Scene()
+		meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT), shaderMaterial)
+		meshTmp.position.z = -500
+		sceneTmp.add meshTmp
+		console.log @cameraOrtho
+		FW.myWorld.renderer.render sceneTmp, @cameraOrtho, target, true
 
-		loadTextures = ->
-		  textureCounter += 1
-		  if textureCounter is 3
-		    FW.myWorld.terrainVisible = true
+	loadTextures : ->
+	  @textureCounter += 1
+	  if @textureCounter is 3
+	    FW.myWorld.terrainVisible = true
 
 	update: ->
 		delta = FW.myWorld.delta
@@ -184,10 +176,11 @@ FW.Terrain= class Terrain
 		valNorm = (lightVal - fLow) / (fHigh - fLow)
 		FW.myWorld.scene.fog.color.setHSL 0.1, 0.5, lightVal
 		FW.myWorld.renderer.setClearColor FW.myWorld.scene.fog.color, 1
-		@directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15)
-		@pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5)
+		FW.myWorld.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15)
+		FW.myWorld.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5)
 		@uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5)
 		if @updateNoise
+
 			animDelta = THREE.Math.clamp(animDelta + 0.00075 * @animDeltaDir, 0, 0.05)
 			@uniformsNoise["time"].value += delta * animDelta
 			@uniformsNoise["offset"].value.x += delta * 0.05
@@ -199,5 +192,5 @@ FW.Terrain= class Terrain
 
 		#@updateNoise = false;
 
-		#renderer.render( FW.myWorld.scene, camera );
-		@composer.render 0.1
+		FW.myWorld.renderer.render( FW.myWorld.scene, FW.myWorld.camera );
+		# @composer.render 0.1
