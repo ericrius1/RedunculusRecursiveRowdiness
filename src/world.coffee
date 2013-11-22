@@ -49,8 +49,20 @@ FW.World = class World
     document.body.appendChild @renderer.domElement
 
     #CONTROLS
-    @controls = new THREE.OrbitControls(@camera, @renderer.domElement)
-    @scene.add @controls
+    @controls = new THREE.TrackballControls( @camera );
+    @controls.target.set( 0, 0, 0 );
+
+    @controls.rotateSpeed = 1.0;
+    @controls.zoomSpeed = 1.2;
+    @controls.panSpeed = 0.8;
+
+    @controls.noZoom = false;
+    @controls.noPan = false;
+
+    @controls.staticMoving = false;
+    @controls.dynamicDampingFactor = 0.15;
+
+    @controls.keys = [ 65, 83, 68, 32 ];
 
     #FOG
     # @scene.fog = new THREE.Fog( 0xff00ff );

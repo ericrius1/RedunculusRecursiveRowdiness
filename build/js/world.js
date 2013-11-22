@@ -43,8 +43,16 @@
       this.renderer.setClearColor(0x000000, 1);
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(this.renderer.domElement);
-      this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-      this.scene.add(this.controls);
+      this.controls = new THREE.TrackballControls(this.camera);
+      this.controls.target.set(0, 0, 0);
+      this.controls.rotateSpeed = 1.0;
+      this.controls.zoomSpeed = 1.2;
+      this.controls.panSpeed = 0.8;
+      this.controls.noZoom = false;
+      this.controls.noPan = false;
+      this.controls.staticMoving = false;
+      this.controls.dynamicDampingFactor = 0.15;
+      this.controls.keys = [65, 83, 68, 32];
       return window.addEventListener("resize", onWindowResize, false);
     };
 
