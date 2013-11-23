@@ -6,6 +6,7 @@ FW.Terrain= class Terrain
     @updateNoise = true
     @textureCounter = 0
     @lightVal = 0
+    @animDelta = 0
 
 
 

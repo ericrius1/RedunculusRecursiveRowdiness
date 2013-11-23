@@ -9,6 +9,7 @@
       this.updateNoise = true;
       this.textureCounter = 0;
       this.lightVal = 0;
+      this.animDelta = 0;
     }
 
     Terrain.prototype.init = function() {
