@@ -8,6 +8,7 @@
       this.animDeltaDir = -1;
       this.updateNoise = true;
       this.textureCounter = 0;
+      this.lightVal = 0;
     }
 
     Terrain.prototype.init = function() {
@@ -109,13 +110,7 @@
       terrain.rotation.x = -Math.PI / 2;
       terrain.visible = false;
       FW.myWorld.scene.add(terrain);
-      this.renderer = new THREE.WebGLRenderer();
-      this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-      this.renderer.setClearColor(FW.myWorld.scene.fog.color, 1);
-      document.body.appendChild(this.renderer.domElement);
-      this.renderer.gammaInput = true;
-      this.renderer.gammaOutput = true;
-      this.renderer.autoClear = false;
+      FW.myWorld.renderer.autoClear = false;
       renderTargetParameters = {
         minFilter: THREE.LinearFilter,
         magFilter: THREE.LinearFilter,
@@ -132,16 +127,16 @@
       vblur.uniforms["v"].value = bluriness / SCREEN_HEIGHT;
       hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5;
       effectBleach.uniforms["opacity"].value = 0.65;
-      this.composer = new THREE.EffectComposer(this.renderer, renderTarget);
+      this.composer = new THREE.EffectComposer(FW.myWorld.renderer, renderTarget);
       renderModel = new THREE.RenderPass(FW.myWorld.scene, FW.myWorld.camera);
       vblur.renderToScreen = true;
-      this.composer = new THREE.EffectComposer(this.renderer, renderTarget);
+      this.composer = new THREE.EffectComposer(FW.myWorld.renderer, renderTarget);
       this.composer.addPass(renderModel);
       this.composer.addPass(effectBloom);
       this.composer.addPass(hblur);
       this.composer.addPass(vblur);
       startX = -3000;
-      return this.renderer.initWebGLObjects(FW.myWorld.scene);
+      return FW.myWorld.renderer.initWebGLObjects(FW.myWorld.scene);
     };
 
     Terrain.prototype.applyShader = function(shader, texture, target) {
@@ -156,7 +151,7 @@
       meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT), shaderMaterial);
       meshTmp.position.z = -500;
       sceneTmp.add(meshTmp);
-      return this.renderer.render(sceneTmp, this.cameraOrtho, target, true);
+      return FW.myWorld.renderer.render(sceneTmp, this.cameraOrtho, target, true);
     };
 
     Terrain.prototype.loadTextures = function() {
@@ -167,15 +162,14 @@
     };
 
     Terrain.prototype.update = function() {
-      var animDelta, delta, fHigh, fLow, lightVal, time, valNorm;
+      var animDelta, delta, fHigh, fLow, time, valNorm;
       delta = FW.myWorld.delta;
       time = Date.now() * 0.001;
       fLow = 0.1;
       fHigh = 0.8;
-      lightVal = THREE.Math.clamp(lightVal + 0.5 * delta * this.lightDir, fLow, fHigh);
-      valNorm = (lightVal - fLow) / (fHigh - fLow);
-      FW.myWorld.scene.fog.color.setHSL(0.1, 0.5, lightVal);
-      this.renderer.setClearColor(FW.myWorld.scene.fog.color, 1);
+      this.lightVal = THREE.Math.clamp(this.lightVal + 0.5 * delta * this.lightDir, fLow, fHigh);
+      valNorm = (this.lightVal - fLow) / (fHigh - fLow);
+      FW.myWorld.scene.fog.color.setHSL(0.1, 0.5, this.lightVal);
       FW.myWorld.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15);
       FW.myWorld.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5);
       this.uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5);
@@ -185,10 +179,9 @@
         this.uniformsNoise["offset"].value.x += delta * 0.05;
         this.uniformsTerrain["uOffset"].value.x = 4 * this.uniformsNoise["offset"].value.x;
         this.quadTarget.material = this.mlib["heightmap"];
-        this.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.heightMap, true);
+        FW.myWorld.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.heightMap, true);
         this.quadTarget.material = this.mlib["normal"];
-        this.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.normalMap, true);
-        debugger;
+        FW.myWorld.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.normalMap, true);
       }
       return this.composer.render(0.1);
     };

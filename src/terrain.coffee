@@ -5,6 +5,7 @@ FW.Terrain= class Terrain
     @animDeltaDir= -1
     @updateNoise = true
     @textureCounter = 0
+    @lightVal = 0
 
 
 
@@ -15,6 +16,8 @@ FW.Terrain= class Terrain
     @cameraOrtho = new THREE.OrthographicCamera( SCREEN_WIDTH / - 2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_HEIGHT / - 2, -10000, 10000 );
     @cameraOrtho.position.z = 100;
     @sceneRenderTarget.add( @cameraOrtho );
+    
+
     normalShader = THREE.NormalMapShader
     rx = 256
     ry = 256
@@ -112,20 +115,9 @@ FW.Terrain= class Terrain
     terrain.visible = false
     FW.myWorld.scene.add terrain
 
-    # RENDERER
-
-    @renderer = new THREE.WebGLRenderer();
-    @renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-    @renderer.setClearColor( FW.myWorld.scene.fog.color, 1 );
-
-    document.body.appendChild( @renderer.domElement );
-    @renderer.gammaInput = true;
-    @renderer.gammaOutput = true;
-
-  
 
     # COMPOSER
-    @renderer.autoClear = false
+    FW.myWorld.renderer.autoClear = false
     renderTargetParameters =
       minFilter: THREE.LinearFilter
       magFilter: THREE.LinearFilter
@@ -142,10 +134,10 @@ FW.Terrain= class Terrain
     vblur.uniforms["v"].value = bluriness / SCREEN_HEIGHT
     hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5
     effectBleach.uniforms["opacity"].value = 0.65
-    @composer = new THREE.EffectComposer(@renderer, renderTarget)
+    @composer = new THREE.EffectComposer(FW.myWorld.renderer, renderTarget)
     renderModel = new THREE.RenderPass(FW.myWorld.scene, FW.myWorld.camera)
     vblur.renderToScreen = true
-    @composer = new THREE.EffectComposer(@renderer, renderTarget)
+    @composer = new THREE.EffectComposer(FW.myWorld.renderer, renderTarget)
     @composer.addPass renderModel
     @composer.addPass effectBloom
 
@@ -155,7 +147,7 @@ FW.Terrain= class Terrain
     startX = -3000
 
     # PRE-INIT
-    @renderer.initWebGLObjects FW.myWorld.scene
+    FW.myWorld.renderer.initWebGLObjects FW.myWorld.scene
 
   applyShader : (shader, texture, target) ->
     shaderMaterial = new THREE.ShaderMaterial(
@@ -168,7 +160,7 @@ FW.Terrain= class Terrain
     meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT), shaderMaterial)
     meshTmp.position.z = -500
     sceneTmp.add meshTmp
-    @renderer.render sceneTmp, @cameraOrtho, target, true
+    FW.myWorld.renderer.render sceneTmp, @cameraOrtho, target, true
 
   loadTextures : ->
     @textureCounter += 1
@@ -180,10 +172,10 @@ FW.Terrain= class Terrain
     time = Date.now() * 0.001
     fLow = 0.1
     fHigh = 0.8
-    lightVal = THREE.Math.clamp(lightVal + 0.5 * delta * @lightDir, fLow, fHigh)
-    valNorm = (lightVal - fLow) / (fHigh - fLow)
-    FW.myWorld.scene.fog.color.setHSL 0.1, 0.5, lightVal
-    @renderer.setClearColor FW.myWorld.scene.fog.color, 1
+    @lightVal = THREE.Math.clamp(@lightVal + 0.5 * delta * @lightDir, fLow, fHigh)
+    valNorm = (@lightVal - fLow) / (fHigh - fLow)
+    FW.myWorld.scene.fog.color.setHSL 0.1, 0.5, @lightVal
+    # FW.myWorld.renderer.setClearColor FW.myWorld.scene.fog.color, 1
     FW.myWorld.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15)
     FW.myWorld.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5)
     @uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5)
@@ -193,12 +185,11 @@ FW.Terrain= class Terrain
       @uniformsNoise["offset"].value.x += delta * 0.05
       @uniformsTerrain["uOffset"].value.x = 4 * @uniformsNoise["offset"].value.x
       @quadTarget.material = @mlib["heightmap"]
-      @renderer.render @sceneRenderTarget, @cameraOrtho, @heightMap, true
+      FW.myWorld.renderer.render @sceneRenderTarget, @cameraOrtho, @heightMap, true
       @quadTarget.material = @mlib["normal"]
-      @renderer.render @sceneRenderTarget, @cameraOrtho, @normalMap, true
-      debugger
+      FW.myWorld.renderer.render @sceneRenderTarget, @cameraOrtho, @normalMap, true
 
     #@updateNoise = false;
 
-    # @renderer.render( FW.myWorld.scene, FW.myWorld.camera );
+    # FW.myWorld.renderer.render( FW.myWorld.scene, FW.myWorld.camera );
     @composer.render 0.1

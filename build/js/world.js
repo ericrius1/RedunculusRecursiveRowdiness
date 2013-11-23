@@ -42,6 +42,12 @@
       this.pointLight.position.set(0, 0, 0);
       this.scene.add(this.pointLight);
       this.terrain = new FW.Terrain();
+      this.renderer = new THREE.WebGLRenderer();
+      this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+      this.renderer.setClearColor(FW.myWorld.scene.fog.color, 1);
+      document.body.appendChild(this.renderer.domElement);
+      this.renderer.gammaInput = true;
+      this.renderer.gammaOutput = true;
       this.terrain.init();
       this.controls = new THREE.OrbitControls(this.camera);
       this.controls.target.set(0, 0, 0);

@@ -45,6 +45,16 @@ FW.World = class World
 
     #TERRAIN
     @terrain = new FW.Terrain()
+
+    # RENDERER
+
+    @renderer = new THREE.WebGLRenderer();
+    @renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+    @renderer.setClearColor( FW.myWorld.scene.fog.color, 1 );
+    document.body.appendChild( @renderer.domElement );
+    @renderer.gammaInput = true;
+    @renderer.gammaOutput = true;
+
     @terrain.init()
 
     #CONTROLS
