@@ -1,300 +1,270 @@
 (function() {
-  var MARGIN, SCREEN_HEIGHT, SCREEN_WIDTH, Terrain, animDelta, animDeltaDir, animate, animateTerrain, applyShader, camera, cameraOrtho, clock, container, directionalLight, heightMap, init, lightDir, lightVal, loadTextures, mlib, normalMap, onKeyDown, onWindowResize, pointLight, quadTarget, render, scene, sceneRenderTarget, stats, terrain, textMesh1, textureCounter, uniformsNoise, uniformsNormal, updateNoise;
+  var Terrain,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   window.Terrain = Terrain = (function() {
-    function Terrain() {}
+    function Terrain() {
+      this.animate = __bind(this.animate, this);
+      var bluriness, detailTexture, diffuseTexture1, diffuseTexture2, effectBleach, effectBloom, hblur, i, material, normalShader, params, pars, plane, renderModel, renderTargetParameters, rx, ry, specularMap, vblur,
+        _this = this;
+      this.camera = void 0;
+      this.scene = void 0;
+      this.cameraOrtho = void 0;
+      this.sceneRenderTarget = void 0;
+      this.uniformsNoise = void 0;
+      this.uniformsNormal = void 0;
+      this.heightMap = void 0;
+      this.normalMap = void 0;
+      this.quadTarget = void 0;
+      this.directionalLight = void 0;
+      this.pointLight = void 0;
+      this.terrain = void 0;
+      this.textureCounter = 0;
+      this.animDelta = 0;
+      this.animDeltaDir = -1;
+      this.lightVal = 0;
+      this.lightDir = 1;
+      this.clock = new THREE.Clock();
+      this.updateNoise = true;
+      this.animateTerrain = false;
+      this.textMesh1 = void 0;
+      this.mlib = {};
+      this.MARGIN = 100;
+      this.SCREEN_WIDTH = window.innerWidth;
+      this.SCREEN_HEIGHT = window.innerHeight - 2 * this.MARGIN;
+      this.renderer = void 0;
+      this.sceneRenderTarget = new THREE.Scene();
+      this.cameraOrtho = new THREE.OrthographicCamera(this.SCREEN_WIDTH / -2, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT / 2, this.SCREEN_HEIGHT / -2, -10000, 10000);
+      this.cameraOrtho.position.z = 100;
+      this.sceneRenderTarget.add(this.cameraOrtho);
+      this.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, 4000);
+      this.camera.position.set(-1200, 800, 1200);
+      this.controls = new THREE.TrackballControls(this.camera);
+      this.controls.target.set(0, 0, 0);
+      this.controls.rotateSpeed = 1.0;
+      this.controls.zoomSpeed = 1.2;
+      this.controls.panSpeed = 0.8;
+      this.controls.noZoom = false;
+      this.controls.noPan = false;
+      this.controls.staticMoving = false;
+      this.controls.dynamicDampingFactor = 0.15;
+      this.controls.keys = [65, 83, 68];
+      this.scene = new THREE.Scene();
+      this.scene.fog = new THREE.Fog(0x050505, 2000, 4000);
+      this.scene.add(new THREE.AmbientLight(0x111111));
+      this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
+      this.directionalLight.position.set(500, 2000, 0);
+      this.scene.add(this.directionalLight);
+      this.pointLight = new THREE.PointLight(0xff4400, 1.5);
+      this.pointLight.position.set(0, 0, 0);
+      this.scene.add(this.pointLight);
+      normalShader = THREE.NormalMapShader;
+      rx = 256;
+      ry = 256;
+      pars = {
+        minFilter: THREE.LinearMipmapLinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBFormat
+      };
+      this.heightMap = new THREE.WebGLRenderTarget(rx, ry, pars);
+      this.normalMap = new THREE.WebGLRenderTarget(rx, ry, pars);
+      this.uniformsNoise = {
+        time: {
+          type: "f",
+          value: 1.0
+        },
+        scale: {
+          type: "v2",
+          value: new THREE.Vector2(1.5, 1.5)
+        },
+        offset: {
+          type: "v2",
+          value: new THREE.Vector2(0, 0)
+        }
+      };
+      this.uniformsNormal = THREE.UniformsUtils.clone(normalShader.uniforms);
+      this.uniformsNormal.height.value = 0.05;
+      this.uniformsNormal.resolution.value.set(rx, ry);
+      this.uniformsNormal.heightMap.value = this.heightMap;
+      this.vertexShader = document.getElementById("vertexShader").textContent;
+      specularMap = new THREE.WebGLRenderTarget(2048, 2048, pars);
+      diffuseTexture1 = THREE.ImageUtils.loadTexture("lib/textures/grasslight-big.jpg", null, function() {
+        _this.loadTextures();
+        return _this.applyShader(THREE.LuminosityShader, diffuseTexture1, specularMap);
+      });
+      diffuseTexture2 = THREE.ImageUtils.loadTexture("lib/textures/backgrounddetailed6.jpg", null, function() {
+        return _this.loadTextures();
+      });
+      detailTexture = THREE.ImageUtils.loadTexture("lib/textures/grasslight-big-nm.jpg", null, function() {
+        return _this.loadTextures();
+      });
+      diffuseTexture1.wrapS = diffuseTexture1.wrapT = THREE.RepeatWrapping;
+      diffuseTexture2.wrapS = diffuseTexture2.wrapT = THREE.RepeatWrapping;
+      detailTexture.wrapS = detailTexture.wrapT = THREE.RepeatWrapping;
+      specularMap.wrapS = specularMap.wrapT = THREE.RepeatWrapping;
+      this.terrainShader = THREE.ShaderTerrain["terrain"];
+      this.uniformsTerrain = THREE.UniformsUtils.clone(this.terrainShader.uniforms);
+      this.uniformsTerrain["tNormal"].value = this.normalMap;
+      this.uniformsTerrain["uNormalScale"].value = 3.5;
+      this.uniformsTerrain["tDisplacement"].value = this.heightMap;
+      this.uniformsTerrain["tDiffuse1"].value = diffuseTexture1;
+      this.uniformsTerrain["tDiffuse2"].value = diffuseTexture2;
+      this.uniformsTerrain["tSpecular"].value = specularMap;
+      this.uniformsTerrain["tDetail"].value = detailTexture;
+      this.uniformsTerrain["enableDiffuse1"].value = true;
+      this.uniformsTerrain["enableDiffuse2"].value = true;
+      this.uniformsTerrain["enableSpecular"].value = true;
+      this.uniformsTerrain["uDiffuseColor"].value.setHex(0xffffff);
+      this.uniformsTerrain["uSpecularColor"].value.setHex(0xffffff);
+      this.uniformsTerrain["uAmbientColor"].value.setHex(0x111111);
+      this.uniformsTerrain["uShininess"].value = 30;
+      this.uniformsTerrain["uDisplacementScale"].value = 375;
+      this.uniformsTerrain["uRepeatOverlay"].value.set(6, 6);
+      params = [["heightmap", document.getElementById("fragmentShaderNoise").textContent, this.vertexShader, this.uniformsNoise, false], ["normal", normalShader.fragmentShader, normalShader.vertexShader, this.uniformsNormal, false], ["@terrain", this.terrainShader.fragmentShader, this.terrainShader.vertexShader, this.uniformsTerrain, true]];
+      i = 0;
+      while (i < params.length) {
+        material = new THREE.ShaderMaterial({
+          uniforms: params[i][3],
+          vertexShader: params[i][2],
+          fragmentShader: params[i][1],
+          lights: params[i][4],
+          fog: true
+        });
+        this.mlib[params[i][0]] = material;
+        i++;
+      }
+      plane = new THREE.PlaneGeometry(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
+      this.quadTarget = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({
+        color: 0x000000
+      }));
+      this.quadTarget.position.z = -500;
+      this.sceneRenderTarget.add(this.quadTarget);
+      this.geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
+      this.geometryTerrain.computeFaceNormals();
+      this.geometryTerrain.computeVertexNormals();
+      this.geometryTerrain.computeTangents();
+      this.terrain = new THREE.Mesh(this.geometryTerrain, this.mlib["@terrain"]);
+      this.terrain.position.set(0, -125, 0);
+      this.terrain.rotation.x = -Math.PI / 2;
+      this.terrain.visible = false;
+      this.scene.add(this.terrain);
+      this.renderer = new THREE.WebGLRenderer();
+      this.renderer.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
+      this.renderer.setClearColor(this.scene.fog.color, 1);
+      this.renderer.domElement.style.position = "absolute";
+      this.renderer.domElement.style.top = this.MARGIN + "px";
+      this.renderer.domElement.style.left = "0px";
+      document.body.appendChild(this.renderer.domElement);
+      this.renderer.gammaInput = true;
+      this.renderer.gammaOutput = true;
+      this.onWindowResize();
+      window.addEventListener("resize", this.onWindowResize, false);
+      document.addEventListener("keydown", this.onKeyDown, false);
+      this.renderer.autoClear = false;
+      renderTargetParameters = {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBFormat,
+        stencilBuffer: false
+      };
+      this.renderTarget = new THREE.WebGLRenderTarget(this.SCREEN_WIDTH, this.SCREEN_HEIGHT, renderTargetParameters);
+      effectBloom = new THREE.BloomPass(0.6);
+      effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader);
+      hblur = new THREE.ShaderPass(THREE.HorizontalTiltShiftShader);
+      vblur = new THREE.ShaderPass(THREE.VerticalTiltShiftShader);
+      bluriness = 6;
+      hblur.uniforms["h"].value = bluriness / this.SCREEN_WIDTH;
+      vblur.uniforms["v"].value = bluriness / this.SCREEN_HEIGHT;
+      hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5;
+      effectBleach.uniforms["opacity"].value = 0.65;
+      this.composer = new THREE.EffectComposer(this.renderer, this.renderTarget);
+      renderModel = new THREE.RenderPass(this.scene, this.camera);
+      vblur.renderToScreen = true;
+      this.composer = new THREE.EffectComposer(this.renderer, this.renderTarget);
+      this.composer.addPass(renderModel);
+      this.composer.addPass(effectBloom);
+      this.composer.addPass(hblur);
+      this.composer.addPass(vblur);
+      this.renderer.initWebGLObjects(this.scene);
+    }
+
+    Terrain.prototype.onWindowResize = function(event) {
+      this.SCREEN_WIDTH = window.innerWidth;
+      this.SCREEN_HEIGHT = window.innerHeight - 2 * this.MARGIN;
+      this.renderer.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
+      this.camera.aspect = this.SCREEN_WIDTH / this.SCREEN_HEIGHT;
+      return this.camera.updateProjectionMatrix();
+    };
+
+    Terrain.prototype.onKeyDown = function(event) {
+      switch (event.keyCode) {
+        case 78:
+          return this.lightDir *= -1;
+        case 77:
+          return this.animDeltaDir *= -1;
+        case 66:
+          return soundDir *= -1;
+      }
+    };
+
+    Terrain.prototype.applyShader = function(shader, texture, target) {
+      var meshTmp, sceneTmp, shaderMaterial;
+      shaderMaterial = new THREE.ShaderMaterial({
+        fragmentShader: shader.fragmentShader,
+        vertexShader: shader.vertexShader,
+        uniforms: THREE.UniformsUtils.clone(shader.uniforms)
+      });
+      shaderMaterial.uniforms["tDiffuse"].value = texture;
+      sceneTmp = new THREE.Scene();
+      meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(this.SCREEN_WIDTH, this.SCREEN_HEIGHT), shaderMaterial);
+      meshTmp.position.z = -500;
+      sceneTmp.add(meshTmp);
+      return this.renderer.render(sceneTmp, this.cameraOrtho, target, true);
+    };
+
+    Terrain.prototype.loadTextures = function() {
+      this.textureCounter += 1;
+      if (this.textureCounter === 3) {
+        return this.terrain.visible = true;
+      }
+    };
+
+    Terrain.prototype.animate = function() {
+      requestAnimationFrame(this.animate);
+      return this.render();
+    };
+
+    Terrain.prototype.render = function() {
+      var delta, fHigh, fLow, time, valNorm;
+      delta = this.clock.getDelta();
+      if (this.terrain.visible) {
+        this.controls.update();
+        time = Date.now() * 0.001;
+        fLow = 0.1;
+        fHigh = 0.8;
+        this.lightVal = THREE.Math.clamp(this.lightVal + 0.5 * delta * this.lightDir, fLow, fHigh);
+        valNorm = (this.lightVal - fLow) / (fHigh - fLow);
+        this.scene.fog.color.setHSL(0.1, 0.5, this.lightVal);
+        this.renderer.setClearColor(this.scene.fog.color, 1);
+        this.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15);
+        this.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5);
+        this.uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5);
+        if (this.updateNoise) {
+          this.animDelta = THREE.Math.clamp(this.animDelta + 0.00075 * this.animDeltaDir, 0, 0.05);
+          this.uniformsNoise["time"].value += delta * this.animDelta;
+          this.uniformsNoise["offset"].value.x += delta * 0.05;
+          this.uniformsTerrain["uOffset"].value.x = 4 * this.uniformsNoise["offset"].value.x;
+          this.quadTarget.material = this.mlib["heightmap"];
+          this.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.heightMap, true);
+          this.quadTarget.material = this.mlib["normal"];
+          this.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.normalMap, true);
+        }
+        return this.composer.render(0.1);
+      }
+    };
 
     return Terrain;
 
   })();
-
-  init = function() {
-    var bluriness, camera, cameraOrtho, composer, controls, detailTexture, diffuseTexture1, diffuseTexture2, directionalLight, effectBleach, effectBloom, geometryTerrain, hblur, heightMap, i, material, normalMap, normalShader, params, pars, plane, pointLight, quadTarget, renderModel, renderTarget, renderTargetParameters, renderer, rx, ry, scene, sceneRenderTarget, specularMap, terrain, terrainShader, uniformsNoise, uniformsNormal, uniformsTerrain, vblur, vertexShader;
-    sceneRenderTarget = new THREE.Scene();
-    cameraOrtho = new THREE.OrthographicCamera(SCREEN_WIDTH / -2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_HEIGHT / -2, -10000, 10000);
-    cameraOrtho.position.z = 100;
-    sceneRenderTarget.add(cameraOrtho);
-    camera = new THREE.PerspectiveCamera(40, SCREEN_WIDTH / SCREEN_HEIGHT, 2, 4000);
-    camera.position.set(-1200, 800, 1200);
-    controls = new THREE.TrackballControls(camera);
-    controls.target.set(0, 0, 0);
-    controls.rotateSpeed = 1.0;
-    controls.zoomSpeed = 1.2;
-    controls.panSpeed = 0.8;
-    controls.noZoom = false;
-    controls.noPan = false;
-    controls.staticMoving = false;
-    controls.dynamicDampingFactor = 0.15;
-    controls.keys = [65, 83, 68];
-    scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x050505, 2000, 4000);
-    scene.add(new THREE.AmbientLight(0x111111));
-    directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
-    directionalLight.position.set(500, 2000, 0);
-    scene.add(directionalLight);
-    pointLight = new THREE.PointLight(0xff4400, 1.5);
-    pointLight.position.set(0, 0, 0);
-    scene.add(pointLight);
-    normalShader = THREE.NormalMapShader;
-    rx = 256;
-    ry = 256;
-    pars = {
-      minFilter: THREE.LinearMipmapLinearFilter,
-      magFilter: THREE.LinearFilter,
-      format: THREE.RGBFormat
-    };
-    heightMap = new THREE.WebGLRenderTarget(rx, ry, pars);
-    normalMap = new THREE.WebGLRenderTarget(rx, ry, pars);
-    uniformsNoise = {
-      time: {
-        type: "f",
-        value: 1.0
-      },
-      scale: {
-        type: "v2",
-        value: new THREE.Vector2(1.5, 1.5)
-      },
-      offset: {
-        type: "v2",
-        value: new THREE.Vector2(0, 0)
-      }
-    };
-    uniformsNormal = THREE.UniformsUtils.clone(normalShader.uniforms);
-    uniformsNormal.height.value = 0.05;
-    uniformsNormal.resolution.value.set(rx, ry);
-    uniformsNormal.heightMap.value = heightMap;
-    vertexShader = document.getElementById("vertexShader").textContent;
-    specularMap = new THREE.WebGLRenderTarget(2048, 2048, pars);
-    diffuseTexture1 = THREE.ImageUtils.loadTexture("lib/textures/grasslight-big.jpg", null, function() {
-      loadTextures();
-      return applyShader(THREE.LuminosityShader, diffuseTexture1, specularMap);
-    });
-    diffuseTexture2 = THREE.ImageUtils.loadTexture("lib/textures/backgrounddetailed6.jpg", null, loadTextures);
-    detailTexture = THREE.ImageUtils.loadTexture("lib/textures/grasslight-big-nm.jpg", null, loadTextures);
-    diffuseTexture1.wrapS = diffuseTexture1.wrapT = THREE.RepeatWrapping;
-    diffuseTexture2.wrapS = diffuseTexture2.wrapT = THREE.RepeatWrapping;
-    detailTexture.wrapS = detailTexture.wrapT = THREE.RepeatWrapping;
-    specularMap.wrapS = specularMap.wrapT = THREE.RepeatWrapping;
-    terrainShader = THREE.ShaderTerrain["terrain"];
-    uniformsTerrain = THREE.UniformsUtils.clone(terrainShader.uniforms);
-    uniformsTerrain["tNormal"].value = normalMap;
-    uniformsTerrain["uNormalScale"].value = 3.5;
-    uniformsTerrain["tDisplacement"].value = heightMap;
-    uniformsTerrain["tDiffuse1"].value = diffuseTexture1;
-    uniformsTerrain["tDiffuse2"].value = diffuseTexture2;
-    uniformsTerrain["tSpecular"].value = specularMap;
-    uniformsTerrain["tDetail"].value = detailTexture;
-    uniformsTerrain["enableDiffuse1"].value = true;
-    uniformsTerrain["enableDiffuse2"].value = true;
-    uniformsTerrain["enableSpecular"].value = true;
-    uniformsTerrain["uDiffuseColor"].value.setHex(0xffffff);
-    uniformsTerrain["uSpecularColor"].value.setHex(0xffffff);
-    uniformsTerrain["uAmbientColor"].value.setHex(0x111111);
-    uniformsTerrain["uShininess"].value = 30;
-    uniformsTerrain["uDisplacementScale"].value = 375;
-    uniformsTerrain["uRepeatOverlay"].value.set(6, 6);
-    params = [["heightmap", document.getElementById("fragmentShaderNoise").textContent, vertexShader, uniformsNoise, false], ["normal", normalShader.fragmentShader, normalShader.vertexShader, uniformsNormal, false], ["terrain", terrainShader.fragmentShader, terrainShader.vertexShader, uniformsTerrain, true]];
-    i = 0;
-    while (i < params.length) {
-      material = new THREE.ShaderMaterial({
-        uniforms: params[i][3],
-        vertexShader: params[i][2],
-        fragmentShader: params[i][1],
-        lights: params[i][4],
-        fog: true
-      });
-      mlib[params[i][0]] = material;
-      i++;
-    }
-    plane = new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT);
-    quadTarget = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({
-      color: 0x000000
-    }));
-    quadTarget.position.z = -500;
-    sceneRenderTarget.add(quadTarget);
-    geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256);
-    geometryTerrain.computeFaceNormals();
-    geometryTerrain.computeVertexNormals();
-    geometryTerrain.computeTangents();
-    terrain = new THREE.Mesh(geometryTerrain, mlib["terrain"]);
-    terrain.position.set(0, -125, 0);
-    terrain.rotation.x = -Math.PI / 2;
-    terrain.visible = false;
-    scene.add(terrain);
-    renderer = new THREE.WebGLRenderer();
-    renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-    renderer.setClearColor(scene.fog.color, 1);
-    renderer.domElement.style.position = "absolute";
-    renderer.domElement.style.top = MARGIN + "px";
-    renderer.domElement.style.left = "0px";
-    document.body.appendChild(renderer.domElement);
-    renderer.gammaInput = true;
-    renderer.gammaOutput = true;
-    onWindowResize();
-    window.addEventListener("resize", onWindowResize, false);
-    document.addEventListener("keydown", onKeyDown, false);
-    renderer.autoClear = false;
-    renderTargetParameters = {
-      minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
-      format: THREE.RGBFormat,
-      stencilBuffer: false
-    };
-    renderTarget = new THREE.WebGLRenderTarget(SCREEN_WIDTH, SCREEN_HEIGHT, renderTargetParameters);
-    effectBloom = new THREE.BloomPass(0.6);
-    effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader);
-    hblur = new THREE.ShaderPass(THREE.HorizontalTiltShiftShader);
-    vblur = new THREE.ShaderPass(THREE.VerticalTiltShiftShader);
-    bluriness = 6;
-    hblur.uniforms["h"].value = bluriness / SCREEN_WIDTH;
-    vblur.uniforms["v"].value = bluriness / SCREEN_HEIGHT;
-    hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5;
-    effectBleach.uniforms["opacity"].value = 0.65;
-    composer = new THREE.EffectComposer(renderer, renderTarget);
-    renderModel = new THREE.RenderPass(scene, camera);
-    vblur.renderToScreen = true;
-    composer = new THREE.EffectComposer(renderer, renderTarget);
-    composer.addPass(renderModel);
-    composer.addPass(effectBloom);
-    composer.addPass(hblur);
-    composer.addPass(vblur);
-    return renderer.initWebGLObjects(scene);
-  };
-
-  onWindowResize = function(event) {
-    var SCREEN_HEIGHT, SCREEN_WIDTH;
-    SCREEN_WIDTH = window.innerWidth;
-    SCREEN_HEIGHT = window.innerHeight - 2 * MARGIN;
-    renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-    camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
-    return camera.updateProjectionMatrix();
-  };
-
-  onKeyDown = function(event) {
-    switch (event.keyCode) {
-      case 78:
-        return lightDir *= -1;
-      case 77:
-        return animDeltaDir *= -1;
-      case 66:
-        return soundDir *= -1;
-    }
-  };
-
-  applyShader = function(shader, texture, target) {
-    var meshTmp, sceneTmp, shaderMaterial;
-    shaderMaterial = new THREE.ShaderMaterial({
-      fragmentShader: shader.fragmentShader,
-      vertexShader: shader.vertexShader,
-      uniforms: THREE.UniformsUtils.clone(shader.uniforms)
-    });
-    shaderMaterial.uniforms["tDiffuse"].value = texture;
-    sceneTmp = new THREE.Scene();
-    meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT), shaderMaterial);
-    meshTmp.position.z = -500;
-    sceneTmp.add(meshTmp);
-    return renderer.render(sceneTmp, cameraOrtho, target, true);
-  };
-
-  loadTextures = function() {
-    textureCounter += 1;
-    if (textureCounter === 3) {
-      return terrain.visible = true;
-    }
-  };
-
-  animate = function() {
-    requestAnimationFrame(animate);
-    return render();
-  };
-
-  render = function() {
-    var animDelta, delta, fHigh, fLow, lightVal, time, valNorm;
-    delta = clock.getDelta();
-    if (terrain.visible) {
-      controls.update();
-      time = Date.now() * 0.001;
-      fLow = 0.1;
-      fHigh = 0.8;
-      lightVal = THREE.Math.clamp(lightVal + 0.5 * delta * lightDir, fLow, fHigh);
-      valNorm = (lightVal - fLow) / (fHigh - fLow);
-      scene.fog.color.setHSL(0.1, 0.5, lightVal);
-      renderer.setClearColor(scene.fog.color, 1);
-      directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15);
-      pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5);
-      uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5);
-      if (updateNoise) {
-        animDelta = THREE.Math.clamp(animDelta + 0.00075 * animDeltaDir, 0, 0.05);
-        uniformsNoise["time"].value += delta * animDelta;
-        uniformsNoise["offset"].value.x += delta * 0.05;
-        uniformsTerrain["uOffset"].value.x = 4 * uniformsNoise["offset"].value.x;
-        quadTarget.material = mlib["heightmap"];
-        renderer.render(sceneRenderTarget, cameraOrtho, heightMap, true);
-        quadTarget.material = mlib["normal"];
-        renderer.render(sceneRenderTarget, cameraOrtho, normalMap, true);
-      }
-      return composer.render(0.1);
-    }
-  };
-
-  MARGIN = 100;
-
-  SCREEN_WIDTH = window.innerWidth;
-
-  SCREEN_HEIGHT = window.innerHeight - 2 * MARGIN;
-
-  window.renderer = void 0;
-
-  container = void 0;
-
-  stats = void 0;
-
-  camera = void 0;
-
-  scene = void 0;
-
-  cameraOrtho = void 0;
-
-  sceneRenderTarget = void 0;
-
-  uniformsNoise = void 0;
-
-  uniformsNormal = void 0;
-
-  heightMap = void 0;
-
-  normalMap = void 0;
-
-  quadTarget = void 0;
-
-  directionalLight = void 0;
-
-  pointLight = void 0;
-
-  terrain = void 0;
-
-  textureCounter = 0;
-
-  animDelta = 0;
-
-  animDeltaDir = -1;
-
-  lightVal = 0;
-
-  lightDir = 1;
-
-  clock = new THREE.Clock();
-
-  updateNoise = true;
-
-  animateTerrain = false;
-
-  textMesh1 = void 0;
-
-  mlib = {};
-
-  init();
-
-  animate();
 
 }).call(this);
