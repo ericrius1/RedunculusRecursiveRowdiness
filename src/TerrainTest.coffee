@@ -1,5 +1,5 @@
 
-window.Terrain = class Terrain
+FW.World = class World
   constructor : ->
     @textureCounter = 0
     @animDelta = 0

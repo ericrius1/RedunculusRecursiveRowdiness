@@ -1,9 +1,9 @@
 (function() {
-  var Terrain,
+  var World,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  window.Terrain = Terrain = (function() {
-    function Terrain() {
+  FW.World = World = (function() {
+    function World() {
       this.animate = __bind(this.animate, this);
       this.onKeyDown = __bind(this.onKeyDown, this);
       var bluriness, detailTexture, diffuseTexture1, diffuseTexture2, effectBleach, effectBloom, hblur, i, material, normalShader, params, pars, plane, renderModel, renderTargetParameters, rx, ry, specularMap, vblur,
@@ -179,7 +179,7 @@
       }), false);
     }
 
-    Terrain.prototype.onWindowResize = function(event) {
+    World.prototype.onWindowResize = function(event) {
       this.SCREEN_WIDTH = window.innerWidth;
       this.SCREEN_HEIGHT = window.innerHeight - 2 * this.MARGIN;
       this.renderer.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
@@ -187,7 +187,7 @@
       return this.camera.updateProjectionMatrix();
     };
 
-    Terrain.prototype.onKeyDown = function(event) {
+    World.prototype.onKeyDown = function(event) {
       switch (event.keyCode) {
         case 78:
           return this.lightDir *= -1;
@@ -196,7 +196,7 @@
       }
     };
 
-    Terrain.prototype.applyShader = function(shader, texture, target) {
+    World.prototype.applyShader = function(shader, texture, target) {
       var meshTmp, sceneTmp, shaderMaterial;
       shaderMaterial = new THREE.ShaderMaterial({
         fragmentShader: shader.fragmentShader,
@@ -211,19 +211,19 @@
       return this.renderer.render(sceneTmp, this.cameraOrtho, target, true);
     };
 
-    Terrain.prototype.loadTextures = function() {
+    World.prototype.loadTextures = function() {
       this.textureCounter += 1;
       if (this.textureCounter === 3) {
         return this.terrain.visible = true;
       }
     };
 
-    Terrain.prototype.animate = function() {
+    World.prototype.animate = function() {
       requestAnimationFrame(this.animate);
       return this.render();
     };
 
-    Terrain.prototype.render = function() {
+    World.prototype.render = function() {
       var delta, fHigh, fLow, time, valNorm;
       delta = this.clock.getDelta();
       if (this.terrain.visible) {
@@ -252,7 +252,7 @@
       }
     };
 
-    return Terrain;
+    return World;
 
   })();
 
