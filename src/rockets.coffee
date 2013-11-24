@@ -8,7 +8,7 @@ FW.Rockets = class Rockets
     @launchSound = new Audio('./assets/launch.mp3');
     @explodeSound = new Audio('./assets/explosion.mp3');
     @crackleSound = new Audio('./assets/crackle.mp3');
-    @soundOn = false
+    @soundOn = true
     @color = new THREE.Color()
     @color.setRGB(200, 10, 0)
 
@@ -19,7 +19,10 @@ FW.Rockets = class Rockets
     @launchSpeed = 0.8
     @explosionDelay = 500
     @shootDirection = new THREE.Vector3()
-    @explosionLightIntensity = 1.0
+
+
+    @dimmingSpeed = 0.005
+    @explosionLightIntensity = 2.0
 
     @rocketMat= new THREE.ShaderMaterial({
     uniforms: uniforms1,
@@ -47,7 +50,7 @@ FW.Rockets = class Rockets
         setTimeout(()=>
           @explodeSound.play()
           setTimeout(()=>
-            @crackleSound.play()
+            #@crackleSound.play()
           400)
         800)
 
@@ -81,7 +84,7 @@ FW.Rockets = class Rockets
 
   update: ()->
     if @light.intensity > 0
-      @light.intensity -= 0.01 * @explosionLightIntensity
+      @light.intensity -= @dimmingSpeed * @explosionLightIntensity
     @updateRocket rocket for rocket in @rockets
     @firework.tick()
 

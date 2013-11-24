@@ -12,7 +12,7 @@
       this.animDelta = 0;
       this.animDeltaDir = -1;
       this.lightVal = 0;
-      this.lightDir = 1;
+      this.lightDir = -1;
       this.clock = new THREE.Clock();
       this.updateNoise = true;
       this.animateTerrain = false;
@@ -23,8 +23,8 @@
       FW.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, 4000);
       FW.camera.position.set(-1200, 800, 1200);
       this.controls = new THREE.FlyControls(FW.camera);
-      this.controls.movementSpeed = 1000;
-      this.controls.rollSpeed = Math.PI / 2;
+      this.controls.movementSpeed = 100;
+      this.controls.rollSpeed = Math.PI / 4;
       this.controls.dragToLook = true;
       this.stats = new Stats();
       this.stats.domElement.style.position = 'absolute';
@@ -155,7 +155,7 @@
         stencilBuffer: false
       };
       this.renderTarget = new THREE.WebGLRenderTarget(this.SCREEN_WIDTH, this.SCREEN_HEIGHT, renderTargetParameters);
-      effectBloom = new THREE.BloomPass(0.6);
+      effectBloom = new THREE.BloomPass(0.4);
       effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader);
       hblur = new THREE.ShaderPass(THREE.HorizontalTiltShiftShader);
       vblur = new THREE.ShaderPass(THREE.VerticalTiltShiftShader);

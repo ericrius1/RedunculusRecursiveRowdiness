@@ -5,7 +5,7 @@ FW.World = class World
     @animDelta = 0
     @animDeltaDir = -1
     @lightVal = 0
-    @lightDir = 1
+    @lightDir = -1
     @clock = new THREE.Clock()
     @updateNoise = true
     @animateTerrain = false
@@ -20,8 +20,8 @@ FW.World = class World
     #CONTROLS
 
     @controls = new THREE.FlyControls(FW.camera)
-    @controls.movementSpeed = 1000;
-    @controls.rollSpeed =  Math.PI / 2;;
+    @controls.movementSpeed = 100;
+    @controls.rollSpeed =  Math.PI / 4;
     @controls.dragToLook = true
 
     #STATS
@@ -182,7 +182,7 @@ FW.World = class World
       stencilBuffer: false
 
     @renderTarget = new THREE.WebGLRenderTarget(@SCREEN_WIDTH, @SCREEN_HEIGHT, renderTargetParameters)
-    effectBloom = new THREE.BloomPass(0.6)
+    effectBloom = new THREE.BloomPass(0.4)
     effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader)
     hblur = new THREE.ShaderPass(THREE.HorizontalTiltShiftShader)
     vblur = new THREE.ShaderPass(THREE.VerticalTiltShiftShader)

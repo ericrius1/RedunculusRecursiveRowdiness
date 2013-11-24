@@ -12,7 +12,7 @@
       this.launchSound = new Audio('./assets/launch.mp3');
       this.explodeSound = new Audio('./assets/explosion.mp3');
       this.crackleSound = new Audio('./assets/crackle.mp3');
-      this.soundOn = false;
+      this.soundOn = true;
       this.color = new THREE.Color();
       this.color.setRGB(200, 10, 0);
       this.firework = new FW.Firework(this.color);
@@ -20,7 +20,8 @@
       this.launchSpeed = 0.8;
       this.explosionDelay = 500;
       this.shootDirection = new THREE.Vector3();
-      this.explosionLightIntensity = 1.0;
+      this.dimmingSpeed = 0.005;
+      this.explosionLightIntensity = 2.0;
       this.rocketMat = new THREE.ShaderMaterial({
         uniforms: uniforms1,
         vertexShader: document.getElementById('rocketVertexShader').textContent,
@@ -40,9 +41,7 @@
       if (this.soundOn) {
         return setTimeout(function() {
           _this.explodeSound.play();
-          return setTimeout(function() {
-            return _this.crackleSound.play();
-          }, 400);
+          return setTimeout(function() {}, 400);
         }, 800);
       }
     };
@@ -81,7 +80,7 @@
     Rockets.prototype.update = function() {
       var rocket, _i, _len, _ref;
       if (this.light.intensity > 0) {
-        this.light.intensity -= 0.01 * this.explosionLightIntensity;
+        this.light.intensity -= this.dimmingSpeed * this.explosionLightIntensity;
       }
       _ref = this.rockets;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
