@@ -20,6 +20,12 @@
       this.MARGIN = 10;
       this.SCREEN_WIDTH = window.innerWidth;
       this.SCREEN_HEIGHT = window.innerHeight - 2 * this.MARGIN;
+      FW.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, 4000);
+      FW.camera.position.set(-1200, 800, 1200);
+      this.controls = new THREE.FlyControls(FW.camera);
+      this.controls.movementSpeed = 1000;
+      this.controls.rollSpeed = Math.PI / 2;
+      this.controls.dragToLook = true;
       this.stats = new Stats();
       this.stats.domElement.style.position = 'absolute';
       this.stats.domElement.style.left = '0px';
@@ -29,8 +35,6 @@
       this.ccasmeraOrtho = new THREE.OrthographicCamera(this.SCREEN_WIDTH / -2, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT / 2, this.SCREEN_HEIGHT / -2, -10000, 10000);
       this.ccasmeraOrtho.position.z = 100;
       this.sceneRenderTarget.add(this.ccasmeraOrtho);
-      FW.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, 4000);
-      FW.camera.position.set(-1200, 800, 1200);
       FW.scene = new THREE.Scene();
       FW.scene.fog = new THREE.Fog(0x050505, 2000, 4000);
       FW.scene.add(new THREE.AmbientLight(0x111111));
@@ -140,10 +144,6 @@
       document.body.appendChild(this.renderer.domElement);
       this.renderer.gammaInput = true;
       this.renderer.gammaOutput = true;
-      this.controls = new THREE.FlyControls(FW.camera);
-      this.controls.movementSpeed = 1000;
-      this.controls.rollSpeed = Math.PI / 24;
-      this.controls.dragToLook = true;
       this.onWindowResize();
       this.renderer.autoClear = false;
       renderTargetParameters = {

@@ -21,7 +21,7 @@ RULES.bush = function(grow3) {
       color: 0xaadd77
     });
 
-    maxDepth(120);
+    maxDepth(80);
 
     rules({
      

@@ -14,6 +14,16 @@ FW.World = class World
     @SCREEN_WIDTH = window.innerWidth
     @SCREEN_HEIGHT = window.innerHeight - 2 * @MARGIN
 
+    # CAMERA
+    FW.camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, 4000)
+    FW.camera.position.set  -1200, 800, 1200
+    #CONTROLS
+
+    @controls = new THREE.FlyControls(FW.camera)
+    @controls.movementSpeed = 1000;
+    @controls.rollSpeed =  Math.PI / 2;;
+    @controls.dragToLook = true
+
     #STATS
     @stats = new Stats()
     @stats.domElement.style.position = 'absolute';
@@ -27,9 +37,6 @@ FW.World = class World
     @ccasmeraOrtho.position.z = 100
     @sceneRenderTarget.add @ccasmeraOrtho
     
-    # CAMERA
-    FW.camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, 4000)
-    FW.camera.position.set  -1200, 800, 1200
     
     # SCENE (FINAL)
     FW.scene = new THREE.Scene()
@@ -132,7 +139,7 @@ FW.World = class World
     @sceneRenderTarget.add @quadTarget
     
     # TERRAIN MESH
-    @geometryTerrain = new THREE.PlaneGeometry(6000, 6000, 256, 256)
+    @geometryTerrain = new THREE.PlaneGeometry(6000, 6000 ,256, 256)
     @geometryTerrain.computeFaceNormals()
     @geometryTerrain.computeVertexNormals()
     @geometryTerrain.computeTangents()
@@ -154,13 +161,7 @@ FW.World = class World
     @renderer.gammaOutput = true
     
 
-    #CONTROLS
-
-    @controls = new THREE.FlyControls(FW.camera)
-    @controls.movementSpeed = 1000;
-    @controls.rollSpeed =  Math.PI / 24;;
-    @controls.dragToLook = true
-    # @controls.domElement = @renderer.domElement;
+    
     
     
     # EVENTS
