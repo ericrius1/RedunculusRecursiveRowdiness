@@ -36,10 +36,7 @@ FW.World = class World
     @scene.fog = new THREE.Fog(0x050505, 2000, 4000)
 
 
-    #RECURSIVE STRUCTURES
-    @g = new grow3.System(@scene, @camera, RULES.bush)
-    thing = @g.build(undefined, new THREE.Vector3(-1300, 900, 1300))
-    @camera.lookAt thing.position
+
     
     # LIGHTS
     @scene.add new THREE.AmbientLight(0x111111)
@@ -146,7 +143,7 @@ FW.World = class World
     @scene.add @terrain
     
     # RENDERER
-    @renderer = new THREE.WebGLRenderer()
+    @renderer = new THREE.WebGLRenderer({antialias: true})
     @renderer.setSize @SCREEN_WIDTH, @SCREEN_HEIGHT
     @renderer.setClearColor @scene.fog.color, 1
     @renderer.domElement.style.position = "absolute"
@@ -202,7 +199,7 @@ FW.World = class World
     # PRE-INIT
     @renderer.initWebGLObjects @scene
 
-    window.addEventListener "resizes", (=>
+    window.addEventListener "resize", (=>
       @onWindowResize()
     ), false
     document.addEventListener "keydown", (=>

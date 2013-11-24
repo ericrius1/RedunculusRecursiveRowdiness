@@ -6,7 +6,7 @@
     function World() {
       this.animate = __bind(this.animate, this);
       this.onKeyDown = __bind(this.onKeyDown, this);
-      var bluriness, detailTexture, diffuseTexture1, diffuseTexture2, effectBleach, effectBloom, hblur, i, material, normalShader, params, pars, plane, renderModel, renderTargetParameters, rx, ry, specularMap, thing, vblur,
+      var bluriness, detailTexture, diffuseTexture1, diffuseTexture2, effectBleach, effectBloom, hblur, i, material, normalShader, params, pars, plane, renderModel, renderTargetParameters, rx, ry, specularMap, vblur,
         _this = this;
       this.textureCounter = 0;
       this.animDelta = 0;
@@ -33,9 +33,6 @@
       this.camera.position.set(-1200, 800, 1200);
       this.scene = new THREE.Scene();
       this.scene.fog = new THREE.Fog(0x050505, 2000, 4000);
-      this.g = new grow3.System(this.scene, this.camera, RULES.bush);
-      thing = this.g.build(void 0, new THREE.Vector3(-1300, 900, 1300));
-      this.camera.lookAt(thing.position);
       this.scene.add(new THREE.AmbientLight(0x111111));
       this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       this.directionalLight.position.set(500, 2000, 0);
@@ -132,7 +129,9 @@
       this.terrain.rotation.x = -Math.PI / 2;
       this.terrain.visible = false;
       this.scene.add(this.terrain);
-      this.renderer = new THREE.WebGLRenderer();
+      this.renderer = new THREE.WebGLRenderer({
+        antialias: true
+      });
       this.renderer.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
       this.renderer.setClearColor(this.scene.fog.color, 1);
       this.renderer.domElement.style.position = "absolute";
@@ -172,7 +171,7 @@
       this.composer.addPass(hblur);
       this.composer.addPass(vblur);
       this.renderer.initWebGLObjects(this.scene);
-      window.addEventListener("resizes", (function() {
+      window.addEventListener("resize", (function() {
         return _this.onWindowResize();
       }), false);
       document.addEventListener("keydown", (function() {
