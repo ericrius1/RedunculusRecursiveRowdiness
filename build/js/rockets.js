@@ -20,16 +20,16 @@
       this.launchSpeed = 0.8;
       this.explosionDelay = 500;
       this.shootDirection = new THREE.Vector3();
-      this.explosionLightIntensity = 20.0;
+      this.explosionLightIntensity = 1.0;
       this.rocketMat = new THREE.ShaderMaterial({
         uniforms: uniforms1,
         vertexShader: document.getElementById('rocketVertexShader').textContent,
         fragmentShader: document.getElementById('fragment_shader1').textContent
       });
       this.rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
-      this.light = new THREE.PointLight(0xffeeee, 0.0, 4000);
+      this.light = new THREE.PointLight(0xffeeee, 0.0, 2000);
       this.light.position.set(1, 1, 1);
-      FW.myWorld.scene.add(this.light);
+      FW.scene.add(this.light);
     }
 
     Rockets.prototype.explode = function(position) {
@@ -54,13 +54,13 @@
       this.explodeSound.load();
       this.crackleSound.load();
       rocket = new THREE.Mesh(this.rocketGeo, this.rocketMat);
-      rocket.position.set(FW.myWorld.camera.position.x, FW.myWorld.camera.position.y, FW.myWorld.camera.position.z);
+      rocket.position.set(FW.camera.position.x, FW.camera.position.y, FW.camera.position.z);
       this.rockets.push(rocket);
       vector = new THREE.Vector3();
       vector.set(0, 0, 1);
-      this.projector.unprojectVector(vector, FW.myWorld.camera);
-      ray = new THREE.Ray(FW.myWorld.camera.position, vector.sub(FW.myWorld.camera.position).normalize());
-      FW.myWorld.scene.add(rocket);
+      this.projector.unprojectVector(vector, FW.camera);
+      ray = new THREE.Ray(FW.camera.position, vector.sub(FW.camera.position).normalize());
+      FW.scene.add(rocket);
       rocket.shootDirection = new THREE.Vector3();
       rocket.shootDirection.x = ray.direction.x;
       rocket.shootDirection.y = ray.direction.y;
@@ -73,7 +73,7 @@
       }
       this.rockets.push(rocket);
       return setTimeout(function() {
-        FW.myWorld.scene.remove(rocket);
+        FW.scene.remove(rocket);
         return _this.explode(rocket.position);
       }, this.explosionDelay);
     };

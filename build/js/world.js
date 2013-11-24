@@ -37,6 +37,8 @@
       this.sceneRenderTarget.add(this.ccasmeraOrtho);
       FW.scene = new THREE.Scene();
       FW.scene.fog = new THREE.Fog(0x050505, 2000, 4000);
+      this.firework = new FW.Firework();
+      this.groundControl = new FW.Rockets();
       FW.scene.add(new THREE.AmbientLight(0x111111));
       this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       this.directionalLight.position.set(500, 2000, 0);
@@ -227,6 +229,7 @@
       var delta, fHigh, fLow, time, valNorm;
       delta = this.clock.getDelta();
       this.stats.update();
+      this.groundControl.update();
       if (this.terrain.visible) {
         this.controls.update(delta);
         time = Date.now() * 0.001;

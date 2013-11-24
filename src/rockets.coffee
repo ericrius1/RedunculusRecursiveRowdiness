@@ -19,7 +19,7 @@ FW.Rockets = class Rockets
     @launchSpeed = 0.8
     @explosionDelay = 500
     @shootDirection = new THREE.Vector3()
-    @explosionLightIntensity = 20.0
+    @explosionLightIntensity = 1.0
 
     @rocketMat= new THREE.ShaderMaterial({
     uniforms: uniforms1,
@@ -30,9 +30,9 @@ FW.Rockets = class Rockets
     @rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
 
     #LIGHTS
-    @light = new THREE.PointLight(0xffeeee, 0.0, 4000)
+    @light = new THREE.PointLight(0xffeeee, 0.0, 2000)
     @light.position.set(1, 1, 1);
-    FW.myWorld.scene.add(@light)
+    FW.scene.add(@light)
 
 
 
@@ -57,13 +57,13 @@ FW.Rockets = class Rockets
     @explodeSound.load()
     @crackleSound.load()
     rocket = new THREE.Mesh(@rocketGeo, @rocketMat)
-    rocket.position.set(FW.myWorld.camera.position.x, FW.myWorld.camera.position.y, FW.myWorld.camera.position.z)
+    rocket.position.set(FW.camera.position.x, FW.camera.position.y, FW.camera.position.z)
     @rockets.push(rocket)
     vector = new THREE.Vector3()
     vector.set(0,0,1)
-    @projector.unprojectVector(vector, FW.myWorld.camera)
-    ray = new THREE.Ray(FW.myWorld.camera.position, vector.sub(FW.myWorld.camera.position).normalize() );
-    FW.myWorld.scene.add(rocket)
+    @projector.unprojectVector(vector, FW.camera)
+    ray = new THREE.Ray(FW.camera.position, vector.sub(FW.camera.position).normalize() );
+    FW.scene.add(rocket)
     rocket.shootDirection = new THREE.Vector3()
     rocket.shootDirection.x = ray.direction.x;
     rocket.shootDirection.y = ray.direction.y;
@@ -75,7 +75,7 @@ FW.Rockets = class Rockets
         @launchSound.play();
     @rockets.push(rocket)
     setTimeout(()=>
-      FW.myWorld.scene.remove(rocket)
+      FW.scene.remove(rocket)
       @explode(rocket.position)
     @explosionDelay)
 

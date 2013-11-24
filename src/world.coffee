@@ -43,6 +43,11 @@ FW.World = class World
     FW.scene.fog = new THREE.Fog(0x050505, 2000, 4000)
 
 
+    #FUN
+    @firework = new FW.Firework()
+    @groundControl = new FW.Rockets()
+
+
 
     
     # LIGHTS
@@ -249,6 +254,7 @@ FW.World = class World
   render : ->
     delta = @clock.getDelta()
     @stats.update()
+    @groundControl.update()
     if @terrain.visible
       @controls.update(delta)
       time = Date.now() * 0.001

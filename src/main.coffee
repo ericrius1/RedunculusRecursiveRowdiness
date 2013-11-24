@@ -14,5 +14,8 @@ FW.Main = class Main
     @g = new grow3.System(FW.scene, FW.camera, RULES.bush)
     thing = @g.build(undefined, new THREE.Vector3(-1220, 760, 1250))
     FW.camera.lookAt thing.position
+    
+    @firework = new FW.Firework()
+    @groundControl = new FW.Rockets()
 
 

@@ -28,7 +28,7 @@
       this.color.setRGB(0, 0, 200);
       this.emitterSettings.colorStart = this.color;
       this.particleGroup.addPool(1, this.emitterSettings, true);
-      FW.myWorld.scene.add(this.particleGroup.mesh);
+      FW.scene.add(this.particleGroup.mesh);
     }
 
     Firework.prototype.createExplosion = function(pos) {

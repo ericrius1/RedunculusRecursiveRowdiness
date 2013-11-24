@@ -24,7 +24,7 @@ FW.Firework = class Firework
     @color.setRGB(0, 0, 200)
     @emitterSettings.colorStart = @color
     @particleGroup.addPool( 1, @emitterSettings, true );
-    FW.myWorld.scene.add(@particleGroup.mesh)
+    FW.scene.add(@particleGroup.mesh)
 
 
   createExplosion: (pos)->
