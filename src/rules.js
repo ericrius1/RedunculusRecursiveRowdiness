@@ -19,7 +19,7 @@ with (grow3) {
 
         rules({
             spiralElement: function () {
-                cube(scale(0.5).move(18));
+                cube(scale(4.5).move(18));
             },
 
             spiral: function () {

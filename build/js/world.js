@@ -26,22 +26,11 @@
       this.sceneRenderTarget.add(this.cameraOrtho);
       this.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, 4000);
       this.camera.position.set(-1200, 800, 1200);
-      this.controls = new THREE.TrackballControls(this.camera);
-      this.controls.target.set(0, 0, 0);
-      this.controls.rotateSpeed = 1.0;
-      this.controls.zoomSpeed = 1.2;
-      this.controls.panSpeed = 0.8;
-      this.controls.noZoom = false;
-      this.controls.noPan = false;
-      this.controls.staticMoving = false;
-      this.controls.dynamicDampingFactor = 0.15;
-      this.controls.keys = [65, 83, 68];
       this.scene = new THREE.Scene();
       this.scene.fog = new THREE.FogExp2(0x050505, 0);
       this.scene.fog.intensity = 0;
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
       thing = this.g.build(void 0, new THREE.Vector3(-1300, 900, 1300));
-      this.camera.lookAt(new THREE.Vector3(thing.position));
       this.scene.add(new THREE.AmbientLight(0x111111));
       this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       this.directionalLight.position.set(500, 2000, 0);
@@ -135,7 +124,6 @@
       this.geometryTerrain.computeVertexNormals();
       this.geometryTerrain.computeTangents();
       this.terrain = new THREE.Mesh(this.geometryTerrain, this.mlib["@terrain"]);
-      this.terrain.position.set(0, -125, 0);
       this.terrain.rotation.x = -Math.PI / 2;
       this.terrain.visible = false;
       this.scene.add(this.terrain);
@@ -148,6 +136,10 @@
       document.body.appendChild(this.renderer.domElement);
       this.renderer.gammaInput = true;
       this.renderer.gammaOutput = true;
+      this.controls = new THREE.FlyControls(this.camera);
+      this.controls.movementSpeed = 1000;
+      this.controls.rollSpeed = Math.PI / 4;
+      this.controls.dragToLook = false;
       this.onWindowResize();
       this.renderer.autoClear = false;
       renderTargetParameters = {
@@ -176,7 +168,7 @@
       this.composer.addPass(vblur);
       this.renderer.initWebGLObjects(this.scene);
       window.addEventListener("resizes", (function() {
-        return console.log('shnur');
+        return _this.onWindowResize();
       }), false);
       document.addEventListener("keydown", (function() {
         return _this.onKeyDown(event);
@@ -231,7 +223,7 @@
       var delta, fHigh, fLow, time, valNorm;
       delta = this.clock.getDelta();
       if (this.terrain.visible) {
-        this.controls.update();
+        this.controls.update(delta);
         time = Date.now() * 0.001;
         fLow = 0.1;
         fHigh = 0.8;

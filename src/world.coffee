@@ -24,16 +24,16 @@ FW.World = class World
     # CAMERA
     @camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, 4000)
     @camera.position.set -1200, 800, 1200
-    @controls = new THREE.TrackballControls(@camera)
-    @controls.target.set 0, 0, 0
-    @controls.rotateSpeed = 1.0
-    @controls.zoomSpeed = 1.2
-    @controls.panSpeed = 0.8
-    @controls.noZoom = false
-    @controls.noPan = false
-    @controls.staticMoving = false
-    @controls.dynamicDampingFactor = 0.15
-    @controls.keys = [65, 83, 68]
+    # @controls.target.set 0, 0, 0
+    # @controls.rotateSpeed = 1.0
+    # @controls.zoomSpeed = 1.2
+    # @controls.panSpeed = 0.8
+    # @controls.noZoom = false
+    # @controls.noPan = false
+    # @controls.staticMoving = false
+    # @controls.dynamicDampingFactor = 0.15
+    # @controls.keys = [65, 83, 68]
+
     
     # SCENE (FINAL)
     @scene = new THREE.Scene()
@@ -43,7 +43,6 @@ FW.World = class World
     #RECURSIVE STRUCTURES
     @g = new grow3.System(@scene, @camera, RULES.bush)
     thing = @g.build(undefined, new THREE.Vector3(-1300, 900, 1300))
-    @camera.lookAt(new THREE.Vector3(thing.position))
     
     # LIGHTS
     @scene.add new THREE.AmbientLight(0x111111)
@@ -144,7 +143,7 @@ FW.World = class World
     @geometryTerrain.computeVertexNormals()
     @geometryTerrain.computeTangents()
     @terrain = new THREE.Mesh(@geometryTerrain, @mlib["@terrain"])
-    @terrain.position.set 0, -125, 0
+    # @terrain.position.set 0, -125, 0
     @terrain.rotation.x = -Math.PI / 2
     @terrain.visible = false
     @scene.add @terrain
@@ -157,10 +156,18 @@ FW.World = class World
     @renderer.domElement.style.top = @MARGIN + "px"
     @renderer.domElement.style.left = "0px"
     document.body.appendChild @renderer.domElement
-    
-    #
     @renderer.gammaInput = true
     @renderer.gammaOutput = true
+    
+
+    #CONTROLS
+
+    @controls = new THREE.FlyControls(@camera)
+    @controls.movementSpeed = 1000;
+    @controls.rollSpeed =  Math.PI / 4;;
+    @controls.dragToLook = false
+    # @controls.domElement = @renderer.domElement;
+    
     
     # EVENTS
     @onWindowResize()
@@ -199,7 +206,7 @@ FW.World = class World
     @renderer.initWebGLObjects @scene
 
     window.addEventListener "resizes", (=>
-      console.log 'shnur'
+      @onWindowResize()
     ), false
     document.addEventListener "keydown", (=>
       @onKeyDown(event)
@@ -248,7 +255,7 @@ FW.World = class World
   render : ->
     delta = @clock.getDelta()
     if @terrain.visible
-      @controls.update()
+      @controls.update(delta)
       time = Date.now() * 0.001
       fLow = 0.1
       fHigh = 0.8
