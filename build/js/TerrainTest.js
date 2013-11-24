@@ -5,20 +5,9 @@
   window.Terrain = Terrain = (function() {
     function Terrain() {
       this.animate = __bind(this.animate, this);
+      this.onKeyDown = __bind(this.onKeyDown, this);
       var bluriness, detailTexture, diffuseTexture1, diffuseTexture2, effectBleach, effectBloom, hblur, i, material, normalShader, params, pars, plane, renderModel, renderTargetParameters, rx, ry, specularMap, vblur,
         _this = this;
-      this.camera = void 0;
-      this.scene = void 0;
-      this.cameraOrtho = void 0;
-      this.sceneRenderTarget = void 0;
-      this.uniformsNoise = void 0;
-      this.uniformsNormal = void 0;
-      this.heightMap = void 0;
-      this.normalMap = void 0;
-      this.quadTarget = void 0;
-      this.directionalLight = void 0;
-      this.pointLight = void 0;
-      this.terrain = void 0;
       this.textureCounter = 0;
       this.animDelta = 0;
       this.animDeltaDir = -1;
@@ -27,12 +16,10 @@
       this.clock = new THREE.Clock();
       this.updateNoise = true;
       this.animateTerrain = false;
-      this.textMesh1 = void 0;
       this.mlib = {};
       this.MARGIN = 100;
       this.SCREEN_WIDTH = window.innerWidth;
       this.SCREEN_HEIGHT = window.innerHeight - 2 * this.MARGIN;
-      this.renderer = void 0;
       this.sceneRenderTarget = new THREE.Scene();
       this.cameraOrtho = new THREE.OrthographicCamera(this.SCREEN_WIDTH / -2, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT / 2, this.SCREEN_HEIGHT / -2, -10000, 10000);
       this.cameraOrtho.position.z = 100;
@@ -158,8 +145,6 @@
       this.renderer.gammaInput = true;
       this.renderer.gammaOutput = true;
       this.onWindowResize();
-      window.addEventListener("resize", this.onWindowResize, false);
-      document.addEventListener("keydown", this.onKeyDown, false);
       this.renderer.autoClear = false;
       renderTargetParameters = {
         minFilter: THREE.LinearFilter,
@@ -186,6 +171,12 @@
       this.composer.addPass(hblur);
       this.composer.addPass(vblur);
       this.renderer.initWebGLObjects(this.scene);
+      window.addEventListener("resizes", (function() {
+        return console.log('shnur');
+      }), false);
+      document.addEventListener("keydown", (function() {
+        return _this.onKeyDown(event);
+      }), false);
     }
 
     Terrain.prototype.onWindowResize = function(event) {
@@ -202,8 +193,6 @@
           return this.lightDir *= -1;
         case 77:
           return this.animDeltaDir *= -1;
-        case 66:
-          return soundDir *= -1;
       }
     };
 

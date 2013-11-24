@@ -1,17 +1,6 @@
+
 window.Terrain = class Terrain
   constructor : ->
-    @camera = undefined
-    @scene = undefined
-    @cameraOrtho = undefined
-    @sceneRenderTarget = undefined
-    @uniformsNoise = undefined
-    @uniformsNormal = undefined
-    @heightMap = undefined
-    @normalMap = undefined
-    @quadTarget = undefined
-    @directionalLight = undefined
-    @pointLight = undefined
-    @terrain = undefined
     @textureCounter = 0
     @animDelta = 0
     @animDeltaDir = -1
@@ -20,12 +9,10 @@ window.Terrain = class Terrain
     @clock = new THREE.Clock()
     @updateNoise = true
     @animateTerrain = false
-    @textMesh1 = undefined
     @mlib = {}
     @MARGIN = 100
     @SCREEN_WIDTH = window.innerWidth
     @SCREEN_HEIGHT = window.innerHeight - 2 * @MARGIN
-    @renderer = undefined
 
     
     # SCENE (RENDER TARGET)
@@ -171,8 +158,7 @@ window.Terrain = class Terrain
     
     # EVENTS
     @onWindowResize()
-    window.addEventListener "resize", @onWindowResize, false
-    document.addEventListener "keydown", @onKeyDown, false
+
     
     # COMPOSER
     @renderer.autoClear = false
@@ -206,6 +192,14 @@ window.Terrain = class Terrain
     # PRE-INIT
     @renderer.initWebGLObjects @scene
 
+    window.addEventListener "resizes", (=>
+      console.log 'shnur'
+    ), false
+    document.addEventListener "keydown", (=>
+      @onKeyDown(event)
+    ), false
+
+
   #
   onWindowResize : (event) ->
     @SCREEN_WIDTH = window.innerWidth
@@ -215,14 +209,12 @@ window.Terrain = class Terrain
     @camera.updateProjectionMatrix()
 
   #
-  onKeyDown : (event) ->
+  onKeyDown : (event) =>
     switch event.keyCode
       when 78
         @lightDir *= -1 #N
       when 77
         @animDeltaDir *= -1 #M
-      when 66
-        soundDir *= -1 #B
 
   #
   applyShader : (shader, texture, target) ->
