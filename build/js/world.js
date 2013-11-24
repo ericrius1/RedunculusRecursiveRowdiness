@@ -17,9 +17,14 @@
       this.updateNoise = true;
       this.animateTerrain = false;
       this.mlib = {};
-      this.MARGIN = 100;
+      this.MARGIN = 10;
       this.SCREEN_WIDTH = window.innerWidth;
       this.SCREEN_HEIGHT = window.innerHeight - 2 * this.MARGIN;
+      this.stats = new Stats();
+      this.stats.domElement.style.position = 'absolute';
+      this.stats.domElement.style.left = '0px';
+      this.stats.domElement.style.top = '0px';
+      document.body.appendChild(this.stats.domElement);
       this.sceneRenderTarget = new THREE.Scene();
       this.cameraOrtho = new THREE.OrthographicCamera(this.SCREEN_WIDTH / -2, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT / 2, this.SCREEN_HEIGHT / -2, -10000, 10000);
       this.cameraOrtho.position.z = 100;
@@ -27,10 +32,10 @@
       this.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, 4000);
       this.camera.position.set(-1200, 800, 1200);
       this.scene = new THREE.Scene();
-      this.scene.fog = new THREE.FogExp2(0x050505, 0);
-      this.scene.fog.intensity = 0;
+      this.scene.fog = new THREE.Fog(0x050505, 2000, 4000);
       this.g = new grow3.System(this.scene, this.camera, RULES.bush);
       thing = this.g.build(void 0, new THREE.Vector3(-1300, 900, 1300));
+      this.camera.lookAt(thing.position);
       this.scene.add(new THREE.AmbientLight(0x111111));
       this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       this.directionalLight.position.set(500, 2000, 0);
@@ -138,8 +143,8 @@
       this.renderer.gammaOutput = true;
       this.controls = new THREE.FlyControls(this.camera);
       this.controls.movementSpeed = 1000;
-      this.controls.rollSpeed = Math.PI / 4;
-      this.controls.dragToLook = false;
+      this.controls.rollSpeed = Math.PI / 24;
+      this.controls.dragToLook = true;
       this.onWindowResize();
       this.renderer.autoClear = false;
       renderTargetParameters = {
@@ -153,7 +158,7 @@
       effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader);
       hblur = new THREE.ShaderPass(THREE.HorizontalTiltShiftShader);
       vblur = new THREE.ShaderPass(THREE.VerticalTiltShiftShader);
-      bluriness = 6;
+      bluriness = 2;
       hblur.uniforms["h"].value = bluriness / this.SCREEN_WIDTH;
       vblur.uniforms["v"].value = bluriness / this.SCREEN_HEIGHT;
       hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5;
@@ -222,6 +227,7 @@
     World.prototype.render = function() {
       var delta, fHigh, fLow, time, valNorm;
       delta = this.clock.getDelta();
+      this.stats.update();
       if (this.terrain.visible) {
         this.controls.update(delta);
         time = Date.now() * 0.001;
@@ -244,7 +250,8 @@
           this.quadTarget.material = this.mlib["normal"];
           this.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.normalMap, true);
         }
-        return this.renderer.render(this.scene, this.camera);
+        this.updateNoise = true;
+        return this.composer.render(0.1);
       }
     };
 

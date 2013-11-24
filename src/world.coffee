@@ -10,10 +10,16 @@ FW.World = class World
     @updateNoise = true
     @animateTerrain = false
     @mlib = {}
-    @MARGIN = 100
+    @MARGIN = 10
     @SCREEN_WIDTH = window.innerWidth
     @SCREEN_HEIGHT = window.innerHeight - 2 * @MARGIN
 
+    #STATS
+    @stats = new Stats()
+    @stats.domElement.style.position = 'absolute';
+    @stats.domElement.style.left = '0px';
+    @stats.domElement.style.top = '0px';
+    document.body.appendChild(@stats.domElement);
     
     # SCENE (RENDER TARGET)
     @sceneRenderTarget = new THREE.Scene()
@@ -23,26 +29,17 @@ FW.World = class World
     
     # CAMERA
     @camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, 4000)
-    @camera.position.set -1200, 800, 1200
-    # @controls.target.set 0, 0, 0
-    # @controls.rotateSpeed = 1.0
-    # @controls.zoomSpeed = 1.2
-    # @controls.panSpeed = 0.8
-    # @controls.noZoom = false
-    # @controls.noPan = false
-    # @controls.staticMoving = false
-    # @controls.dynamicDampingFactor = 0.15
-    # @controls.keys = [65, 83, 68]
-
+    @camera.position.set  -1200, 800, 1200
     
     # SCENE (FINAL)
     @scene = new THREE.Scene()
-    @scene.fog = new THREE.FogExp2(0x050505, 0)
-    @scene.fog.intensity = 0
+    @scene.fog = new THREE.Fog(0x050505, 2000, 4000)
+
 
     #RECURSIVE STRUCTURES
     @g = new grow3.System(@scene, @camera, RULES.bush)
     thing = @g.build(undefined, new THREE.Vector3(-1300, 900, 1300))
+    @camera.lookAt thing.position
     
     # LIGHTS
     @scene.add new THREE.AmbientLight(0x111111)
@@ -164,8 +161,8 @@ FW.World = class World
 
     @controls = new THREE.FlyControls(@camera)
     @controls.movementSpeed = 1000;
-    @controls.rollSpeed =  Math.PI / 4;;
-    @controls.dragToLook = false
+    @controls.rollSpeed =  Math.PI / 24;;
+    @controls.dragToLook = true
     # @controls.domElement = @renderer.domElement;
     
     
@@ -186,7 +183,7 @@ FW.World = class World
     effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader)
     hblur = new THREE.ShaderPass(THREE.HorizontalTiltShiftShader)
     vblur = new THREE.ShaderPass(THREE.VerticalTiltShiftShader)
-    bluriness = 6
+    bluriness = 2
     hblur.uniforms["h"].value = bluriness / @SCREEN_WIDTH
     vblur.uniforms["v"].value = bluriness / @SCREEN_HEIGHT
     hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5
@@ -254,6 +251,7 @@ FW.World = class World
     @render()
   render : ->
     delta = @clock.getDelta()
+    @stats.update()
     if @terrain.visible
       @controls.update(delta)
       time = Date.now() * 0.001
@@ -276,10 +274,10 @@ FW.World = class World
         @quadTarget.material = @mlib["normal"]
         @renderer.render @sceneRenderTarget, @cameraOrtho, @normalMap, true
       
-      #@updateNoise = false;
+      @updateNoise = true;
       
-      @renderer.render( @scene, @camera );
-      #@composer.render 0.1
+      #@renderer.render( @scene, @camera );
+      @composer.render 0.1
 
 
     
