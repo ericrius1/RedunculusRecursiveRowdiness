@@ -11,8 +11,8 @@ window.onload = ->
 FW.Main = class Main
   constructor: ->
     #RECURSIVE STRUCTURES
-    @g = new grow3.System(FW.myWorld.scene, FW.myWorld.camera, RULES.bush)
+    @g = new grow3.System(FW.scene, FW.camera, RULES.bush)
     thing = @g.build(undefined, new THREE.Vector3(-1220, 760, 1250))
-    FW.myWorld.camera.lookAt thing.position
+    FW.camera.lookAt thing.position
 
 

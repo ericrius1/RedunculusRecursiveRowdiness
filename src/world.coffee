@@ -23,29 +23,29 @@ FW.World = class World
     
     # SCENE (RENDER TARGET)
     @sceneRenderTarget = new THREE.Scene()
-    @cameraOrtho = new THREE.OrthographicCamera(@SCREEN_WIDTH / -2, @SCREEN_WIDTH / 2, @SCREEN_HEIGHT / 2, @SCREEN_HEIGHT / -2, -10000, 10000)
-    @cameraOrtho.position.z = 100
-    @sceneRenderTarget.add @cameraOrtho
+    @ccasmeraOrtho = new THREE.OrthographicCamera(@SCREEN_WIDTH / -2, @SCREEN_WIDTH / 2, @SCREEN_HEIGHT / 2, @SCREEN_HEIGHT / -2, -10000, 10000)
+    @ccasmeraOrtho.position.z = 100
+    @sceneRenderTarget.add @ccasmeraOrtho
     
     # CAMERA
-    @camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, 4000)
-    @camera.position.set  -1200, 800, 1200
+    FW.camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, 4000)
+    FW.camera.position.set  -1200, 800, 1200
     
     # SCENE (FINAL)
-    @scene = new THREE.Scene()
-    @scene.fog = new THREE.Fog(0x050505, 2000, 4000)
+    FW.scene = new THREE.Scene()
+    FW.scene.fog = new THREE.Fog(0x050505, 2000, 4000)
 
 
 
     
     # LIGHTS
-    @scene.add new THREE.AmbientLight(0x111111)
+    FW.scene.add new THREE.AmbientLight(0x111111)
     @directionalLight = new THREE.DirectionalLight(0xffffff, 1.15)
     @directionalLight.position.set 500, 2000, 0
-    @scene.add @directionalLight
+    FW.scene.add @directionalLight
     @pointLight = new THREE.PointLight(0xff4400, 1.5)
     @pointLight.position.set 0, 0, 0
-    @scene.add @pointLight
+    FW.scene.add @pointLight
     
     # HEIGHT + NORMAL MAPS
     normalShader = THREE.NormalMapShader
@@ -140,12 +140,12 @@ FW.World = class World
     # @terrain.position.set 0, -125, 0
     @terrain.rotation.x = -Math.PI / 2
     @terrain.visible = false
-    @scene.add @terrain
+    FW.scene.add @terrain
     
     # RENDERER
     @renderer = new THREE.WebGLRenderer({antialias: true})
     @renderer.setSize @SCREEN_WIDTH, @SCREEN_HEIGHT
-    @renderer.setClearColor @scene.fog.color, 1
+    @renderer.setClearColor FW.scene.fog.color, 1
     @renderer.domElement.style.position = "absolute"
     @renderer.domElement.style.top = @MARGIN + "px"
     @renderer.domElement.style.left = "0px"
@@ -156,7 +156,7 @@ FW.World = class World
 
     #CONTROLS
 
-    @controls = new THREE.FlyControls(@camera)
+    @controls = new THREE.FlyControls(FW.camera)
     @controls.movementSpeed = 1000;
     @controls.rollSpeed =  Math.PI / 24;;
     @controls.dragToLook = true
@@ -186,7 +186,7 @@ FW.World = class World
     hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5
     effectBleach.uniforms["opacity"].value = 0.65
     @composer = new THREE.EffectComposer(@renderer, @renderTarget)
-    renderModel = new THREE.RenderPass(@scene, @camera)
+    renderModel = new THREE.RenderPass(FW.scene, FW.camera)
     vblur.renderToScreen = true
     @composer = new THREE.EffectComposer(@renderer, @renderTarget)
     @composer.addPass renderModel
@@ -197,7 +197,7 @@ FW.World = class World
     @composer.addPass vblur
     
     # PRE-INIT
-    @renderer.initWebGLObjects @scene
+    @renderer.initWebGLObjects FW.scene
 
     window.addEventListener "resize", (=>
       @onWindowResize()
@@ -212,8 +212,8 @@ FW.World = class World
     @SCREEN_WIDTH = window.innerWidth
     @SCREEN_HEIGHT = window.innerHeight - 2 * @MARGIN
     @renderer.setSize @SCREEN_WIDTH, @SCREEN_HEIGHT
-    @camera.aspect = @SCREEN_WIDTH / @SCREEN_HEIGHT
-    @camera.updateProjectionMatrix()
+    FW.camera.aspect = @SCREEN_WIDTH / @SCREEN_HEIGHT
+    FW.camera.updateProjectionMatrix()
 
   #
   onKeyDown : (event) =>
@@ -235,9 +235,8 @@ FW.World = class World
     meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(@SCREEN_WIDTH, @SCREEN_HEIGHT), shaderMaterial)
     meshTmp.position.z = -500
     sceneTmp.add meshTmp
-    @renderer.render sceneTmp, @cameraOrtho, target, true
+    @renderer.render sceneTmp, @ccasmeraOrtho, target, true
 
-  #
   loadTextures : ->
     @textureCounter += 1
     @terrain.visible = true  if @textureCounter is 3
@@ -256,8 +255,8 @@ FW.World = class World
       fHigh = 0.8
       @lightVal = THREE.Math.clamp(@lightVal + 0.5 * delta * @lightDir, fLow, fHigh)
       valNorm = (@lightVal - fLow) / (fHigh - fLow)
-      @scene.fog.color.setHSL 0.1, 0.5, @lightVal
-      @renderer.setClearColor @scene.fog.color, 1
+      FW.scene.fog.color.setHSL 0.1, 0.5, @lightVal
+      @renderer.setClearColor FW.scene.fog.color, 1
       @directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15)
       @pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5)
       @uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5)
@@ -267,13 +266,13 @@ FW.World = class World
         @uniformsNoise["offset"].value.x += delta * 0.05
         @uniformsTerrain["uOffset"].value.x = 4 * @uniformsNoise["offset"].value.x
         @quadTarget.material = @mlib["heightmap"]
-        @renderer.render @sceneRenderTarget, @cameraOrtho, @heightMap, true
+        @renderer.render @sceneRenderTarget, @ccasmeraOrtho, @heightMap, true
         @quadTarget.material = @mlib["normal"]
-        @renderer.render @sceneRenderTarget, @cameraOrtho, @normalMap, true
+        @renderer.render @sceneRenderTarget, @ccasmeraOrtho, @normalMap, true
       
       @updateNoise = true;
       
-      #@renderer.render( @scene, @camera );
+      #@renderer.render( FW.scene, FW.camera );
       @composer.render 0.1
 
 

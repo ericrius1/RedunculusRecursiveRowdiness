@@ -26,20 +26,20 @@
       this.stats.domElement.style.top = '0px';
       document.body.appendChild(this.stats.domElement);
       this.sceneRenderTarget = new THREE.Scene();
-      this.cameraOrtho = new THREE.OrthographicCamera(this.SCREEN_WIDTH / -2, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT / 2, this.SCREEN_HEIGHT / -2, -10000, 10000);
-      this.cameraOrtho.position.z = 100;
-      this.sceneRenderTarget.add(this.cameraOrtho);
-      this.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, 4000);
-      this.camera.position.set(-1200, 800, 1200);
-      this.scene = new THREE.Scene();
-      this.scene.fog = new THREE.Fog(0x050505, 2000, 4000);
-      this.scene.add(new THREE.AmbientLight(0x111111));
+      this.ccasmeraOrtho = new THREE.OrthographicCamera(this.SCREEN_WIDTH / -2, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT / 2, this.SCREEN_HEIGHT / -2, -10000, 10000);
+      this.ccasmeraOrtho.position.z = 100;
+      this.sceneRenderTarget.add(this.ccasmeraOrtho);
+      FW.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, 4000);
+      FW.camera.position.set(-1200, 800, 1200);
+      FW.scene = new THREE.Scene();
+      FW.scene.fog = new THREE.Fog(0x050505, 2000, 4000);
+      FW.scene.add(new THREE.AmbientLight(0x111111));
       this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       this.directionalLight.position.set(500, 2000, 0);
-      this.scene.add(this.directionalLight);
+      FW.scene.add(this.directionalLight);
       this.pointLight = new THREE.PointLight(0xff4400, 1.5);
       this.pointLight.position.set(0, 0, 0);
-      this.scene.add(this.pointLight);
+      FW.scene.add(this.pointLight);
       normalShader = THREE.NormalMapShader;
       rx = 256;
       ry = 256;
@@ -128,19 +128,19 @@
       this.terrain = new THREE.Mesh(this.geometryTerrain, this.mlib["@terrain"]);
       this.terrain.rotation.x = -Math.PI / 2;
       this.terrain.visible = false;
-      this.scene.add(this.terrain);
+      FW.scene.add(this.terrain);
       this.renderer = new THREE.WebGLRenderer({
         antialias: true
       });
       this.renderer.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
-      this.renderer.setClearColor(this.scene.fog.color, 1);
+      this.renderer.setClearColor(FW.scene.fog.color, 1);
       this.renderer.domElement.style.position = "absolute";
       this.renderer.domElement.style.top = this.MARGIN + "px";
       this.renderer.domElement.style.left = "0px";
       document.body.appendChild(this.renderer.domElement);
       this.renderer.gammaInput = true;
       this.renderer.gammaOutput = true;
-      this.controls = new THREE.FlyControls(this.camera);
+      this.controls = new THREE.FlyControls(FW.camera);
       this.controls.movementSpeed = 1000;
       this.controls.rollSpeed = Math.PI / 24;
       this.controls.dragToLook = true;
@@ -163,14 +163,14 @@
       hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5;
       effectBleach.uniforms["opacity"].value = 0.65;
       this.composer = new THREE.EffectComposer(this.renderer, this.renderTarget);
-      renderModel = new THREE.RenderPass(this.scene, this.camera);
+      renderModel = new THREE.RenderPass(FW.scene, FW.camera);
       vblur.renderToScreen = true;
       this.composer = new THREE.EffectComposer(this.renderer, this.renderTarget);
       this.composer.addPass(renderModel);
       this.composer.addPass(effectBloom);
       this.composer.addPass(hblur);
       this.composer.addPass(vblur);
-      this.renderer.initWebGLObjects(this.scene);
+      this.renderer.initWebGLObjects(FW.scene);
       window.addEventListener("resize", (function() {
         return _this.onWindowResize();
       }), false);
@@ -183,8 +183,8 @@
       this.SCREEN_WIDTH = window.innerWidth;
       this.SCREEN_HEIGHT = window.innerHeight - 2 * this.MARGIN;
       this.renderer.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
-      this.camera.aspect = this.SCREEN_WIDTH / this.SCREEN_HEIGHT;
-      return this.camera.updateProjectionMatrix();
+      FW.camera.aspect = this.SCREEN_WIDTH / this.SCREEN_HEIGHT;
+      return FW.camera.updateProjectionMatrix();
     };
 
     World.prototype.onKeyDown = function(event) {
@@ -208,7 +208,7 @@
       meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(this.SCREEN_WIDTH, this.SCREEN_HEIGHT), shaderMaterial);
       meshTmp.position.z = -500;
       sceneTmp.add(meshTmp);
-      return this.renderer.render(sceneTmp, this.cameraOrtho, target, true);
+      return this.renderer.render(sceneTmp, this.ccasmeraOrtho, target, true);
     };
 
     World.prototype.loadTextures = function() {
@@ -234,8 +234,8 @@
         fHigh = 0.8;
         this.lightVal = THREE.Math.clamp(this.lightVal + 0.5 * delta * this.lightDir, fLow, fHigh);
         valNorm = (this.lightVal - fLow) / (fHigh - fLow);
-        this.scene.fog.color.setHSL(0.1, 0.5, this.lightVal);
-        this.renderer.setClearColor(this.scene.fog.color, 1);
+        FW.scene.fog.color.setHSL(0.1, 0.5, this.lightVal);
+        this.renderer.setClearColor(FW.scene.fog.color, 1);
         this.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15);
         this.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5);
         this.uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5);
@@ -245,9 +245,9 @@
           this.uniformsNoise["offset"].value.x += delta * 0.05;
           this.uniformsTerrain["uOffset"].value.x = 4 * this.uniformsNoise["offset"].value.x;
           this.quadTarget.material = this.mlib["heightmap"];
-          this.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.heightMap, true);
+          this.renderer.render(this.sceneRenderTarget, this.ccasmeraOrtho, this.heightMap, true);
           this.quadTarget.material = this.mlib["normal"];
-          this.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.normalMap, true);
+          this.renderer.render(this.sceneRenderTarget, this.ccasmeraOrtho, this.normalMap, true);
         }
         this.updateNoise = true;
         return this.composer.render(0.1);

@@ -12,9 +12,9 @@
   FW.Main = Main = (function() {
     function Main() {
       var thing;
-      this.g = new grow3.System(FW.myWorld.scene, FW.myWorld.camera, RULES.bush);
+      this.g = new grow3.System(FW.scene, FW.camera, RULES.bush);
       thing = this.g.build(void 0, new THREE.Vector3(-1220, 760, 1250));
-      FW.myWorld.camera.lookAt(thing.position);
+      FW.camera.lookAt(thing.position);
     }
 
     return Main;
