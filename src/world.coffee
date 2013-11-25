@@ -3,7 +3,7 @@ FW.World = class World
   constructor : ->
     @textureCounter = 0
     @animDelta = 0
-    @animDeltaDir = -1
+    @animDeltaDir = 1
     @lightVal = 0
     @lightDir = -1
     @clock = new THREE.Clock()
@@ -21,7 +21,7 @@ FW.World = class World
 
     @controls = new THREE.FlyControls(FW.camera)
     @controls.movementSpeed = 100;
-    @controls.rollSpeed =  Math.PI / 4;
+    @controls.rollSpeed =  Math.PI / 16;
     @controls.dragToLook = false
 
     #STATS

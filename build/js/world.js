@@ -10,7 +10,7 @@
         _this = this;
       this.textureCounter = 0;
       this.animDelta = 0;
-      this.animDeltaDir = -1;
+      this.animDeltaDir = 1;
       this.lightVal = 0;
       this.lightDir = -1;
       this.clock = new THREE.Clock();
@@ -24,7 +24,7 @@
       FW.camera.position.set(-1200, 800, 1200);
       this.controls = new THREE.FlyControls(FW.camera);
       this.controls.movementSpeed = 100;
-      this.controls.rollSpeed = Math.PI / 4;
+      this.controls.rollSpeed = Math.PI / 16;
       this.controls.dragToLook = false;
       this.stats = new Stats();
       this.stats.domElement.style.position = 'absolute';
