@@ -21,7 +21,7 @@ FW.Rockets = class Rockets
     @shootDirection = new THREE.Vector3()
 
 
-    @dimmingSpeed = 0.005
+    @dimmingSpeed = 0.008
     @explosionLightIntensity = 2.0
 
     @rocketMat= new THREE.ShaderMaterial({
@@ -33,7 +33,7 @@ FW.Rockets = class Rockets
     @rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
 
     #LIGHTS
-    @light = new THREE.PointLight(0xffeeee, 0.0, 2000)
+    @light = new THREE.PointLight(0xffeeee, 0.0, 4000)
     @light.position.set(1, 1, 1);
     FW.scene.add(@light)
 
@@ -52,7 +52,7 @@ FW.Rockets = class Rockets
           setTimeout(()=>
             #@crackleSound.play()
           400)
-        800)
+        500)
 
 
   launchRocket: ()->

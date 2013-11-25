@@ -25,18 +25,18 @@
       this.controls = new THREE.FlyControls(FW.camera);
       this.controls.movementSpeed = 100;
       this.controls.rollSpeed = Math.PI / 4;
-      this.controls.dragToLook = true;
+      this.controls.dragToLook = false;
       this.stats = new Stats();
       this.stats.domElement.style.position = 'absolute';
       this.stats.domElement.style.left = '0px';
       this.stats.domElement.style.top = '0px';
       document.body.appendChild(this.stats.domElement);
       this.sceneRenderTarget = new THREE.Scene();
-      this.ccasmeraOrtho = new THREE.OrthographicCamera(this.SCREEN_WIDTH / -2, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT / 2, this.SCREEN_HEIGHT / -2, -10000, 10000);
-      this.ccasmeraOrtho.position.z = 100;
-      this.sceneRenderTarget.add(this.ccasmeraOrtho);
+      this.cameraOrtho = new THREE.OrthographicCamera(this.SCREEN_WIDTH / -2, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT / 2, this.SCREEN_HEIGHT / -2, -10000, 10000);
+      this.cameraOrtho.position.z = 100;
+      this.sceneRenderTarget.add(this.cameraOrtho);
       FW.scene = new THREE.Scene();
-      FW.scene.fog = new THREE.Fog(0x050505, 2000, 4000);
+      FW.scene.fog = new THREE.Fog(0x0000ff, 100, 4000);
       this.firework = new FW.Firework();
       this.groundControl = new FW.Rockets();
       FW.scene.add(new THREE.AmbientLight(0x111111));
@@ -210,7 +210,7 @@
       meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(this.SCREEN_WIDTH, this.SCREEN_HEIGHT), shaderMaterial);
       meshTmp.position.z = -500;
       sceneTmp.add(meshTmp);
-      return this.renderer.render(sceneTmp, this.ccasmeraOrtho, target, true);
+      return this.renderer.render(sceneTmp, this.cameraOrtho, target, true);
     };
 
     World.prototype.loadTextures = function() {
@@ -248,9 +248,9 @@
           this.uniformsNoise["offset"].value.x += delta * 0.05;
           this.uniformsTerrain["uOffset"].value.x = 4 * this.uniformsNoise["offset"].value.x;
           this.quadTarget.material = this.mlib["heightmap"];
-          this.renderer.render(this.sceneRenderTarget, this.ccasmeraOrtho, this.heightMap, true);
+          this.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.heightMap, true);
           this.quadTarget.material = this.mlib["normal"];
-          this.renderer.render(this.sceneRenderTarget, this.ccasmeraOrtho, this.normalMap, true);
+          this.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.normalMap, true);
         }
         this.updateNoise = true;
         return this.composer.render(0.1);

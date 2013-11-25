@@ -22,7 +22,7 @@ FW.World = class World
     @controls = new THREE.FlyControls(FW.camera)
     @controls.movementSpeed = 100;
     @controls.rollSpeed =  Math.PI / 4;
-    @controls.dragToLook = true
+    @controls.dragToLook = false
 
     #STATS
     @stats = new Stats()
@@ -33,14 +33,14 @@ FW.World = class World
     
     # SCENE (RENDER TARGET)
     @sceneRenderTarget = new THREE.Scene()
-    @ccasmeraOrtho = new THREE.OrthographicCamera(@SCREEN_WIDTH / -2, @SCREEN_WIDTH / 2, @SCREEN_HEIGHT / 2, @SCREEN_HEIGHT / -2, -10000, 10000)
-    @ccasmeraOrtho.position.z = 100
-    @sceneRenderTarget.add @ccasmeraOrtho
+    @cameraOrtho = new THREE.OrthographicCamera(@SCREEN_WIDTH / -2, @SCREEN_WIDTH / 2, @SCREEN_HEIGHT / 2, @SCREEN_HEIGHT / -2, -10000, 10000)
+    @cameraOrtho.position.z = 100
+    @sceneRenderTarget.add @cameraOrtho
     
     
     # SCENE (FINAL)
     FW.scene = new THREE.Scene()
-    FW.scene.fog = new THREE.Fog(0x050505, 2000, 4000)
+    FW.scene.fog = new THREE.Fog(0x0000ff, 100, 4000)
 
 
     #FUN
@@ -241,7 +241,7 @@ FW.World = class World
     meshTmp = new THREE.Mesh(new THREE.PlaneGeometry(@SCREEN_WIDTH, @SCREEN_HEIGHT), shaderMaterial)
     meshTmp.position.z = -500
     sceneTmp.add meshTmp
-    @renderer.render sceneTmp, @ccasmeraOrtho, target, true
+    @renderer.render sceneTmp, @cameraOrtho, target, true
 
   loadTextures : ->
     @textureCounter += 1
@@ -273,9 +273,9 @@ FW.World = class World
         @uniformsNoise["offset"].value.x += delta * 0.05
         @uniformsTerrain["uOffset"].value.x = 4 * @uniformsNoise["offset"].value.x
         @quadTarget.material = @mlib["heightmap"]
-        @renderer.render @sceneRenderTarget, @ccasmeraOrtho, @heightMap, true
+        @renderer.render @sceneRenderTarget, @cameraOrtho, @heightMap, true
         @quadTarget.material = @mlib["normal"]
-        @renderer.render @sceneRenderTarget, @ccasmeraOrtho, @normalMap, true
+        @renderer.render @sceneRenderTarget, @cameraOrtho, @normalMap, true
       
       @updateNoise = true;
       
