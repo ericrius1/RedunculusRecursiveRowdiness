@@ -18,6 +18,7 @@
       this.firework = new FW.Firework(this.color);
       this.projector = new THREE.Projector();
       this.launchSpeed = 0.8;
+      this.launchSpeedY = 1.0;
       this.explosionDelay = 500;
       this.shootDirection = new THREE.Vector3();
       this.dimmingSpeed = 0.008;
@@ -64,6 +65,7 @@
       rocket.shootDirection.x = ray.direction.x;
       rocket.shootDirection.y = ray.direction.y;
       rocket.shootDirection.z = ray.direction.z;
+      rocket.launchSpeedY = 0.0;
       rocket.translateX(rocket.shootDirection.x);
       rocket.translateY(rocket.shootDirection.y);
       rocket.translateZ(rocket.shootDirection.z);
@@ -93,7 +95,9 @@
     Rockets.prototype.updateRocket = function(rocket) {
       rocket.translateX(this.launchSpeed * rocket.shootDirection.x);
       rocket.translateY(this.launchSpeed * rocket.shootDirection.y);
-      return rocket.translateZ(this.launchSpeed * rocket.shootDirection.z);
+      rocket.translateZ(this.launchSpeed * rocket.shootDirection.z);
+      rocket.translateY(rocket.launchSpeedY);
+      return rocket.launchSpeedY -= .005;
     };
 
     return Rockets;

@@ -13,7 +13,7 @@
     function Main() {
       var thing;
       this.g = new grow3.System(FW.scene, FW.camera, RULES.bush);
-      thing = this.g.build(void 0, new THREE.Vector3(-1137, 794, 1191));
+      thing = this.g.build(void 0, new THREE.Vector3(-1137, 800, 1591));
       FW.camera.lookAt(thing.position);
       this.firework = new FW.Firework();
       this.groundControl = new FW.Rockets();

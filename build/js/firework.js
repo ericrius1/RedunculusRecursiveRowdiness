@@ -9,13 +9,26 @@
     function Firework() {
       this.groups = [];
       this.color = new THREE.Color();
-      this.color.setRGB(200, 0, 0);
       this.particleGroup = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
         maxAge: 13
       });
-      this.emitterSettings = {
+      this.particleGroup.addPool(1, this.generateEmitter(), true);
+      this.particleGroup.addPool(1, this.generateEmitter(), true);
+      this.particleGroup.addPool(1, this.generateEmitter(), true);
+      this.particleGroup.addPool(1, this.generateEmitter(), true);
+      this.particleGroup.addPool(1, this.generateEmitter(), true);
+      this.particleGroup.addPool(1, this.generateEmitter(), true);
+      this.particleGroup.addPool(1, this.generateEmitter(), true);
+      this.particleGroup.addPool(1, this.generateEmitter(), true);
+      FW.scene.add(this.particleGroup.mesh);
+    }
+
+    Firework.prototype.generateEmitter = function() {
+      var emitterSettings;
+      this.color.setRGB(rnd(255), rnd(255), rnd(255));
+      return emitterSettings = {
         size: 0.2,
         acceleration: new THREE.Vector3(0, -0.01, 0),
         accelerationSpread: new THREE.Vector3(.2, .2, .02),
@@ -24,12 +37,7 @@
         alive: 0,
         emitterDuration: 2.0
       };
-      this.particleGroup.addPool(20, this.emitterSettings, true);
-      this.color.setRGB(0, 0, 200);
-      this.emitterSettings.colorStart = this.color;
-      this.particleGroup.addPool(1, this.emitterSettings, true);
-      FW.scene.add(this.particleGroup.mesh);
-    }
+    };
 
     Firework.prototype.createExplosion = function(pos) {
       return this.particleGroup.triggerPoolEmitter(1, pos);

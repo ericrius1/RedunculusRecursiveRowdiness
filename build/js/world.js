@@ -25,7 +25,7 @@
       this.controls = new THREE.FlyControls(FW.camera);
       this.controls.movementSpeed = 100;
       this.controls.rollSpeed = Math.PI / 16;
-      this.controls.dragToLook = false;
+      this.controls.dragToLook = true;
       this.stats = new Stats();
       this.stats.domElement.style.position = 'absolute';
       this.stats.domElement.style.left = '0px';
@@ -36,7 +36,7 @@
       this.cameraOrtho.position.z = 100;
       this.sceneRenderTarget.add(this.cameraOrtho);
       FW.scene = new THREE.Scene();
-      FW.scene.fog = new THREE.Fog(0x0000ff, 100, 4000);
+      FW.scene.fog = new THREE.Fog(0x000000, 100, 4000);
       this.firework = new FW.Firework();
       this.groundControl = new FW.Rockets();
       FW.scene.add(new THREE.AmbientLight(0x111111));

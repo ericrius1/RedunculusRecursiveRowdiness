@@ -17,6 +17,7 @@ FW.Rockets = class Rockets
 
     @projector = new THREE.Projector()
     @launchSpeed = 0.8
+    @launchSpeedY= 1.0 
     @explosionDelay = 500
     @shootDirection = new THREE.Vector3()
 
@@ -71,6 +72,7 @@ FW.Rockets = class Rockets
     rocket.shootDirection.x = ray.direction.x;
     rocket.shootDirection.y = ray.direction.y;
     rocket.shootDirection.z = ray.direction.z;
+    rocket.launchSpeedY = 0.0
     rocket.translateX(rocket.shootDirection.x)
     rocket.translateY(rocket.shootDirection.y)
     rocket.translateZ(rocket.shootDirection.z)
@@ -93,3 +95,6 @@ FW.Rockets = class Rockets
     rocket.translateX(@launchSpeed * rocket.shootDirection.x)
     rocket.translateY( @launchSpeed * rocket.shootDirection.y)
     rocket.translateZ(@launchSpeed * rocket.shootDirection.z)
+    rocket.translateY(rocket.launchSpeedY)
+    rocket.launchSpeedY -=.005
+

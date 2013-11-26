@@ -22,7 +22,7 @@ FW.World = class World
     @controls = new THREE.FlyControls(FW.camera)
     @controls.movementSpeed = 100;
     @controls.rollSpeed =  Math.PI / 16;
-    @controls.dragToLook = false
+    @controls.dragToLook = true
 
     #STATS
     @stats = new Stats()
@@ -40,7 +40,7 @@ FW.World = class World
     
     # SCENE (FINAL)
     FW.scene = new THREE.Scene()
-    FW.scene.fog = new THREE.Fog(0x0000ff, 100, 4000)
+    FW.scene.fog = new THREE.Fog(0x000000, 100, 4000)
 
 
     #FUN

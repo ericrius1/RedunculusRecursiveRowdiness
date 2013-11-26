@@ -14,21 +14,26 @@ window.RULES = {}
 
 RULES.bush = function(grow3) {
   with(grow3) {
-    var mat1 = new THREE.MeshPhongMaterial({
-      color: 0xddaa77
-    });
     var mat2 = new THREE.MeshPhongMaterial({
       color: 0xaadd77
     });
+    var shinyMat = new THREE.ShaderMaterial({
+    uniforms: uniforms1,
+    vertexShader: document.getElementById('rocketVertexShader').textContent,
+    fragmentShader: document.getElementById('fragment_shader1').textContent
 
-    maxDepth(80);
+    })
+
+    var mats = [shinyMat, mat2];
+
+    maxDepth(50);
 
     rules({
      
 
       arc: function() {
-        cube(scale(0.9));
-        arc(pitch(4.0).yaw(7.0).move(-1.3).s(0.97));
+        cube(material(mats).scale(0.9));
+        arc(pitch(4.0).yaw(7.0).move(-20.3).s(0.97));
       },
 
       twistyObject: function() {
@@ -40,7 +45,7 @@ RULES.bush = function(grow3) {
       },
 
       start: function() {
-        twistyObject(material(mat2));
+        twistyObject();
 
       }
     });
