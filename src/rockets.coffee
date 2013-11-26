@@ -8,7 +8,7 @@ FW.Rockets = class Rockets
     @launchSound = new Audio('./assets/launch.mp3');
     @explodeSound = new Audio('./assets/explosion.mp3');
     @crackleSound = new Audio('./assets/crackle.mp3');
-    @soundOn = true
+    @soundOn = false
     @color = new THREE.Color()
     @color.setRGB(200, 10, 0)
 

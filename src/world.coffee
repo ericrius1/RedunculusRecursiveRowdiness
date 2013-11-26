@@ -17,10 +17,10 @@ FW.World = class World
     # CAMERA
     FW.camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, 4000)
     FW.camera.position.set  -1200, 800, 1200
+    
     #CONTROLS
-
     @controls = new THREE.FlyControls(FW.camera)
-    @controls.movementSpeed = 100;
+    @controls.movementSpeed = 60;
     @controls.rollSpeed =  Math.PI / 16;
     @controls.dragToLook = true
 
@@ -186,7 +186,7 @@ FW.World = class World
     effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader)
     hblur = new THREE.ShaderPass(THREE.HorizontalTiltShiftShader)
     vblur = new THREE.ShaderPass(THREE.VerticalTiltShiftShader)
-    bluriness = 2
+    bluriness = 0
     hblur.uniforms["h"].value = bluriness / @SCREEN_WIDTH
     vblur.uniforms["v"].value = bluriness / @SCREEN_HEIGHT
     hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5
@@ -255,6 +255,7 @@ FW.World = class World
     delta = @clock.getDelta()
     @stats.update()
     @groundControl.update()
+    uniforms1.time.value += delta * 5;
     if @terrain.visible
       @controls.update(delta)
       time = Date.now() * 0.001
@@ -263,7 +264,7 @@ FW.World = class World
       @lightVal = THREE.Math.clamp(@lightVal + 0.5 * delta * @lightDir, fLow, fHigh)
       valNorm = (@lightVal - fLow) / (fHigh - fLow)
       FW.scene.fog.color.setHSL 0.1, 0.5, @lightVal
-      @renderer.setClearColor FW.scene.fog.color, 1
+      @renderer.setClearColor '0x000000', 1
       @directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15)
       @pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5)
       @uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5)

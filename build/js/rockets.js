@@ -12,7 +12,7 @@
       this.launchSound = new Audio('./assets/launch.mp3');
       this.explodeSound = new Audio('./assets/explosion.mp3');
       this.crackleSound = new Audio('./assets/crackle.mp3');
-      this.soundOn = true;
+      this.soundOn = false;
       this.color = new THREE.Color();
       this.color.setRGB(200, 10, 0);
       this.firework = new FW.Firework(this.color);

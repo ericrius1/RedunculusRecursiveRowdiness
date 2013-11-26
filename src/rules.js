@@ -33,7 +33,7 @@ RULES.bush = function(grow3) {
 
       arc: function() {
         cube(material(mats).scale(0.9));
-        arc(pitch(4.0).yaw(7.0).move(-20.3).s(0.97));
+        arc(pitch(4.0).yaw(FW.rnd(3, 7)).move(-40.3).s(0.97));
       },
 
       twistyObject: function() {

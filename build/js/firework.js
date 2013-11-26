@@ -7,32 +7,31 @@
     rnd = FW.rnd;
 
     function Firework() {
+      var i, _i;
       this.groups = [];
-      this.color = new THREE.Color();
+      this.colorStart = new THREE.Color();
+      this.colorEnd = new THREE.Color();
       this.particleGroup = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
         maxAge: 13
       });
-      this.particleGroup.addPool(1, this.generateEmitter(), true);
-      this.particleGroup.addPool(1, this.generateEmitter(), true);
-      this.particleGroup.addPool(1, this.generateEmitter(), true);
-      this.particleGroup.addPool(1, this.generateEmitter(), true);
-      this.particleGroup.addPool(1, this.generateEmitter(), true);
-      this.particleGroup.addPool(1, this.generateEmitter(), true);
-      this.particleGroup.addPool(1, this.generateEmitter(), true);
-      this.particleGroup.addPool(1, this.generateEmitter(), true);
+      for (i = _i = 1; _i <= 10; i = ++_i) {
+        this.particleGroup.addPool(1, this.generateEmitter(), true);
+      }
       FW.scene.add(this.particleGroup.mesh);
     }
 
     Firework.prototype.generateEmitter = function() {
       var emitterSettings;
-      this.color.setRGB(rnd(255), rnd(255), rnd(255));
+      this.colorStart.setRGB(rnd(255), rnd(255), rnd(255));
+      console.log('color start', this.colorSTart);
       return emitterSettings = {
         size: 0.2,
         acceleration: new THREE.Vector3(0, -0.01, 0),
-        accelerationSpread: new THREE.Vector3(.2, .2, .02),
-        colorStart: this.color,
+        accelerationSpread: new THREE.Vector3(rnd(.01, 1), rnd(.01, 1), rnd(.01, 1)),
+        colorStart: this.colorStart,
+        colorSpread: new THREE.Vector3(20, 20, 20),
         particlesPerSecond: 100,
         alive: 0,
         emitterDuration: 2.0

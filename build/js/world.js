@@ -23,7 +23,7 @@
       FW.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, 4000);
       FW.camera.position.set(-1200, 800, 1200);
       this.controls = new THREE.FlyControls(FW.camera);
-      this.controls.movementSpeed = 100;
+      this.controls.movementSpeed = 60;
       this.controls.rollSpeed = Math.PI / 16;
       this.controls.dragToLook = true;
       this.stats = new Stats();
@@ -159,7 +159,7 @@
       effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader);
       hblur = new THREE.ShaderPass(THREE.HorizontalTiltShiftShader);
       vblur = new THREE.ShaderPass(THREE.VerticalTiltShiftShader);
-      bluriness = 2;
+      bluriness = 0;
       hblur.uniforms["h"].value = bluriness / this.SCREEN_WIDTH;
       vblur.uniforms["v"].value = bluriness / this.SCREEN_HEIGHT;
       hblur.uniforms["r"].value = vblur.uniforms["r"].value = 0.5;
@@ -230,6 +230,7 @@
       delta = this.clock.getDelta();
       this.stats.update();
       this.groundControl.update();
+      uniforms1.time.value += delta * 5;
       if (this.terrain.visible) {
         this.controls.update(delta);
         time = Date.now() * 0.001;
@@ -238,7 +239,7 @@
         this.lightVal = THREE.Math.clamp(this.lightVal + 0.5 * delta * this.lightDir, fLow, fHigh);
         valNorm = (this.lightVal - fLow) / (fHigh - fLow);
         FW.scene.fog.color.setHSL(0.1, 0.5, this.lightVal);
-        this.renderer.setClearColor(FW.scene.fog.color, 1);
+        this.renderer.setClearColor('0x000000', 1);
         this.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15);
         this.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5);
         this.uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5);
