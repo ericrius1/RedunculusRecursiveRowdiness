@@ -8,7 +8,7 @@ FW.Rockets = class Rockets
     @launchSound = new Audio('./assets/launch.mp3');
     @explodeSound = new Audio('./assets/explosion.mp3');
     @crackleSound = new Audio('./assets/crackle.mp3');
-    @soundOn = false
+    @soundOn = true 
     @color = new THREE.Color()
     @color.setRGB(200, 10, 0)
 
@@ -16,7 +16,7 @@ FW.Rockets = class Rockets
     @firework = new FW.Firework(@color)
 
     @projector = new THREE.Projector()
-    @launchSpeed = 2.1
+    @launchSpeed = 3.1
     @explosionDelay = 1000
     @shootDirection = new THREE.Vector3()
 
@@ -34,7 +34,7 @@ FW.Rockets = class Rockets
 
 
     #LIGHTS
-    @light = new THREE.PointLight(0xffeeee, 0.0, 4000)
+    @light = new THREE.PointLight(0xffeeee, 0.0, 6000)
     @light.position.set(1, 1, 1);
     FW.scene.add(@light)
 
@@ -45,7 +45,6 @@ FW.Rockets = class Rockets
     FW.scene.remove(rocket)
     @light.intensity = @explosionLightIntensity
     @light.position.set rocket.position.x, rocket.position.y, rocket.position.z
-    console.log @rockets
     @rockets.splice(@rockets.indexOf(rocket), 1) 
     @firework.createExplosion(rocket.position)
 
@@ -55,7 +54,7 @@ FW.Rockets = class Rockets
         setTimeout(()=>
           @explodeSound.play()
           setTimeout(()=>
-            #@crackleSound.play()
+            @crackleSound.play()
           400)
         500)
 

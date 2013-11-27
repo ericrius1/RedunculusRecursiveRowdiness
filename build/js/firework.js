@@ -11,6 +11,7 @@
       this.groups = [];
       this.colorStart = new THREE.Color();
       this.colorEnd = new THREE.Color();
+      this.numFireworksPerExplosion = 3;
       this.particleGroup = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/smokeparticle.png'),
         blending: THREE.AdditiveBlending,
@@ -24,17 +25,17 @@
 
     Firework.prototype.generateEmitter = function() {
       var emitterSettings;
-      this.colorStart.setRGB(Math.random(255), Math.random(255), Math.random(255));
-      this.colorEnd.setRGB(Math.random(255), Math.random(255), Math.random(255));
+      this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
+      this.colorEnd.setRGB(Math.random(), Math.random(), Math.random());
       return emitterSettings = {
         size: rnd(0.01, 0.3),
         velocity: new THREE.Vector3(0, rnd(-2, 2), 0),
         acceleration: new THREE.Vector3(0, -0.01, 0),
         accelerationSpread: new THREE.Vector3(rnd(0, 5), rnd(0, 5), rnd(0, 5)),
         colorStart: this.colorStart,
-        colorSpread: new THREE.Vector3(1, 1, 1),
+        colorSpread: new THREE.Vector3(.3, .3, .3),
         colorEnd: this.colorEnd,
-        particlesPerSecond: 300,
+        particlesPerSecond: rnd(100, 500),
         alive: 0,
         emitterDuration: 3.0
       };
@@ -49,7 +50,7 @@
         count = 0;
       }
       this.particleGroup.triggerPoolEmitter(2, newPos);
-      if (count < 5) {
+      if (count < this.numFireworksPerExplosion) {
         return setTimeout(function() {
           count++;
           newPos = new THREE.Vector3(rnd(origPos.x - 20, origPos.x + 20), rnd(origPos.y - 20, origPos.y + 20), rnd(origPos.z - 20, origPos.z + 20));

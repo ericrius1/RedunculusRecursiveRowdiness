@@ -51,13 +51,13 @@ FW.World = class World
 
     
     # LIGHTS
-    FW.scene.add new THREE.AmbientLight(0x70AAFF)
+    # FW.scene.add new THREE.AmbientLight(0xffffff)
     @directionalLight = new THREE.DirectionalLight(0xffffff, 1.15)
     @directionalLight.position.set 500, 2000, 0
-    FW.scene.add @directionalLight
+    # FW.scene.add @directionalLight
     @pointLight = new THREE.PointLight(0xff4400, 1.5)
     @pointLight.position.set 0, 0, 0
-    FW.scene.add @pointLight
+    # FW.scene.add @pointLight
     
     # HEIGHT + NORMAL MAPS
     normalShader = THREE.NormalMapShader
@@ -280,7 +280,7 @@ FW.World = class World
       
       @updateNoise = true;
       
-      #@renderer.render( FW.scene, FW.camera );
+      # @renderer.render( FW.scene, FW.camera );
       @composer.render 0.1
 
 

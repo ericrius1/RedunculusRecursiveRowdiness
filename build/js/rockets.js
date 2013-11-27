@@ -12,12 +12,12 @@
       this.launchSound = new Audio('./assets/launch.mp3');
       this.explodeSound = new Audio('./assets/explosion.mp3');
       this.crackleSound = new Audio('./assets/crackle.mp3');
-      this.soundOn = false;
+      this.soundOn = true;
       this.color = new THREE.Color();
       this.color.setRGB(200, 10, 0);
       this.firework = new FW.Firework(this.color);
       this.projector = new THREE.Projector();
-      this.launchSpeed = 2.1;
+      this.launchSpeed = 3.1;
       this.explosionDelay = 1000;
       this.shootDirection = new THREE.Vector3();
       this.dimmingSpeed = 0.008;
@@ -28,7 +28,7 @@
         fragmentShader: document.getElementById('fragment_shader1').textContent
       });
       this.rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
-      this.light = new THREE.PointLight(0xffeeee, 0.0, 4000);
+      this.light = new THREE.PointLight(0xffeeee, 0.0, 6000);
       this.light.position.set(1, 1, 1);
       FW.scene.add(this.light);
     }
@@ -38,13 +38,14 @@
       FW.scene.remove(rocket);
       this.light.intensity = this.explosionLightIntensity;
       this.light.position.set(rocket.position.x, rocket.position.y, rocket.position.z);
-      console.log(this.rockets);
       this.rockets.splice(this.rockets.indexOf(rocket), 1);
       this.firework.createExplosion(rocket.position);
       if (this.soundOn) {
         return setTimeout(function() {
           _this.explodeSound.play();
-          return setTimeout(function() {}, 400);
+          return setTimeout(function() {
+            return _this.crackleSound.play();
+          }, 400);
         }, 500);
       }
     };
