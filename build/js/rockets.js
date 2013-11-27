@@ -10,8 +10,6 @@
       rnd = FW.rnd;
       this.rockets = [];
       this.launchSound = new Audio('./assets/launch.mp3');
-      this.explodeSound = new Audio('./assets/explosion.mp3');
-      this.crackleSound = new Audio('./assets/crackle.mp3');
       this.soundOn = true;
       this.color = new THREE.Color();
       this.color.setRGB(200, 10, 0);
@@ -20,42 +18,24 @@
       this.launchSpeed = 3.1;
       this.explosionDelay = 1000;
       this.shootDirection = new THREE.Vector3();
-      this.dimmingSpeed = 0.008;
-      this.explosionLightIntensity = 2.0;
       this.rocketMat = new THREE.ShaderMaterial({
         uniforms: uniforms1,
         vertexShader: document.getElementById('rocketVertexShader').textContent,
         fragmentShader: document.getElementById('fragment_shader1').textContent
       });
       this.rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
-      this.light = new THREE.PointLight(0xffeeee, 0.0, 6000);
-      this.light.position.set(1, 1, 1);
-      FW.scene.add(this.light);
     }
 
     Rockets.prototype.explode = function(rocket) {
-      var _this = this;
       FW.scene.remove(rocket);
-      this.light.intensity = this.explosionLightIntensity;
-      this.light.position.set(rocket.position.x, rocket.position.y, rocket.position.z);
       this.rockets.splice(this.rockets.indexOf(rocket), 1);
-      this.firework.createExplosion(rocket.position);
-      if (this.soundOn) {
-        return setTimeout(function() {
-          _this.explodeSound.play();
-          return setTimeout(function() {
-            return _this.crackleSound.play();
-          }, 400);
-        }, 500);
-      }
+      return this.firework.createExplosion(rocket.position);
     };
 
     Rockets.prototype.launchRocket = function() {
       var ray, rocket, vector,
         _this = this;
       this.launchSound.load();
-      this.explodeSound.load();
-      this.crackleSound.load();
       rocket = new THREE.Mesh(this.rocketGeo, this.rocketMat);
       rocket.position.set(FW.camera.position.x, FW.camera.position.y, FW.camera.position.z);
       rocket.scale.set(0.1, 0.1, 0.1);
@@ -83,9 +63,6 @@
 
     Rockets.prototype.update = function() {
       var rocket, _i, _len, _ref;
-      if (this.light.intensity > 0) {
-        this.light.intensity -= this.dimmingSpeed * this.explosionLightIntensity;
-      }
       _ref = this.rockets;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         rocket = _ref[_i];

@@ -12,6 +12,8 @@
       this.colorStart = new THREE.Color();
       this.colorEnd = new THREE.Color();
       this.numFireworksPerExplosion = 3;
+      this.explodeSound = new Audio('./assets/explosion.mp3');
+      this.crackleSound = new Audio('./assets/crackle.mp3');
       this.particleGroup = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/smokeparticle.png'),
         blending: THREE.AdditiveBlending,
@@ -52,6 +54,13 @@
       this.particleGroup.triggerPoolEmitter(2, newPos);
       if (count < this.numFireworksPerExplosion) {
         return setTimeout(function() {
+          _this.explodeSound.load();
+          setTimeout(function() {
+            _this.explodeSound.play();
+            return setTimeout(function() {
+              return _this.crackleSound.play();
+            }, 100);
+          }, 100);
           count++;
           newPos = new THREE.Vector3(rnd(origPos.x - 20, origPos.x + 20), rnd(origPos.y - 20, origPos.y + 20), rnd(origPos.z - 20, origPos.z + 20));
           return _this.createExplosion(origPos, newPos, count++);

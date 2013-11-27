@@ -6,8 +6,7 @@ FW.Rockets = class Rockets
     rnd = FW.rnd
     @rockets = []
     @launchSound = new Audio('./assets/launch.mp3');
-    @explodeSound = new Audio('./assets/explosion.mp3');
-    @crackleSound = new Audio('./assets/crackle.mp3');
+
     @soundOn = true 
     @color = new THREE.Color()
     @color.setRGB(200, 10, 0)
@@ -21,8 +20,7 @@ FW.Rockets = class Rockets
     @shootDirection = new THREE.Vector3()
 
 
-    @dimmingSpeed = 0.008
-    @explosionLightIntensity = 2.0
+
 
     @rocketMat= new THREE.ShaderMaterial({
     uniforms: uniforms1,
@@ -33,36 +31,19 @@ FW.Rockets = class Rockets
     @rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
 
 
-    #LIGHTS
-    @light = new THREE.PointLight(0xffeeee, 0.0, 6000)
-    @light.position.set(1, 1, 1);
-    FW.scene.add(@light)
 
 
 
 
   explode: (rocket)->
     FW.scene.remove(rocket)
-    @light.intensity = @explosionLightIntensity
-    @light.position.set rocket.position.x, rocket.position.y, rocket.position.z
     @rockets.splice(@rockets.indexOf(rocket), 1) 
     @firework.createExplosion(rocket.position)
 
-    
-    #set timeout for speed of sound delay!
-    if @soundOn
-        setTimeout(()=>
-          @explodeSound.play()
-          setTimeout(()=>
-            @crackleSound.play()
-          400)
-        500)
 
 
   launchRocket: ()->
     @launchSound.load();
-    @explodeSound.load()
-    @crackleSound.load()
     rocket = new THREE.Mesh(@rocketGeo, @rocketMat)
     rocket.position.set(FW.camera.position.x, FW.camera.position.y, FW.camera.position.z)
     rocket.scale.set(0.1, 0.1, 0.1)
@@ -87,11 +68,8 @@ FW.Rockets = class Rockets
     @explosionDelay)
 
   update: ()->
-    if @light.intensity > 0
-      @light.intensity -= @dimmingSpeed * @explosionLightIntensity
     @updateRocket rocket for rocket in @rockets
     @firework.tick()
-
 
   updateRocket: (rocket)->
     rocket.translateX(@launchSpeed * rocket.shootDirection.x)

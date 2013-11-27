@@ -6,6 +6,13 @@ FW.Firework = class Firework
     @colorStart = new THREE.Color()
     @colorEnd = new THREE.Color()
     @numFireworksPerExplosion = 3
+
+    @explodeSound = new Audio('./assets/explosion.mp3');
+    @crackleSound = new Audio('./assets/crackle.mp3');
+    
+
+
+    
     @particleGroup = new ShaderParticleGroup({
       texture: THREE.ImageUtils.loadTexture('assets/smokeparticle.png'),
       blending: THREE.AdditiveBlending,
@@ -35,6 +42,15 @@ FW.Firework = class Firework
     @particleGroup.triggerPoolEmitter(2, newPos)
     if count < @numFireworksPerExplosion
       setTimeout =>
+        @explodeSound.load()
+            #set timeout for speed of sound delay!
+
+        setTimeout(()=>
+          @explodeSound.play()
+          setTimeout(()=>
+            @crackleSound.play()
+          100)
+        100)
         count++
         newPos = new THREE.Vector3(rnd(origPos.x - 20, origPos.x+20), rnd(origPos.y - 20, origPos.y+20), rnd(origPos.z - 20, origPos.z+20))
         @createExplosion(origPos, newPos, count++)
