@@ -20,10 +20,11 @@ FW.Firework = class Firework
     @colorEnd.setRGB(Math.random(255), Math.random(255),Math.random(255))
     emitterSettings = 
       size: rnd(0.01, 0.3),
+      velocity: new THREE.Vector3(0, rnd(-2, 2), 0)
       acceleration: new THREE.Vector3(0, -0.01, 0),
-      accelerationSpread: new THREE.Vector3(rnd(.0001, 1.5), rnd(.0001, 1.5), rnd(.0001, 1.5)),
+      accelerationSpread: new THREE.Vector3(rnd(0, 5), rnd(0, 5), rnd(0, 5)),
       colorStart: @colorStart,
-      colorSpread: new THREE.Vector3(10, 10, 10),
+      colorSpread: new THREE.Vector3(1, 1, 1),
       colorEnd: @colorEnd,
       particlesPerSecond: 300,
       alive: 0,  

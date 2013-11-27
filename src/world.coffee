@@ -266,7 +266,7 @@ FW.World = class World
       FW.scene.fog.color.setHSL 0.1, 0.5, @lightVal
       @renderer.setClearColor '0x000000', 1
       @directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15)
-      # @pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5)
+      @pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5)
       @uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5)
       if @updateNoise
         @animDelta = THREE.Math.clamp(@animDelta + 0.00075 * @animDeltaDir, 0, 0.05)

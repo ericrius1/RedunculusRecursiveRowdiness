@@ -33,11 +33,11 @@ RULES.bush = function(grow3) {
 
       arc: function() {
         cube(material(mats).scale(rnd(0.6, 1.0)));
-        arc(pitch(4.0).yaw(FW.rnd(3, 7)).move(-40.3).s(0.97));
+        arc(pitch(rnd(1, 5)).yaw(FW.rnd(3, 7)).move(rnd(-40, -20)).s(0.97));
       },
 
       twistyObject: function() {
-        for (var i = -90; i <= 90; i += 60) {
+        for (var i = -90; i <= 10; i += 60) {
           for (var j = 0; j < 360; j += 60) {
             arc(pitch(i).yaw(j));
           }
