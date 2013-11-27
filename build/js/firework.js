@@ -38,13 +38,20 @@
       };
     };
 
-    Firework.prototype.createExplosion = function(pos) {
+    Firework.prototype.createExplosion = function(pos, count) {
       var _this = this;
+      if (count == null) {
+        count = 0;
+      }
+      console.log(pos);
       this.particleGroup.triggerPoolEmitter(1, pos);
-      return setTimeout(function() {
-        console.log("position", pos);
-        return _this.createExplosion(pos);
-      }, 1000);
+      if (count < 3) {
+        return setTimeout(function() {
+          count++;
+          pos.set(rnd(pos.x - 10, pos.x + 10), rnd(pos.y - 10, pos.y + 10), rnd(pos.z - 10, pos.z + 10));
+          return _this.createExplosion(pos, count++);
+        }, rnd(100, 500));
+      }
     };
 
     Firework.prototype.tick = function() {

@@ -99,7 +99,8 @@
       rocket.translateX(this.launchSpeed * rocket.shootDirection.x);
       rocket.translateY(this.launchSpeed * rocket.shootDirection.y);
       rocket.translateZ(this.launchSpeed * rocket.shootDirection.z);
-      return rocket.translateY(rocket.launchSpeedY);
+      rocket.translateY(rocket.launchSpeedY);
+      return rocket.launchSpeedY -= .005;
     };
 
     return Rockets;

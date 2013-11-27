@@ -28,13 +28,15 @@ FW.Firework = class Firework
       alive: 0,  
       emitterDuration: 3.0
 
-  createExplosion: (pos)->
-    
+  createExplosion: (pos, count=0)->
+    console.log pos
     @particleGroup.triggerPoolEmitter(1, pos)
-    setTimeout =>
-        console.log("position",pos)
-        @createExplosion(pos)
-    ,1000 
+    if count < 3
+      setTimeout =>
+        count++
+        pos.set(rnd(pos.x-10, pos.x+10), rnd(pos.y-10, pos.y+10), rnd(pos.z-10, pos.z+10))
+        @createExplosion(pos, count++)
+      ,rnd(100, 500)
     
   tick: ->
     @particleGroup.tick(0.16)
