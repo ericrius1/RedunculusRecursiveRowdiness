@@ -12,6 +12,7 @@
       this.colorEnd = new THREE.Color();
       this.numFireworksPerExplosion = 3;
       this.lightIndex = 0;
+      this.lightDimmingFactor = 0.06;
       this.explodeSound = new Audio('./assets/explosion.mp3');
       this.crackleSound = new Audio('./assets/crackle.mp3');
       this.lights = [];
@@ -89,7 +90,7 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         light = _ref[_i];
         if (light.intensity > 0) {
-          _results.push(light.intensity -= 0.1);
+          _results.push(light.intensity -= this.lightDimmingFactor);
         } else {
           _results.push(void 0);
         }

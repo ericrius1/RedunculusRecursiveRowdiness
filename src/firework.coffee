@@ -6,6 +6,7 @@ FW.Firework = class Firework
     @colorEnd = new THREE.Color()
     @numFireworksPerExplosion = 3
     @lightIndex = 0
+    @lightDimmingFactor = 0.06
 
     @explodeSound = new Audio('./assets/explosion.mp3');
     @crackleSound = new Audio('./assets/crackle.mp3');
@@ -70,6 +71,6 @@ FW.Firework = class Firework
     @particleGroup.tick(0.16)
     for light in @lights
       if light.intensity > 0
-        light.intensity -=0.1
+        light.intensity -=@lightDimmingFactor
 
 

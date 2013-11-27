@@ -17,6 +17,10 @@ RULES.bush = function(grow3) {
     var mat2 = new THREE.MeshPhongMaterial({
       color: 0x70AAFF
     });
+
+    var mat1 = new THREE.MeshLambertMaterial({
+      color: 0xff00ff
+    });
     var shinyMat = new THREE.ShaderMaterial({
     uniforms: uniforms1,
     vertexShader: document.getElementById('rocketVertexShader').textContent,
@@ -24,7 +28,7 @@ RULES.bush = function(grow3) {
 
     })
 
-    var mats = [shinyMat, mat2];
+    var mats = [shinyMat, mat2, mat1];
 
     maxDepth(50);
 
