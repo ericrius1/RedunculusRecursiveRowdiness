@@ -1,6 +1,8 @@
 (function() {
   var Rockets;
 
+  window.soundOn = false;
+
   FW.Rockets = Rockets = (function() {
     var rnd;
 
@@ -52,7 +54,7 @@
       rocket.translateX(rocket.shootDirection.x);
       rocket.translateY(rocket.shootDirection.y);
       rocket.translateZ(rocket.shootDirection.z);
-      if (this.soundOn) {
+      if (soundOn) {
         this.launchSound.play();
       }
       this.rockets.push(rocket);

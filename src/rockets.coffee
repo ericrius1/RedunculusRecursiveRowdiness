@@ -1,4 +1,4 @@
-
+window.soundOn = false
 #handle rocket stuff
 FW.Rockets = class Rockets
   rnd = FW.rnd
@@ -60,7 +60,7 @@ FW.Rockets = class Rockets
     rocket.translateX(rocket.shootDirection.x)
     rocket.translateY(rocket.shootDirection.y)
     rocket.translateZ(rocket.shootDirection.z)
-    if @soundOn
+    if soundOn
         @launchSound.play();
     @rockets.push(rocket)
     setTimeout(()=>

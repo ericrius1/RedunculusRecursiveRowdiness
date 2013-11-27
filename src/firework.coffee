@@ -27,7 +27,7 @@ FW.Firework = class Firework
   generateEmitter : ->
     @colorStart.setRGB(Math.random(), Math.random(),Math.random())
     @colorEnd.setRGB(Math.random(), Math.random(),Math.random())
-    light = new THREE.PointLight(@colorStart, 0.0, 4000)
+    light = new THREE.PointLight(@colorStart, 0.0, 6000)
     FW.scene.add(light)
     @lights.push(light)
     emitterSettings = 
@@ -45,18 +45,21 @@ FW.Firework = class Firework
   createExplosion: (origPos, newPos = origPos, count=0)->
     emitter = @particleGroup.triggerPoolEmitter(1, newPos)
     light = @lights[@lightIndex++]
+    if @lightIndex is @lights.length
+      @lightIndex = 0
     light.position.set(newPos.x, newPos.y, newPos.z)
-    light.intensity = 1.0
+    light.intensity = 2.0
     if count < @numFireworksPerExplosion
       setTimeout =>
         @explodeSound.load()
         #set timeout for speed of sound delay!
-        setTimeout(()=>
-          @explodeSound.play()
+        if soundOn
           setTimeout(()=>
-            @crackleSound.play()
+            @explodeSound.play()
+            setTimeout(()=>
+              @crackleSound.play()
+            100)
           100)
-        100)
         count++
         newPos = new THREE.Vector3(rnd(origPos.x - 20, origPos.x+20), rnd(origPos.y - 20, origPos.y+20), rnd(origPos.z - 20, origPos.z+20))
         @createExplosion(origPos, newPos, count++)
@@ -67,5 +70,6 @@ FW.Firework = class Firework
     @particleGroup.tick(0.16)
     for light in @lights
       if light.intensity > 0
-        light.intensity -=0.01
+        light.intensity -=0.1
+
 

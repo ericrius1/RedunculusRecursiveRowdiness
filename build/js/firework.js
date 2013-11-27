@@ -30,7 +30,7 @@
       var emitterSettings, light;
       this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
       this.colorEnd.setRGB(Math.random(), Math.random(), Math.random());
-      light = new THREE.PointLight(this.colorStart, 0.0, 4000);
+      light = new THREE.PointLight(this.colorStart, 0.0, 6000);
       FW.scene.add(light);
       this.lights.push(light);
       return emitterSettings = {
@@ -58,17 +58,22 @@
       }
       emitter = this.particleGroup.triggerPoolEmitter(1, newPos);
       light = this.lights[this.lightIndex++];
+      if (this.lightIndex === this.lights.length) {
+        this.lightIndex = 0;
+      }
       light.position.set(newPos.x, newPos.y, newPos.z);
-      light.intensity = 1.0;
+      light.intensity = 2.0;
       if (count < this.numFireworksPerExplosion) {
         return setTimeout(function() {
           _this.explodeSound.load();
-          setTimeout(function() {
-            _this.explodeSound.play();
-            return setTimeout(function() {
-              return _this.crackleSound.play();
+          if (soundOn) {
+            setTimeout(function() {
+              _this.explodeSound.play();
+              return setTimeout(function() {
+                return _this.crackleSound.play();
+              }, 100);
             }, 100);
-          }, 100);
+          }
           count++;
           newPos = new THREE.Vector3(rnd(origPos.x - 20, origPos.x + 20), rnd(origPos.y - 20, origPos.y + 20), rnd(origPos.z - 20, origPos.z + 20));
           return _this.createExplosion(origPos, newPos, count++);
@@ -84,7 +89,7 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         light = _ref[_i];
         if (light.intensity > 0) {
-          _results.push(light.intensity -= 0.01);
+          _results.push(light.intensity -= 0.1);
         } else {
           _results.push(void 0);
         }
