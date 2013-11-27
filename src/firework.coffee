@@ -11,7 +11,7 @@ FW.Firework = class Firework
       maxAge: 8
     });
 
-    for i in [1..15]
+    for i in [1..25]
       @particleGroup.addPool( 1, @generateEmitter(), true )     
     FW.scene.add(@particleGroup.mesh)
 
@@ -19,23 +19,23 @@ FW.Firework = class Firework
     @colorStart.setRGB(Math.random(255), Math.random(255),Math.random(255))
     @colorEnd.setRGB(Math.random(255), Math.random(255),Math.random(255))
     emitterSettings = 
-      size: 0.2,
+      size: rnd(0.01, 0.3),
       acceleration: new THREE.Vector3(0, -0.01, 0),
-      accelerationSpread: new THREE.Vector3(rnd(.02, 1.5), rnd(.02, 1.5), rnd(.02, 1.5)),
+      accelerationSpread: new THREE.Vector3(rnd(.0001, 1.5), rnd(.0001, 1.5), rnd(.0001, 1.5)),
       colorStart: @colorStart,
+      colorSpread: new THREE.Vector3(10, 10, 10),
       colorEnd: @colorEnd,
       particlesPerSecond: 300,
       alive: 0,  
       emitterDuration: 3.0
 
-  createExplosion: (pos, count=0)->
-    console.log pos
-    @particleGroup.triggerPoolEmitter(1, pos)
-    if count < 3
+  createExplosion: (origPos, newPos = origPos, count=0)->
+    @particleGroup.triggerPoolEmitter(2, newPos)
+    if count < 5
       setTimeout =>
         count++
-        pos.set(rnd(pos.x-10, pos.x+10), rnd(pos.y-10, pos.y+10), rnd(pos.z-10, pos.z+10))
-        @createExplosion(pos, count++)
+        newPos = new THREE.Vector3(rnd(origPos.x - 20, origPos.x+20), rnd(origPos.y - 20, origPos.y+20), rnd(origPos.z - 20, origPos.z+20))
+        @createExplosion(origPos, newPos, count++)
       ,rnd(100, 500)
     
   tick: ->

@@ -16,9 +16,8 @@ FW.Rockets = class Rockets
     @firework = new FW.Firework(@color)
 
     @projector = new THREE.Projector()
-    @launchSpeed = 0.8
-    @launchSpeedY= 1.0 
-    @explosionDelay = 400
+    @launchSpeed = 2.1
+    @explosionDelay = 1000
     @shootDirection = new THREE.Vector3()
 
 
@@ -48,7 +47,6 @@ FW.Rockets = class Rockets
     @light.position.set rocket.position.x, rocket.position.y, rocket.position.z
     console.log @rockets
     @rockets.splice(@rockets.indexOf(rocket), 1) 
-    console.log @rockets
     @firework.createExplosion(rocket.position)
 
     

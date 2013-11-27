@@ -241,7 +241,6 @@
         FW.scene.fog.color.setHSL(0.1, 0.5, this.lightVal);
         this.renderer.setClearColor('0x000000', 1);
         this.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15);
-        this.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5);
         this.uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5);
         if (this.updateNoise) {
           this.animDelta = THREE.Math.clamp(this.animDelta + 0.00075 * this.animDeltaDir, 0, 0.05);

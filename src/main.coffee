@@ -12,7 +12,7 @@ FW.Main = class Main
   constructor: ->
     #RECURSIVE STRUCTURES
     @g = new grow3.System(FW.scene, FW.camera, RULES.bush)
-    thing = @g.build(undefined, new THREE.Vector3(-1137,  1000, 1591))
+    thing = @g.build(undefined, new THREE.Vector3(-800,  860, 1065))
     FW.camera.lookAt thing.position
     
     @firework = new FW.Firework()

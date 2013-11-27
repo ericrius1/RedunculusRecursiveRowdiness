@@ -17,9 +17,8 @@
       this.color.setRGB(200, 10, 0);
       this.firework = new FW.Firework(this.color);
       this.projector = new THREE.Projector();
-      this.launchSpeed = 0.8;
-      this.launchSpeedY = 1.0;
-      this.explosionDelay = 400;
+      this.launchSpeed = 2.1;
+      this.explosionDelay = 1000;
       this.shootDirection = new THREE.Vector3();
       this.dimmingSpeed = 0.008;
       this.explosionLightIntensity = 2.0;
@@ -41,7 +40,6 @@
       this.light.position.set(rocket.position.x, rocket.position.y, rocket.position.z);
       console.log(this.rockets);
       this.rockets.splice(this.rockets.indexOf(rocket), 1);
-      console.log(this.rockets);
       this.firework.createExplosion(rocket.position);
       if (this.soundOn) {
         return setTimeout(function() {
