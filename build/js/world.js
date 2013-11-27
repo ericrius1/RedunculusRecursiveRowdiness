@@ -24,7 +24,7 @@
       FW.camera.position.set(-1200, 800, 1200);
       this.controls = new THREE.FlyControls(FW.camera);
       this.controls.movementSpeed = 60;
-      this.controls.rollSpeed = Math.PI / 16;
+      this.controls.rollSpeed = Math.PI / 8;
       this.controls.dragToLook = true;
       this.stats = new Stats();
       this.stats.domElement.style.position = 'absolute';
@@ -39,7 +39,7 @@
       FW.scene.fog = new THREE.Fog(0x000000, 100, 4000);
       this.firework = new FW.Firework();
       this.groundControl = new FW.Rockets();
-      FW.scene.add(new THREE.AmbientLight(0x111111));
+      FW.scene.add(new THREE.AmbientLight(0x70AAFF));
       this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       this.directionalLight.position.set(500, 2000, 0);
       FW.scene.add(this.directionalLight);
@@ -247,7 +247,7 @@
           this.animDelta = THREE.Math.clamp(this.animDelta + 0.00075 * this.animDeltaDir, 0, 0.05);
           this.uniformsNoise["time"].value += delta * this.animDelta;
           this.uniformsNoise["offset"].value.x += delta * 0.05;
-          this.uniformsTerrain["uOffset"].value.x = 4 * this.uniformsNoise["offset"].value.x;
+          this.uniformsTerrain["uOffset"].value.y = 2 * this.uniformsNoise["offset"].value.y;
           this.quadTarget.material = this.mlib["heightmap"];
           this.renderer.render(this.sceneRenderTarget, this.cameraOrtho, this.heightMap, true);
           this.quadTarget.material = this.mlib["normal"];

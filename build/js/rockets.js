@@ -19,7 +19,7 @@
       this.projector = new THREE.Projector();
       this.launchSpeed = 0.8;
       this.launchSpeedY = 1.0;
-      this.explosionDelay = 500;
+      this.explosionDelay = 400;
       this.shootDirection = new THREE.Vector3();
       this.dimmingSpeed = 0.008;
       this.explosionLightIntensity = 2.0;
@@ -34,11 +34,15 @@
       FW.scene.add(this.light);
     }
 
-    Rockets.prototype.explode = function(position) {
+    Rockets.prototype.explode = function(rocket) {
       var _this = this;
+      FW.scene.remove(rocket);
       this.light.intensity = this.explosionLightIntensity;
-      this.light.position.set(position.x, position.y, position.z);
-      this.firework.createExplosion(position);
+      this.light.position.set(rocket.position.x, rocket.position.y, rocket.position.z);
+      console.log(this.rockets);
+      this.rockets.splice(this.rockets.indexOf(rocket), 1);
+      console.log(this.rockets);
+      this.firework.createExplosion(rocket.position);
       if (this.soundOn) {
         return setTimeout(function() {
           _this.explodeSound.play();
@@ -55,7 +59,7 @@
       this.crackleSound.load();
       rocket = new THREE.Mesh(this.rocketGeo, this.rocketMat);
       rocket.position.set(FW.camera.position.x, FW.camera.position.y, FW.camera.position.z);
-      this.rockets.push(rocket);
+      rocket.scale.set(0.1, 0.1, 0.1);
       vector = new THREE.Vector3();
       vector.set(0, 0, 1);
       this.projector.unprojectVector(vector, FW.camera);
@@ -74,8 +78,7 @@
       }
       this.rockets.push(rocket);
       return setTimeout(function() {
-        FW.scene.remove(rocket);
-        return _this.explode(rocket.position);
+        return _this.explode(rocket);
       }, this.explosionDelay);
     };
 
@@ -96,8 +99,7 @@
       rocket.translateX(this.launchSpeed * rocket.shootDirection.x);
       rocket.translateY(this.launchSpeed * rocket.shootDirection.y);
       rocket.translateZ(this.launchSpeed * rocket.shootDirection.z);
-      rocket.translateY(rocket.launchSpeedY);
-      return rocket.launchSpeedY -= .005;
+      return rocket.translateY(rocket.launchSpeedY);
     };
 
     return Rockets;

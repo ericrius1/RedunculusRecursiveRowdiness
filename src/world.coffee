@@ -21,7 +21,7 @@ FW.World = class World
     #CONTROLS
     @controls = new THREE.FlyControls(FW.camera)
     @controls.movementSpeed = 60;
-    @controls.rollSpeed =  Math.PI / 16;
+    @controls.rollSpeed =  Math.PI / 8;
     @controls.dragToLook = true
 
     #STATS
@@ -51,7 +51,7 @@ FW.World = class World
 
     
     # LIGHTS
-    FW.scene.add new THREE.AmbientLight(0x111111)
+    FW.scene.add new THREE.AmbientLight(0x70AAFF)
     @directionalLight = new THREE.DirectionalLight(0xffffff, 1.15)
     @directionalLight.position.set 500, 2000, 0
     FW.scene.add @directionalLight
@@ -272,7 +272,7 @@ FW.World = class World
         @animDelta = THREE.Math.clamp(@animDelta + 0.00075 * @animDeltaDir, 0, 0.05)
         @uniformsNoise["time"].value += delta * @animDelta
         @uniformsNoise["offset"].value.x += delta * 0.05
-        @uniformsTerrain["uOffset"].value.x = 4 * @uniformsNoise["offset"].value.x
+        @uniformsTerrain["uOffset"].value.y = 2 * @uniformsNoise["offset"].value.y
         @quadTarget.material = @mlib["heightmap"]
         @renderer.render @sceneRenderTarget, @cameraOrtho, @heightMap, true
         @quadTarget.material = @mlib["normal"]

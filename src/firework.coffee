@@ -6,32 +6,35 @@ FW.Firework = class Firework
     @colorStart = new THREE.Color()
     @colorEnd = new THREE.Color()
     @particleGroup = new ShaderParticleGroup({
-      texture: THREE.ImageUtils.loadTexture('assets/star.png'),
+      texture: THREE.ImageUtils.loadTexture('assets/smokeparticle.png'),
       blending: THREE.AdditiveBlending,
-      maxAge: 13
+      maxAge: 8
     });
 
-    for i in [1..10]
+    for i in [1..15]
       @particleGroup.addPool( 1, @generateEmitter(), true )     
     FW.scene.add(@particleGroup.mesh)
 
   generateEmitter : ->
-    @colorStart.setRGB(rnd(255), rnd(255), rnd(255))
-    # @colorEnd.setRGB(rnd(255), rnd(255), rnd(255))
-    console.log('color start', @colorSTart)
+    @colorStart.setRGB(Math.random(255), Math.random(255),Math.random(255))
+    @colorEnd.setRGB(Math.random(255), Math.random(255),Math.random(255))
     emitterSettings = 
       size: 0.2,
       acceleration: new THREE.Vector3(0, -0.01, 0),
-      accelerationSpread: new THREE.Vector3(rnd(.01, 1), rnd(.01, 1), rnd(.01, 1)),
+      accelerationSpread: new THREE.Vector3(rnd(.02, 1.5), rnd(.02, 1.5), rnd(.02, 1.5)),
       colorStart: @colorStart,
-      colorSpread: new THREE.Vector3(20, 20, 20)
-      # colorEnd: @colorEnd,
-      particlesPerSecond: 100,
+      colorEnd: @colorEnd,
+      particlesPerSecond: 300,
       alive: 0,  
-      emitterDuration: 2.0
+      emitterDuration: 3.0
 
   createExplosion: (pos)->
+    
     @particleGroup.triggerPoolEmitter(1, pos)
+    setTimeout =>
+        console.log("position",pos)
+        @createExplosion(pos)
+    ,1000 
     
   tick: ->
     @particleGroup.tick(0.16)

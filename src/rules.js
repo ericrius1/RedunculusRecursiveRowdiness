@@ -15,7 +15,7 @@ window.RULES = {}
 RULES.bush = function(grow3) {
   with(grow3) {
     var mat2 = new THREE.MeshPhongMaterial({
-      color: 0xaadd77
+      color: 0x70AAFF
     });
     var shinyMat = new THREE.ShaderMaterial({
     uniforms: uniforms1,
@@ -32,7 +32,7 @@ RULES.bush = function(grow3) {
      
 
       arc: function() {
-        cube(material(mats).scale(0.9));
+        cube(material(mats).scale(rnd(0.6, 1.0)));
         arc(pitch(4.0).yaw(FW.rnd(3, 7)).move(-40.3).s(0.97));
       },
 
