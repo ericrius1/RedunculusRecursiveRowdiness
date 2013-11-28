@@ -15,7 +15,7 @@ FW.Rockets = class Rockets
     @firework = new FW.Firework(@color)
 
     @projector = new THREE.Projector()
-    @launchSpeed = rnd(1, 5)
+    @launchSpeed = 10
     @explosionDelay = 1000
     @shootDirection = new THREE.Vector3()
 
@@ -46,7 +46,6 @@ FW.Rockets = class Rockets
     @launchSound.load();
     rocket = new THREE.Mesh(@rocketGeo, @rocketMat)
     rocket.position.set(FW.camera.position.x, FW.camera.position.y, FW.camera.position.z)
-    rocket.scale.set(0.1, 0.1, 0.1)
     vector = new THREE.Vector3()
     vector.set(0,0,1)
     @projector.unprojectVector(vector, FW.camera)
@@ -66,7 +65,6 @@ FW.Rockets = class Rockets
     setTimeout(()=>
       @explode(rocket)
     @explosionDelay)
-    @launchSpeed = rnd(1, 5)
   update: ()->
     @updateRocket rocket for rocket in @rockets
     @firework.tick()

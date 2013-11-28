@@ -17,7 +17,7 @@
       this.color.setRGB(200, 10, 0);
       this.firework = new FW.Firework(this.color);
       this.projector = new THREE.Projector();
-      this.launchSpeed = rnd(1, 5);
+      this.launchSpeed = 10;
       this.explosionDelay = 1000;
       this.shootDirection = new THREE.Vector3();
       this.rocketMat = new THREE.ShaderMaterial({
@@ -40,7 +40,6 @@
       this.launchSound.load();
       rocket = new THREE.Mesh(this.rocketGeo, this.rocketMat);
       rocket.position.set(FW.camera.position.x, FW.camera.position.y, FW.camera.position.z);
-      rocket.scale.set(0.1, 0.1, 0.1);
       vector = new THREE.Vector3();
       vector.set(0, 0, 1);
       this.projector.unprojectVector(vector, FW.camera);
@@ -58,10 +57,9 @@
         this.launchSound.play();
       }
       this.rockets.push(rocket);
-      setTimeout(function() {
+      return setTimeout(function() {
         return _this.explode(rocket);
       }, this.explosionDelay);
-      return this.launchSpeed = rnd(1, 5);
     };
 
     Rockets.prototype.update = function() {

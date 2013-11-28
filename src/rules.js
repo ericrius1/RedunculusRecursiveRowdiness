@@ -21,14 +21,14 @@ RULES.bush = function(grow3) {
     var mat1 = new THREE.MeshLambertMaterial({
       color: 0xff00ff
     });
-    var shinyMat = new THREE.ShaderMaterial({
-    uniforms: uniforms1,
-    vertexShader: document.getElementById('rocketVertexShader').textContent,
-    fragmentShader: document.getElementById('fragment_shader1').textContent
+    // var shinyMat = new THREE.ShaderMaterial({
+    // uniforms: uniforms1,
+    // vertexShader: document.getElementById('rocketVertexShader').textContent,
+    // fragmentShader: document.getElementById('fragment_shader1').textContent
 
-    })
+    // })
 
-    var mats = [shinyMat, mat2, mat1];
+    var mats = [ mat2, mat1];
 
     maxDepth(50);
 
