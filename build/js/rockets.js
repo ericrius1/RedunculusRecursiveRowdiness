@@ -17,7 +17,7 @@
       this.color.setRGB(200, 10, 0);
       this.firework = new FW.Firework(this.color);
       this.projector = new THREE.Projector();
-      this.launchSpeed = 3.1;
+      this.launchSpeed = rnd(1, 5);
       this.explosionDelay = 1000;
       this.shootDirection = new THREE.Vector3();
       this.rocketMat = new THREE.ShaderMaterial({
@@ -58,9 +58,10 @@
         this.launchSound.play();
       }
       this.rockets.push(rocket);
-      return setTimeout(function() {
+      setTimeout(function() {
         return _this.explode(rocket);
       }, this.explosionDelay);
+      return this.launchSpeed = rnd(1, 5);
     };
 
     Rockets.prototype.update = function() {
