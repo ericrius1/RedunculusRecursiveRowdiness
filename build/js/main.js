@@ -3,6 +3,10 @@
 
   window.FW = {};
 
+  SC.initialize({
+    client_id: "7da24ca214bf72b66ed2494117d05480"
+  });
+
   window.onload = function() {
     FW.myWorld = new FW.World();
     FW.myWorld.animate();
@@ -17,6 +21,9 @@
       FW.camera.lookAt(thing.position);
       this.firework = new FW.Firework();
       this.groundControl = new FW.Rockets();
+      SC.stream("/tracks/rameses-b-inspire", function(sound) {
+        return sound.play();
+      });
     }
 
     return Main;

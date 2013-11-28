@@ -1,4 +1,7 @@
 window.FW = {}
+SC.initialize({
+    client_id: "7da24ca214bf72b66ed2494117d05480",
+});
 
 #inspire rameses b
 #Give user option between building a permanent structure or launching fire works
@@ -17,5 +20,9 @@ FW.Main = class Main
     
     @firework = new FW.Firework()
     @groundControl = new FW.Rockets()
+
+    SC.stream "/tracks/rameses-b-inspire", (sound)->
+      sound.play()
+
 
 
