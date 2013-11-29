@@ -18,8 +18,9 @@
   FW.Main = Main = (function() {
     function Main() {
       var thing;
+      this.generateStars();
       this.g = new grow3.System(FW.scene, FW.camera, RULES.bush);
-      thing = this.g.build(void 0, new THREE.Vector3(-800, 820, 1065));
+      thing = this.g.build(void 0, new THREE.Vector3(-580, 913, 1009));
       FW.camera.lookAt(thing.position);
       this.firework = new FW.Firework();
       this.groundControl = new FW.Rockets();
@@ -29,6 +30,10 @@
         });
       }
     }
+
+    Main.prototype.generateStars = function() {
+      return console.log('hey');
+    };
 
     return Main;
 

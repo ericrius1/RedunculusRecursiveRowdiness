@@ -14,9 +14,10 @@ window.onload = ->
 
 FW.Main = class Main
   constructor: ->
+    @generateStars()
     #RECURSIVE STRUCTURES
     @g = new grow3.System(FW.scene, FW.camera, RULES.bush)
-    thing = @g.build(undefined, new THREE.Vector3(-800,  820, 1065))
+    thing = @g.build(undefined, new THREE.Vector3(-580, 913,1009))
     FW.camera.lookAt thing.position
     
     @firework = new FW.Firework()
@@ -26,5 +27,6 @@ FW.Main = class Main
       SC.stream "/tracks/rameses-b-inspire", (sound)->
          sound.play()
 
-
+  generateStars : ->
+    console.log 'hey'      
 

@@ -25,7 +25,7 @@
         maxAge: 6
       });
       for (i = _i = 1; _i <= 10; i = ++_i) {
-        this.particleGroup.addPool(1, this.generateEmitter(), true);
+        this.particleGroup.addPool(1, this.generateEmitter(), false);
       }
       FW.scene.add(this.particleGroup.mesh);
     }

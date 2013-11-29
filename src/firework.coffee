@@ -26,7 +26,7 @@ FW.Firework = class Firework
     });
 
     for i in [1..10]
-      @particleGroup.addPool( 1, @generateEmitter(), true )     
+      @particleGroup.addPool( 1, @generateEmitter(), false )     
     FW.scene.add(@particleGroup.mesh)
 
   generateEmitter : ->
