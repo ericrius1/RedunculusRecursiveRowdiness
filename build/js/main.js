@@ -12,13 +12,13 @@
   window.onload = function() {
     FW.myWorld = new FW.World();
     FW.myWorld.animate();
-    return FW.main = FW.Main();
+    FW.main = new FW.Main();
+    return FW.main.init();
   };
 
   FW.Main = Main = (function() {
     function Main() {
       var thing;
-      this.generateStars();
       this.g = new grow3.System(FW.scene, FW.camera, RULES.bush);
       thing = this.g.build(void 0, new THREE.Vector3(-580, 913, 1009));
       FW.camera.lookAt(thing.position);
@@ -30,6 +30,10 @@
         });
       }
     }
+
+    Main.prototype.init = function() {
+      return this.generateStars();
+    };
 
     Main.prototype.generateStars = function() {
       return console.log('hey');

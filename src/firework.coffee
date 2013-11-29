@@ -4,7 +4,7 @@ FW.Firework = class Firework
     #create a few different emmitters and add to pool
     @colorStart = new THREE.Color()
     @colorEnd = new THREE.Color()
-    @numFireworksPerExplosion = 5
+    @numFireworksPerExplosion = rnd(2, 5)
     @lightIndex = 0
     @fwSpread = 100
     @fwAge = 15
@@ -47,7 +47,7 @@ FW.Firework = class Firework
       particlesPerSecond: rnd(100, 500),
       alive: 0,  
       emitterDuration: rnd(1.0, 5.0)
-      opacityEnd: 0.5
+      opacityEnd: 0.1
 
   createExplosion: (origPos, newPos = origPos, count=0)->
     emitter = @particleGroup.triggerPoolEmitter(1, newPos)

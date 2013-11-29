@@ -9,12 +9,12 @@ window.soundOn = true
 window.onload = ->
   FW.myWorld = new FW.World()
   FW.myWorld.animate()
-  FW.main = FW.Main()
+  FW.main = new FW.Main()
+  FW.main.init()
 
 
 FW.Main = class Main
   constructor: ->
-    @generateStars()
     #RECURSIVE STRUCTURES
     @g = new grow3.System(FW.scene, FW.camera, RULES.bush)
     thing = @g.build(undefined, new THREE.Vector3(-580, 913,1009))
@@ -26,6 +26,8 @@ FW.Main = class Main
     if soundOn
       SC.stream "/tracks/rameses-b-inspire", (sound)->
          sound.play()
+  init : ->
+      @generateStars()
 
   generateStars : ->
     console.log 'hey'      

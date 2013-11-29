@@ -10,7 +10,7 @@
       var i, _i;
       this.colorStart = new THREE.Color();
       this.colorEnd = new THREE.Color();
-      this.numFireworksPerExplosion = 5;
+      this.numFireworksPerExplosion = rnd(2, 5);
       this.lightIndex = 0;
       this.fwSpread = 100;
       this.fwAge = 15;
@@ -49,7 +49,7 @@
         particlesPerSecond: rnd(100, 500),
         alive: 0,
         emitterDuration: rnd(1.0, 5.0),
-        opacityEnd: 0.5
+        opacityEnd: 0.1
       };
     };
 
