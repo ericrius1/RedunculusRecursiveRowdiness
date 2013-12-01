@@ -21,13 +21,6 @@ FW.Rockets = class Rockets
 
 
 
-
-    @rocketMat= new THREE.ShaderMaterial({
-    uniforms: uniforms1,
-    vertexShader: document.getElementById('rocketVertexShader').textContent,
-    fragmentShader: document.getElementById('fragment_shader1').textContent
-
-    })
     @rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
 
 
@@ -44,7 +37,7 @@ FW.Rockets = class Rockets
 
   launchRocket: ()->
     @launchSound.load();
-    rocket = new THREE.Mesh(@rocketGeo, @rocketMat)
+    rocket = new THREE.Mesh(@rocketGeo, FW.rocketMat)
     rocket.position.set(FW.camera.position.x, FW.camera.position.y, FW.camera.position.z)
     vector = new THREE.Vector3()
     vector.set(0,0,1)

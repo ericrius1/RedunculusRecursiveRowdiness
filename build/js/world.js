@@ -43,6 +43,7 @@
       this.meteor.startShower();
       this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       this.directionalLight.position.set(500, 2000, 0);
+      FW.scene.add(this.directionalLight);
       this.pointLight = new THREE.PointLight(0xff4400, 1.5);
       this.pointLight.position.set(0, 0, 0);
       normalShader = THREE.NormalMapShader;

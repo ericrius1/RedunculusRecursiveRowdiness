@@ -4,11 +4,16 @@ FW.Meteor = class Meteor
     #create a few different emmitters and add to pool
 
     
-    @meteorGroup = new ShaderParticleGroup({
+    @meteorTail = new ShaderParticleGroup({
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
       blending: THREE.AdditiveBlending,
       maxAge: 6
     });
+
+    sphereGeo = new THREE.SphereGeometry(10, 5, 5 )
+    @meteorHead = new THREE.Mesh(sphereGeo, FW.rocketMat)
+    @meteorHead.position.set -992, 820, 1165
+    FW.scene.add(@meteorHead)
 
     @emitterSettings = 
       size: rnd(0.01, 1.3),
@@ -20,22 +25,18 @@ FW.Meteor = class Meteor
       alive: 0,  
       emitterDuration: rnd(1.0, 5.0)
       opacityEnd: 0.5
-    @meteorGroup.addPool(5, @emitterSettings, true)
-    FW.scene.add(@meteorGroup.mesh)
+    @meteorTail.addPool(5, @emitterSettings, true)
+    FW.scene.add(@meteorTail.mesh)
     
-    @light = new THREE.PointLight(0xFFFFFF, 0.0, 3000)
-    FW.scene.add(@light)
-
   startShower: ->
     setInterval(()=>
       console.log "Spakrle!!!!"
-      @meteorGroup.triggerPoolEmitter(1, FW.startingPos)
-      @light.intensity +=0.2
+      @meteorTail.triggerPoolEmitter(1, FW.startingPos)
     5000) 
 
     
   tick: ->
-    @meteorGroup.tick(0.16)
+    @meteorTail.tick(0.16)
     
 
 

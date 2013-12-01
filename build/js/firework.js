@@ -34,7 +34,7 @@
       var emitterSettings, light;
       this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
       this.colorEnd.setRGB(Math.random(), Math.random(), Math.random());
-      light = new THREE.PointLight(this.colorStart, 0.0, 3000);
+      light = new THREE.PointLight(this.colorStart, 0.0, 5000);
       FW.scene.add(light);
       this.lights.push(light);
       return emitterSettings = {

@@ -39,4 +39,10 @@
 
   })();
 
+  FW.rocketMat = new THREE.ShaderMaterial({
+    uniforms: uniforms1,
+    vertexShader: document.getElementById('rocketVertexShader').textContent,
+    fragmentShader: document.getElementById('fragment_shader1').textContent
+  });
+
 }).call(this);
