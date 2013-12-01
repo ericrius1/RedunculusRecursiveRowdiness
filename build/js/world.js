@@ -39,6 +39,8 @@
       FW.scene.fog = new THREE.Fog(0x000000, 100, 4000);
       this.firework = new FW.Firework();
       this.groundControl = new FW.Rockets();
+      this.meteor = new FW.Meteor();
+      this.meteor.startShower();
       this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       this.directionalLight.position.set(500, 2000, 0);
       this.pointLight = new THREE.PointLight(0xff4400, 1.5);
@@ -227,6 +229,7 @@
       delta = this.clock.getDelta();
       this.stats.update();
       this.groundControl.update();
+      this.meteor.tick();
       uniforms1.time.value += delta * 5;
       if (this.terrain.visible) {
         this.controls.update(delta);

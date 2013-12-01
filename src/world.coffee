@@ -46,6 +46,8 @@ FW.World = class World
     #FUN
     @firework = new FW.Firework()
     @groundControl = new FW.Rockets()
+    @meteor = new FW.Meteor()
+    @meteor.startShower()
 
 
 
@@ -255,6 +257,7 @@ FW.World = class World
     delta = @clock.getDelta()
     @stats.update()
     @groundControl.update()
+    @meteor.tick()
     uniforms1.time.value += delta * 5;
     if @terrain.visible
       @controls.update(delta)

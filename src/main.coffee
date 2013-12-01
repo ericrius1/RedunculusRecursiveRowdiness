@@ -1,5 +1,5 @@
 window.FW = {}
-SC.initialize({
+SC?.initialize({
     client_id: "7da24ca214bf72b66ed2494117d05480",
 });
 window.soundOn = true
@@ -7,28 +7,24 @@ window.soundOn = true
 #inspire rameses b
 #Give user option between building a permanent structure or launching fire works
 window.onload = ->
+  FW.startingPos = new THREE.Vector3(-580, 913, 1009)
   FW.myWorld = new FW.World()
   FW.myWorld.animate()
   FW.main = new FW.Main()
-  FW.main.init()
+  FW.main.makeStars()
 
 
 FW.Main = class Main
   constructor: ->
-    #RECURSIVE STRUCTURES
-    @g = new grow3.System(FW.scene, FW.camera, RULES.bush)
-    thing = @g.build(undefined, new THREE.Vector3(-580, 913,1009))
-    FW.camera.lookAt thing.position
-    
-    @firework = new FW.Firework()
-    @groundControl = new FW.Rockets()
+
+
 
     if soundOn
       SC.stream "/tracks/rameses-b-inspire", (sound)->
          sound.play()
-  init : ->
-      @generateStars()
 
-  generateStars : ->
-    console.log 'hey'      
+  makeStars: ->
+    @g = new grow3.System(FW.scene, FW.camera, RULES.bush)
+    thing = @g.build(undefined, FW.startingPos)
+    FW.camera.lookAt thing.position    
 

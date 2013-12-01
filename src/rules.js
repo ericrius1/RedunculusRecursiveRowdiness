@@ -36,8 +36,8 @@ RULES.bush = function(grow3) {
      
 
       arc: function() {
-        cube(material(mats).scale(rnd(0.6, 2.0)));
-        arc(pitch(rnd(1, 5)).yaw(FW.rnd(3, 7)).move(rnd(-40, -20)).s(0.97));
+        cube(material(mats).scale(rnd(0.6, 4.0)));
+        arc(pitch(rnd(1, 8)).yaw(FW.rnd(3, 11)).move(rnd(-40, -20)).s(0.97));
       },
 
       twistyObject: function() {

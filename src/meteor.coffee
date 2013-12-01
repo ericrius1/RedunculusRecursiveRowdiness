@@ -16,20 +16,22 @@ FW.Meteor = class Meteor
       velocity: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1))
       acceleration: new THREE.Vector3(0, -0.01, 0),
       accelerationSpread: new THREE.Vector3(rnd(-2, 0), rnd(-2, 0), rnd(-2, 0)),
-      colorStart: @colorStart,
-      colorSpread: new THREE.Vector3(rnd(.1, .5), rnd(.1, .5), rnd(.1, .5)),
-      colorEnd: @colorEnd,
       particlesPerSecond: rnd(100, 500),
       alive: 0,  
       emitterDuration: rnd(1.0, 5.0)
       opacityEnd: 0.5
 
-    @meteorGroup.add(1, @emitterSettings, true)
+    @meteorGroup.addPool(5, @emitterSettings, true)
+
+  startShower: ->
+    setInterval(()=>
+      console.log "Spakrle!!!!"
+      @meteorGroup.triggerPoolEmitter(1, FW.startingPos)
+    1000) 
 
     
-    
   tick: ->
-    @particleGroup.tick(0.16)
+    @meteorGroup.tick(0.16)
     
 
 
