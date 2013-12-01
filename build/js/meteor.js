@@ -11,9 +11,9 @@
       this.meteorTail = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
-        maxAge: 6
+        maxAge: 15
       });
-      sphereGeo = new THREE.SphereGeometry(10, 5, 5);
+      sphereGeo = new THREE.SphereGeometry(5, 5, 5);
       this.meteorHead = new THREE.Mesh(sphereGeo, FW.rocketMat);
       this.meteorHead.position.set(-992, 820, 1165);
       FW.scene.add(this.meteorHead);
@@ -36,7 +36,7 @@
       var _this = this;
       return setInterval(function() {
         console.log("Spakrle!!!!");
-        return _this.meteorTail.triggerPoolEmitter(1, FW.startingPos);
+        return _this.meteorTail.triggerPoolEmitter(1, _this.meteorHead.position);
       }, 5000);
     };
 

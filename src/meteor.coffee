@@ -7,10 +7,10 @@ FW.Meteor = class Meteor
     @meteorTail = new ShaderParticleGroup({
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
       blending: THREE.AdditiveBlending,
-      maxAge: 6
+      maxAge: 15
     });
 
-    sphereGeo = new THREE.SphereGeometry(10, 5, 5 )
+    sphereGeo = new THREE.SphereGeometry(5, 5, 5 )
     @meteorHead = new THREE.Mesh(sphereGeo, FW.rocketMat)
     @meteorHead.position.set -992, 820, 1165
     FW.scene.add(@meteorHead)
@@ -31,7 +31,7 @@ FW.Meteor = class Meteor
   startShower: ->
     setInterval(()=>
       console.log "Spakrle!!!!"
-      @meteorTail.triggerPoolEmitter(1, FW.startingPos)
+      @meteorTail.triggerPoolEmitter(1, @meteorHead.position)
     5000) 
 
     
