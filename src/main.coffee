@@ -16,9 +16,6 @@ window.onload = ->
 
 FW.Main = class Main
   constructor: ->
-
-
-
     if soundOn
       SC.stream "/tracks/rameses-b-inspire", (sound)->
          sound.play()

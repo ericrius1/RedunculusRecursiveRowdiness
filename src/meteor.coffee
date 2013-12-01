@@ -20,14 +20,18 @@ FW.Meteor = class Meteor
       alive: 0,  
       emitterDuration: rnd(1.0, 5.0)
       opacityEnd: 0.5
-
     @meteorGroup.addPool(5, @emitterSettings, true)
+    FW.scene.add(@meteorGroup.mesh)
+    
+    @light = new THREE.PointLight(0xFFFFFF, 0.0, 3000)
+    FW.scene.add(@light)
 
   startShower: ->
     setInterval(()=>
       console.log "Spakrle!!!!"
       @meteorGroup.triggerPoolEmitter(1, FW.startingPos)
-    1000) 
+      @light.intensity +=0.2
+    5000) 
 
     
   tick: ->

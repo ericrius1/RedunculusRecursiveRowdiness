@@ -24,14 +24,18 @@
         opacityEnd: 0.5
       };
       this.meteorGroup.addPool(5, this.emitterSettings, true);
+      FW.scene.add(this.meteorGroup.mesh);
+      this.light = new THREE.PointLight(0xFFFFFF, 0.0, 3000);
+      FW.scene.add(this.light);
     }
 
     Meteor.prototype.startShower = function() {
       var _this = this;
       return setInterval(function() {
         console.log("Spakrle!!!!");
-        return _this.meteorGroup.triggerPoolEmitter(1, FW.startingPos);
-      }, 1000);
+        _this.meteorGroup.triggerPoolEmitter(1, FW.startingPos);
+        return _this.light.intensity += 0.2;
+      }, 5000);
     };
 
     Meteor.prototype.tick = function() {
