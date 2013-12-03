@@ -23,11 +23,6 @@ FW.Rockets = class Rockets
 
     @rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
 
-
-
-
-
-
   explode: (rocket)->
     FW.scene.remove(rocket)
     @rockets.splice(@rockets.indexOf(rocket), 1) 

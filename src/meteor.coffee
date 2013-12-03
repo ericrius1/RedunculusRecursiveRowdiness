@@ -1,6 +1,7 @@
 FW.Meteor = class Meteor
   rnd = FW.rnd
   constructor: ()->
+    @speed = 5
     #create a few different emmitters and add to pool
 
     
@@ -15,14 +16,14 @@ FW.Meteor = class Meteor
     @meteorHead.position.set -992, 820, 1165
     FW.scene.add(@meteorHead)
 
-    @emitterSettings = 
+    @emitterSettings =
       size: rnd(0.01, 1.3),
       sizeSpread: rnd(0.1, 1.0),
       acceleration: new THREE.Vector3(1, 0, 0),
-      accelerationSpread(.1, .1, .1),
+      accelerationSpread: new THREE.Vector3(.1, .1, .1),
       particlesPerSecond: rnd(100, 500),
       alive: 0,  
-      emitterDuration: 100
+      emitterDuration: 100,
       opacityEnd: 0.5
     @meteorTail.addPool(5, @emitterSettings, true)
     FW.scene.add(@meteorTail.mesh)
@@ -31,10 +32,12 @@ FW.Meteor = class Meteor
     setTimeout(()=>
       console.log "Spakrle!!!!"
       @meteorTail.triggerPoolEmitter(1, @meteorHead.position)
-    000) 
+    ) 
 
     
   tick: ->
+    console.log "POSITION", @meteorHead.position.x
+    @meteorHead.translateX(@speed * 1)
     @meteorTail.tick(0.16)
     
 

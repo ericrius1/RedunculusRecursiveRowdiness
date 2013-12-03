@@ -8,6 +8,7 @@
 
     function Meteor() {
       var sphereGeo;
+      this.speed = 5;
       this.meteorTail = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
@@ -21,6 +22,7 @@
         size: rnd(0.01, 1.3),
         sizeSpread: rnd(0.1, 1.0),
         acceleration: new THREE.Vector3(1, 0, 0),
+        accelerationSpread: new THREE.Vector3(.1, .1, .1),
         particlesPerSecond: rnd(100, 500),
         alive: 0,
         emitterDuration: 100,
@@ -35,10 +37,12 @@
       return setTimeout(function() {
         console.log("Spakrle!!!!");
         return _this.meteorTail.triggerPoolEmitter(1, _this.meteorHead.position);
-      }, 1000);
+      });
     };
 
     Meteor.prototype.tick = function() {
+      console.log("POSITION", this.meteorHead.position.x);
+      this.meteorHead.translateX(this.speed * 1);
       return this.meteorTail.tick(0.16);
     };
 
