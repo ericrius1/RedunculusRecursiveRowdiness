@@ -20,7 +20,8 @@
       this.MARGIN = 10;
       this.SCREEN_WIDTH = window.innerWidth;
       this.SCREEN_HEIGHT = window.innerHeight - 2 * this.MARGIN;
-      FW.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, 4000);
+      this.camFar = 3000;
+      FW.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, this.camFar);
       FW.camera.position.set(-1200, 800, 1200);
       this.controls = new THREE.FlyControls(FW.camera);
       this.controls.movementSpeed = 60;
@@ -40,7 +41,6 @@
       this.firework = new FW.Firework();
       this.groundControl = new FW.Rockets();
       this.meteor = new FW.Meteor();
-      this.meteor.startShower();
       this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       this.directionalLight.position.set(500, 2000, 0);
       FW.scene.add(this.directionalLight);

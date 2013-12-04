@@ -36,15 +36,20 @@
         particlesPerSecond: rnd(100, 500),
         opacityEnd: 0.5
       });
-      return this.meteorTail.addEmitter(this.emitter);
+      this.meteorTail.addEmitter(this.emitter);
+      return this.calcDistance();
     };
 
-    Meteor.prototype.startShower = function() {
-      var _this = this;
-      return setTimeout(function() {}, 500);
+    Meteor.prototype.calcDistance = function() {
+      var distance;
+      distance = FW.camera.position.distanceTo(this.meteorHead.position);
+      if (distance > FW.camera.far) {
+        return console.log("RESPAWN");
+      }
     };
 
     Meteor.prototype.tick = function() {
+      this.calcDistance();
       this.speed += this.acceleration;
       this.meteorHead.translateX(this.speed * this.dirZ);
       this.meteorHead.translateY(this.speed * this.dirY);

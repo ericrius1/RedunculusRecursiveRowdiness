@@ -33,15 +33,18 @@ FW.Meteor = class Meteor
       opacityEnd: 0.5
     
     @meteorTail.addEmitter @emitter
+    @calcDistance()
     
-  startShower: ->
-    setTimeout(()=>
-      #check to see if meteor is too far, then respawn
-
-    500)
+  calcDistance: ->
+    distance =  FW.camera.position.distanceTo(@meteorHead.position)
+    #meteor is off screen, respawn it somewhere
+    if distance > FW.camera.far
+      console.log "RESPAWN"
+    
 
     
   tick: ->
+    @calcDistance()
     @speed += @acceleration
     @meteorHead.translateX(@speed * @dirZ)
     @meteorHead.translateY(@speed * @dirY)

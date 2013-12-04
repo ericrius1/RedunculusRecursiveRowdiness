@@ -13,9 +13,10 @@ FW.World = class World
     @MARGIN = 10
     @SCREEN_WIDTH = window.innerWidth
     @SCREEN_HEIGHT = window.innerHeight - 2 * @MARGIN
+    @camFar = 3000
 
     # CAMERA
-    FW.camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, 4000)
+    FW.camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, @camFar)
     FW.camera.position.set  -1200, 800, 1200
     
     #CONTROLS
@@ -47,7 +48,6 @@ FW.World = class World
     @firework = new FW.Firework()
     @groundControl = new FW.Rockets()
     @meteor = new FW.Meteor()
-    @meteor.startShower()
 
 
 
