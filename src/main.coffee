@@ -26,8 +26,9 @@ FW.Main = class Main
     @stars = @grow.build(undefined, new THREE.Vector3().copy(FW.startingPos))
     setTimeout(()=>
       FW.scene.remove(@stars)
+      console.log ("NEW STARS")
       @makeStars()
-    40000)
+    10000)
 
 
     

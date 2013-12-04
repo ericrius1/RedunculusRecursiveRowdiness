@@ -25,7 +25,7 @@
       FW.camera.position.set(-1200, 800, 1200);
       this.controls = new THREE.FlyControls(FW.camera);
       this.controls.movementSpeed = 60;
-      this.controls.rollSpeed = Math.PI / 8;
+      this.controls.rollSpeed = Math.PI / 6;
       this.controls.dragToLook = true;
       this.stats = new Stats();
       this.stats.domElement.style.position = 'absolute';

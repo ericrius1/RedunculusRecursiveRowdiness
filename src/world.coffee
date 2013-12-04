@@ -22,7 +22,7 @@ FW.World = class World
     #CONTROLS
     @controls = new THREE.FlyControls(FW.camera)
     @controls.movementSpeed = 60;
-    @controls.rollSpeed =  Math.PI / 8;
+    @controls.rollSpeed =  Math.PI / 6;
     @controls.dragToLook = true
 
     #STATS

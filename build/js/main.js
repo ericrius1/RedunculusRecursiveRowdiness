@@ -35,8 +35,9 @@
       this.stars = this.grow.build(void 0, new THREE.Vector3().copy(FW.startingPos));
       return setTimeout(function() {
         FW.scene.remove(_this.stars);
+        console.log("NEW STARS");
         return _this.makeStars();
-      }, 40000);
+      }, 10000);
     };
 
     return Main;

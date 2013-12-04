@@ -10,6 +10,7 @@ FW.Meteor = class Meteor
     #create a few different emmitters and add to pool
 
     
+
     @meteorTail = new ShaderParticleGroup({
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
       blending: THREE.AdditiveBlending,
@@ -23,6 +24,9 @@ FW.Meteor = class Meteor
     FW.scene.add(@meteorHead)
     FW.scene.add(@meteorTail.mesh)
 
+    @light = new THREE.PointLight(0xefefef, 2, 2000)
+    FW.scene.add(@light)
+
   newMeteor: ->
     @emitter = new ShaderParticleEmitter
       position: @meteorHead.position
@@ -30,7 +34,7 @@ FW.Meteor = class Meteor
       sizeSpread: rnd(0.1, 1.0),
       acceleration: new THREE.Vector3(-@dirX, -@dirY, -@dirZ),
       accelerationSpread: new THREE.Vector3(.2, .2, .2),
-      particlesPerSecond: rnd(100, 500),
+      particlesPerSecond: 1000
       opacityEnd: 0.5
     
     @meteorTail.addEmitter @emitter
@@ -40,19 +44,20 @@ FW.Meteor = class Meteor
     setInterval(=>
       distance =  FW.camera.position.distanceTo(@meteorHead.position)
       #meteor is off screen, respawn it somewhere
-      if distance > FW.camera.far/10
+      if distance > FW.camera.far/4
+        @speed = 1
         @meteorHead.position.copy @startingPos
     1000)
     
 
     
   tick: ->
-    # @speed += @acceleration
-    # @meteorHead.translateX(@speed * @dirZ)
-    # @meteorHead.translateY(@speed * @dirY)
-    @emitter.position.x = @meteorHead.position.x
-    @emitter.position.y = @meteorHead.position.y
-    # @meteorTail.tick(0.16)
+    @speed += @acceleration
+    @meteorHead.translateX(@speed * @dirZ)
+    @meteorHead.translateY(@speed * @dirY)
+    @emitter.position = new THREE.Vector3().copy(@meteorHead.position)
+    @light.position = new THREE.Vector3().copy(@meteorHead.position)
+    @meteorTail.tick(0.16)
     
 
 

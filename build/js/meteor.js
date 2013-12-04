@@ -25,6 +25,8 @@
       this.newMeteor();
       FW.scene.add(this.meteorHead);
       FW.scene.add(this.meteorTail.mesh);
+      this.light = new THREE.PointLight(0xefefef, 2, 2000);
+      FW.scene.add(this.light);
     }
 
     Meteor.prototype.newMeteor = function() {
@@ -34,7 +36,7 @@
         sizeSpread: rnd(0.1, 1.0),
         acceleration: new THREE.Vector3(-this.dirX, -this.dirY, -this.dirZ),
         accelerationSpread: new THREE.Vector3(.2, .2, .2),
-        particlesPerSecond: rnd(100, 500),
+        particlesPerSecond: 1000,
         opacityEnd: 0.5
       });
       this.meteorTail.addEmitter(this.emitter);
@@ -46,15 +48,20 @@
       return setInterval(function() {
         var distance;
         distance = FW.camera.position.distanceTo(_this.meteorHead.position);
-        if (distance > FW.camera.far / 10) {
+        if (distance > FW.camera.far / 4) {
+          _this.speed = 1;
           return _this.meteorHead.position.copy(_this.startingPos);
         }
       }, 1000);
     };
 
     Meteor.prototype.tick = function() {
-      this.emitter.position.x = this.meteorHead.position.x;
-      return this.emitter.position.y = this.meteorHead.position.y;
+      this.speed += this.acceleration;
+      this.meteorHead.translateX(this.speed * this.dirZ);
+      this.meteorHead.translateY(this.speed * this.dirY);
+      this.emitter.position = new THREE.Vector3().copy(this.meteorHead.position);
+      this.light.position = new THREE.Vector3().copy(this.meteorHead.position);
+      return this.meteorTail.tick(0.16);
     };
 
     return Meteor;
