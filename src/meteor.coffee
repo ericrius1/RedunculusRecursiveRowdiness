@@ -2,7 +2,10 @@ FW.Meteor = class Meteor
   rnd = FW.rnd
   constructor: ()->
     @speed = .1
-    @dir = rnd(-1, 1)
+    @acceleration = 0.01
+    @dirX = rnd(-1, 1)
+    @dirY = rnd(-1, 1)
+    @dirZ = rnd(-1, 1)
     #create a few different emmitters and add to pool
 
     
@@ -15,28 +18,35 @@ FW.Meteor = class Meteor
     sphereGeo = new THREE.SphereGeometry(5, 5, 5 )
     @meteorHead = new THREE.Mesh(sphereGeo, FW.rocketMat)
     @meteorHead.position.set -992, 820, 1165
-    # FW.scene.add(@meteorHead)
+    FW.scene.add(@meteorHead)
+    @newMeteor()
+    FW.scene.add(@meteorTail.mesh)
 
+  newMeteor: ->
     @emitter = new ShaderParticleEmitter
       position: new THREE.Vector3(-992, 820, 1165)
       size: rnd(0.01, 1.3),
       sizeSpread: rnd(0.1, 1.0),
-      acceleration: new THREE.Vector3(1, 0, 0),
-      accelerationSpread: new THREE.Vector3(.1, .1, .1),
+      acceleration: new THREE.Vector3(-@dirX, -@dirY, -@dirZ),
+      accelerationSpread: new THREE.Vector3(.2, .2, .2),
       particlesPerSecond: rnd(100, 500),
       opacityEnd: 0.5
+    
     @meteorTail.addEmitter @emitter
-    FW.scene.add(@meteorTail.mesh)
     
   startShower: ->
     setTimeout(()=>
+      #check to see if meteor is too far, then respawn
+
     500)
 
     
   tick: ->
-    @meteorHead.translateX(@speed * @dir)
-    @meteorHead.translateY(@speed * @dir)
+    @speed += @acceleration
+    @meteorHead.translateX(@speed * @dirZ)
+    @meteorHead.translateY(@speed * @dirY)
     @emitter.position.x = @meteorHead.position.x
+    @emitter.position.y = @meteorHead.position.y
     @meteorTail.tick(0.16)
     
 
