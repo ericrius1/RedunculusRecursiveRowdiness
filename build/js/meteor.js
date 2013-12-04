@@ -41,15 +41,17 @@
     };
 
     Meteor.prototype.calcDistance = function() {
-      var distance;
-      distance = FW.camera.position.distanceTo(this.meteorHead.position);
-      if (distance > FW.camera.far) {
-        return console.log("RESPAWN");
-      }
+      var _this = this;
+      return setInterval(function() {
+        var distance;
+        distance = FW.camera.position.distanceTo(_this.meteorHead.position);
+        if (distance > FW.camera.far) {
+          return console.log("RESPAWN");
+        }
+      }, 1000);
     };
 
     Meteor.prototype.tick = function() {
-      this.calcDistance();
       this.speed += this.acceleration;
       this.meteorHead.translateX(this.speed * this.dirZ);
       this.meteorHead.translateY(this.speed * this.dirY);

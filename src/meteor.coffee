@@ -36,15 +36,16 @@ FW.Meteor = class Meteor
     @calcDistance()
     
   calcDistance: ->
-    distance =  FW.camera.position.distanceTo(@meteorHead.position)
-    #meteor is off screen, respawn it somewhere
-    if distance > FW.camera.far
-      console.log "RESPAWN"
+    setInterval(=>
+      distance =  FW.camera.position.distanceTo(@meteorHead.position)
+      #meteor is off screen, respawn it somewhere
+      if distance > FW.camera.far
+        console.log "RESPAWN"
+    1000)
     
 
     
   tick: ->
-    @calcDistance()
     @speed += @acceleration
     @meteorHead.translateX(@speed * @dirZ)
     @meteorHead.translateY(@speed * @dirY)
