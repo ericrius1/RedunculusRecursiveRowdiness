@@ -18,6 +18,9 @@ FW.Rockets = class Rockets
     @launchSpeed = 5
     @explosionDelay = 1000
     @shootDirection = new THREE.Vector3()
+    @rocketMat = new THREE.MeshBasicMaterial({
+      color: 0xff0000
+    });
 
 
 
@@ -32,7 +35,7 @@ FW.Rockets = class Rockets
 
   launchRocket: ()->
     @launchSound.load();
-    rocket = new THREE.Mesh(@rocketGeo, FW.rocketMat)
+    rocket = new THREE.Mesh(@rocketGeo, @rocketMat)
     rocket.position.set(FW.camera.position.x, FW.camera.position.y, FW.camera.position.z)
     vector = new THREE.Vector3()
     vector.set(0,0,1)

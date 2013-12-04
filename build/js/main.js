@@ -16,7 +16,8 @@
     FW.myWorld = new FW.World();
     FW.myWorld.animate();
     FW.main = new FW.Main();
-    return FW.main.makeStars();
+    FW.main.makeStars();
+    return FW.camera.lookAt(FW.main.stars.position);
   };
 
   FW.Main = Main = (function() {
@@ -29,10 +30,13 @@
     }
 
     Main.prototype.makeStars = function() {
-      var thing;
-      this.g = new grow3.System(FW.scene, FW.camera, RULES.bush);
-      thing = this.g.build(void 0, FW.startingPos);
-      return FW.camera.lookAt(thing.position);
+      var _this = this;
+      this.grow = new grow3.System(FW.scene, FW.camera, RULES.bush);
+      this.stars = this.grow.build(void 0, new THREE.Vector3().copy(FW.startingPos));
+      return setTimeout(function() {
+        FW.scene.remove(_this.stars);
+        return _this.makeStars();
+      }, 40000);
     };
 
     return Main;

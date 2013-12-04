@@ -5,13 +5,14 @@ SC?.initialize({
 window.soundOn = true
 
 #inspire rameses b
-#Give user option between building a permanent structure or launching fire works
+#Give user option between building a permanent structure or laun@stars fire works
 window.onload = ->
   FW.startingPos = new THREE.Vector3(-580, 913, 1009)
   FW.myWorld = new FW.World()
   FW.myWorld.animate()
   FW.main = new FW.Main()
   FW.main.makeStars()
+  FW.camera.lookAt FW.main.stars.position  
 
 
 FW.Main = class Main
@@ -21,9 +22,16 @@ FW.Main = class Main
          sound.play()
 
   makeStars: ->
-    @g = new grow3.System(FW.scene, FW.camera, RULES.bush)
-    thing = @g.build(undefined, FW.startingPos)
-    FW.camera.lookAt thing.position    
+    @grow = new grow3.System(FW.scene, FW.camera, RULES.bush)
+    @stars = @grow.build(undefined, new THREE.Vector3().copy(FW.startingPos))
+    setTimeout(()=>
+      FW.scene.remove(@stars)
+      @makeStars()
+    40000)
+
+
+    
+
 
 
 FW.rocketMat= new THREE.ShaderMaterial({

@@ -14,21 +14,20 @@ window.RULES = {}
 
 RULES.bush = function(grow3) {
   with(grow3) {
-    var mat2 = new THREE.MeshPhongMaterial({
-      color: 0x70AAFF
+    var mat1 = new THREE.MeshPhongMaterial({
+      color: '#'+Math.floor(Math.random()*16777215).toString(16)
     });
 
-    var mat1 = new THREE.MeshLambertMaterial({
-      color: 0xff00ff
+    var mat2 = new THREE.MeshLambertMaterial({
+      color: '#'+Math.floor(Math.random()*16777215).toString(16)
     });
-    // var shinyMat = new THREE.ShaderMaterial({
-    // uniforms: uniforms1,
-    // vertexShader: document.getElementById('rocketVertexShader').textContent,
-    // fragmentShader: document.getElementById('fragment_shader1').textContent
+    
+    var mat3 = new THREE.MeshLambertMaterial({
+      color: '#'+Math.floor(Math.random()*16777215).toString(16)
+    });
 
-    // })
 
-    var mats = [ mat2, mat1];
+    var mats = [ mat1, mat2, mat3];
 
     maxDepth(50);
 

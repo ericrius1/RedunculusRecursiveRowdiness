@@ -20,6 +20,9 @@
       this.launchSpeed = 5;
       this.explosionDelay = 1000;
       this.shootDirection = new THREE.Vector3();
+      this.rocketMat = new THREE.MeshBasicMaterial({
+        color: 0xff0000
+      });
       this.rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
     }
 
@@ -33,7 +36,7 @@
       var ray, rocket, vector,
         _this = this;
       this.launchSound.load();
-      rocket = new THREE.Mesh(this.rocketGeo, FW.rocketMat);
+      rocket = new THREE.Mesh(this.rocketGeo, this.rocketMat);
       rocket.position.set(FW.camera.position.x, FW.camera.position.y, FW.camera.position.z);
       vector = new THREE.Vector3();
       vector.set(0, 0, 1);

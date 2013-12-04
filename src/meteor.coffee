@@ -41,7 +41,6 @@ FW.Meteor = class Meteor
       distance =  FW.camera.position.distanceTo(@meteorHead.position)
       #meteor is off screen, respawn it somewhere
       if distance > FW.camera.far/10
-        console.log @startingPos
         @meteorHead.position.copy @startingPos
     1000)
     
@@ -49,11 +48,11 @@ FW.Meteor = class Meteor
     
   tick: ->
     # @speed += @acceleration
-    @meteorHead.translateX(@speed * @dirZ)
-    @meteorHead.translateY(@speed * @dirY)
+    # @meteorHead.translateX(@speed * @dirZ)
+    # @meteorHead.translateY(@speed * @dirY)
     @emitter.position.x = @meteorHead.position.x
     @emitter.position.y = @meteorHead.position.y
-    @meteorTail.tick(0.16)
+    # @meteorTail.tick(0.16)
     
 
 

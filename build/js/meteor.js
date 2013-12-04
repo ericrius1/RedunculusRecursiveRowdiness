@@ -47,18 +47,14 @@
         var distance;
         distance = FW.camera.position.distanceTo(_this.meteorHead.position);
         if (distance > FW.camera.far / 10) {
-          console.log(_this.startingPos);
           return _this.meteorHead.position.copy(_this.startingPos);
         }
       }, 1000);
     };
 
     Meteor.prototype.tick = function() {
-      this.meteorHead.translateX(this.speed * this.dirZ);
-      this.meteorHead.translateY(this.speed * this.dirY);
       this.emitter.position.x = this.meteorHead.position.x;
-      this.emitter.position.y = this.meteorHead.position.y;
-      return this.meteorTail.tick(0.16);
+      return this.emitter.position.y = this.meteorHead.position.y;
     };
 
     return Meteor;
