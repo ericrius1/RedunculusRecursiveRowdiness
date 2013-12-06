@@ -1,8 +1,10 @@
 FW.Meteor = class Meteor
   rnd = FW.rnd
   constructor: ()->
-    @speed = 1
-    @acceleration = 0.01
+    @speed = .1
+    @accelX =rnd(.1, .5)
+    @accelY = .2
+    @accelZ = 1
     @dirX = rnd(-1, 1)
     @dirY = rnd(-1, 1)
     @dirZ = rnd(-1, 1)
@@ -47,14 +49,16 @@ FW.Meteor = class Meteor
       if distance > FW.camera.far/4
         @speed = 1
         @meteorHead.position.copy @startingPos
+        @emit
     1000)
     
 
     
   tick: ->
     @speed += @acceleration
-    @meteorHead.translateX(@speed * @dirZ)
+    @meteorHead.translateX(@speed * @dirX)
     @meteorHead.translateY(@speed * @dirY)
+    @meteorHead.translateZ(@speed * @dirZ)
     @emitter.position = new THREE.Vector3().copy(@meteorHead.position)
     @light.position = new THREE.Vector3().copy(@meteorHead.position)
     @meteorTail.tick(0.16)

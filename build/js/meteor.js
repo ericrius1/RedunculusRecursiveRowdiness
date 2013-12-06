@@ -8,8 +8,10 @@
 
     function Meteor() {
       var sphereGeo;
-      this.speed = 1;
-      this.acceleration = 0.01;
+      this.speed = .1;
+      this.accelX = rnd(.1, .5);
+      this.accelY = .2;
+      this.accelZ = 1;
       this.dirX = rnd(-1, 1);
       this.dirY = rnd(-1, 1);
       this.dirZ = rnd(-1, 1);
@@ -50,15 +52,17 @@
         distance = FW.camera.position.distanceTo(_this.meteorHead.position);
         if (distance > FW.camera.far / 4) {
           _this.speed = 1;
-          return _this.meteorHead.position.copy(_this.startingPos);
+          _this.meteorHead.position.copy(_this.startingPos);
+          return _this.emit;
         }
       }, 1000);
     };
 
     Meteor.prototype.tick = function() {
       this.speed += this.acceleration;
-      this.meteorHead.translateX(this.speed * this.dirZ);
+      this.meteorHead.translateX(this.speed * this.dirX);
       this.meteorHead.translateY(this.speed * this.dirY);
+      this.meteorHead.translateZ(this.speed * this.dirZ);
       this.emitter.position = new THREE.Vector3().copy(this.meteorHead.position);
       this.light.position = new THREE.Vector3().copy(this.meteorHead.position);
       return this.meteorTail.tick(0.16);
