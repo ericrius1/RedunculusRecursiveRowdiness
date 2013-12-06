@@ -8,13 +8,7 @@
 
     function Meteor() {
       var sphereGeo;
-      this.speed = .1;
-      this.accelX = rnd(.1, .5);
-      this.accelY = .2;
-      this.accelZ = 1;
-      this.dirX = rnd(-1, 1);
-      this.dirY = rnd(-1, 1);
-      this.dirZ = rnd(-1, 1);
+      this.generateSpeed();
       this.startingPos = new THREE.Vector3(-992, 820, 1165);
       this.meteorTail = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
@@ -30,6 +24,18 @@
       this.light = new THREE.PointLight(0xefefef, 2, 2000);
       FW.scene.add(this.light);
     }
+
+    Meteor.prototype.generateSpeed = function() {
+      this.speedX = .1;
+      this.speedY = .1;
+      this.speedZ = .1;
+      this.accelX = rnd(.01, .05);
+      this.accelY = .02;
+      this.accelZ = .01;
+      this.dirX = rnd(-1, 1);
+      this.dirY = rnd(-1, 1);
+      return this.dirZ = rnd(-1, 1);
+    };
 
     Meteor.prototype.newMeteor = function() {
       this.emitter = new ShaderParticleEmitter({
@@ -51,7 +57,7 @@
         var distance;
         distance = FW.camera.position.distanceTo(_this.meteorHead.position);
         if (distance > FW.camera.far / 4) {
-          _this.speed = 1;
+          _this.generateSpeed();
           _this.meteorHead.position.copy(_this.startingPos);
           return _this.emit;
         }
@@ -59,10 +65,12 @@
     };
 
     Meteor.prototype.tick = function() {
-      this.speed += this.acceleration;
-      this.meteorHead.translateX(this.speed * this.dirX);
-      this.meteorHead.translateY(this.speed * this.dirY);
-      this.meteorHead.translateZ(this.speed * this.dirZ);
+      this.speedX += this.accelX;
+      this.speedY += this.accelY;
+      this.speedZ += this.accelZ;
+      this.meteorHead.translateX(this.speedX * this.dirX);
+      this.meteorHead.translateY(this.speedY * this.dirY);
+      this.meteorHead.translateZ(this.speedZ * this.dirZ);
       this.emitter.position = new THREE.Vector3().copy(this.meteorHead.position);
       this.light.position = new THREE.Vector3().copy(this.meteorHead.position);
       return this.meteorTail.tick(0.16);
