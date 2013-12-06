@@ -4,7 +4,7 @@ FW.Firework = class Firework
     #create a few different emmitters and add to pool
     @colorStart = new THREE.Color()
     @colorEnd = new THREE.Color()
-    @numFireworksPerExplosion = rnd(2, 5)
+    @numFireworksPerExplosion = 3
     @lightIndex = 0
     @fwSpread = 100
     @fwAge = 15
@@ -20,7 +20,7 @@ FW.Firework = class Firework
 
     
     @particleGroup = new ShaderParticleGroup({
-      texture: THREE.ImageUtils.loadTexture('assets/smokeparticle.png'),
+      texture: THREE.ImageUtils.loadTexture('assets/star.png'),
       blending: THREE.AdditiveBlending,
       maxAge: 6
     });
@@ -36,18 +36,16 @@ FW.Firework = class Firework
     FW.scene.add(light)
     @lights.push(light)
     emitterSettings = 
-      size: rnd(0.01, 1.3),
-      sizeSpread: rnd(0.1, 1.0),
       velocity: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1))
       acceleration: new THREE.Vector3(0, -0.01, 0),
       accelerationSpread: new THREE.Vector3(rnd(-2, 0), rnd(-2, 0), rnd(-2, 0)),
       colorStart: @colorStart,
       colorSpread: new THREE.Vector3(rnd(.1, .5), rnd(.1, .5), rnd(.1, .5)),
       colorEnd: @colorEnd,
-      particlesPerSecond: rnd(100, 500),
+      particlesPerSecond: 100
       alive: 0,  
-      emitterDuration: rnd(1.0, 5.0)
-      opacityEnd: 0.1
+      emitterDuration: 1.0
+      opacityEnd: 0.4
 
   createExplosion: (origPos, newPos = origPos, count=0)->
     emitter = @particleGroup.triggerPoolEmitter(1, newPos)

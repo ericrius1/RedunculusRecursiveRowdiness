@@ -10,7 +10,7 @@
       var i, _i;
       this.colorStart = new THREE.Color();
       this.colorEnd = new THREE.Color();
-      this.numFireworksPerExplosion = rnd(2, 5);
+      this.numFireworksPerExplosion = 3;
       this.lightIndex = 0;
       this.fwSpread = 100;
       this.fwAge = 15;
@@ -20,7 +20,7 @@
       this.crackleSound = new Audio('./assets/crackle.mp3');
       this.lights = [];
       this.particleGroup = new ShaderParticleGroup({
-        texture: THREE.ImageUtils.loadTexture('assets/smokeparticle.png'),
+        texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
         maxAge: 6
       });
@@ -38,18 +38,16 @@
       FW.scene.add(light);
       this.lights.push(light);
       return emitterSettings = {
-        size: rnd(0.01, 1.3),
-        sizeSpread: rnd(0.1, 1.0),
         velocity: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1)),
         acceleration: new THREE.Vector3(0, -0.01, 0),
         accelerationSpread: new THREE.Vector3(rnd(-2, 0), rnd(-2, 0), rnd(-2, 0)),
         colorStart: this.colorStart,
         colorSpread: new THREE.Vector3(rnd(.1, .5), rnd(.1, .5), rnd(.1, .5)),
         colorEnd: this.colorEnd,
-        particlesPerSecond: rnd(100, 500),
+        particlesPerSecond: 100,
         alive: 0,
-        emitterDuration: rnd(1.0, 5.0),
-        opacityEnd: 0.1
+        emitterDuration: 1.0,
+        opacityEnd: 0.4
       };
     };
 
