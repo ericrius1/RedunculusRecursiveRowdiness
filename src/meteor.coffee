@@ -3,6 +3,8 @@ FW.Meteor = class Meteor
   constructor: ()->
     @generateSpeed()
     @startingPos = new THREE.Vector3(-992, 820, 1165)
+    @colorStart = new THREE.Color()
+    @colorStart.setRGB(Math.random(),Math.random(),Math.random() )
     #create a few different emmitters and add to pool
 
     @meteorTail = new ShaderParticleGroup({
@@ -11,6 +13,8 @@ FW.Meteor = class Meteor
       maxAge: 15
     });
 
+    @colorEnd = new THREE.Color()
+    @colorEnd.setRGB(Math.random(),Math.random(),Math.random() )
     sphereGeo = new THREE.SphereGeometry(5, 5, 5 )
     @meteorHead = new THREE.Mesh(sphereGeo, FW.rocketMat)
     @meteorHead.position.copy @startingPos
@@ -42,6 +46,8 @@ FW.Meteor = class Meteor
       accelerationSpread: new THREE.Vector3(.2, .2, .2),
       particlesPerSecond: 1000
       opacityEnd: 0.5
+      colorStart: @colorStart
+      colorEnd: @colorEnd
     
     @meteorTail.addEmitter @emitter
     @calcDistance()

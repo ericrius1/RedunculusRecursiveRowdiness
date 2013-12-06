@@ -10,11 +10,15 @@
       var sphereGeo;
       this.generateSpeed();
       this.startingPos = new THREE.Vector3(-992, 820, 1165);
+      this.colorStart = new THREE.Color();
+      this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
       this.meteorTail = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
         maxAge: 15
       });
+      this.colorEnd = new THREE.Color();
+      this.colorEnd.setRGB(Math.random(), Math.random(), Math.random());
       sphereGeo = new THREE.SphereGeometry(5, 5, 5);
       this.meteorHead = new THREE.Mesh(sphereGeo, FW.rocketMat);
       this.meteorHead.position.copy(this.startingPos);
@@ -45,7 +49,9 @@
         acceleration: new THREE.Vector3(-this.dirX, -this.dirY, -this.dirZ),
         accelerationSpread: new THREE.Vector3(.2, .2, .2),
         particlesPerSecond: 1000,
-        opacityEnd: 0.5
+        opacityEnd: 0.5,
+        colorStart: this.colorStart,
+        colorEnd: this.colorEnd
       });
       this.meteorTail.addEmitter(this.emitter);
       return this.calcDistance();
