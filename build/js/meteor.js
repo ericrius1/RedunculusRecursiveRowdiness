@@ -9,7 +9,8 @@
     function Meteor() {
       var sphereGeo;
       this.generateSpeed();
-      this.startingPos = new THREE.Vector3(-992, 820, 1165);
+      this.distFromCamera = 1165;
+      this.startingPos = new THREE.Vector3(-992, 820, this.distFromCamera);
       this.colorStart = new THREE.Color();
       this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
       this.meteorTail = new ShaderParticleGroup({
@@ -23,7 +24,6 @@
       this.meteorHead = new THREE.Mesh(sphereGeo, FW.rocketMat);
       this.meteorHead.position.copy(this.startingPos);
       this.newMeteor();
-      FW.scene.add(this.meteorHead);
       FW.scene.add(this.meteorTail.mesh);
       this.light = new THREE.PointLight(0xefefef, 2, 2000);
       FW.scene.add(this.light);
@@ -54,10 +54,10 @@
         colorEnd: this.colorEnd
       });
       this.meteorTail.addEmitter(this.emitter);
-      return this.calcDistance();
+      return this.calcPosition();
     };
 
-    Meteor.prototype.calcDistance = function() {
+    Meteor.prototype.calcPosition = function() {
       var _this = this;
       return setInterval(function() {
         var distance;
