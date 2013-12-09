@@ -3,9 +3,11 @@ FW.Meteor = class Meteor
   constructor: ()->
     @generateSpeed()
     @distFromCamera = 1165
-    @startingPos = new THREE.Vector3(-992, 820, @distFromCamera)
+
     @colorStart = new THREE.Color()
     @colorStart.setRGB(Math.random(),Math.random(),Math.random() )
+
+
 
     @meteorTail = new ShaderParticleGroup({
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
@@ -16,8 +18,8 @@ FW.Meteor = class Meteor
     @colorEnd = new THREE.Color()
     @colorEnd.setRGB(Math.random(),Math.random(),Math.random() )
     sphereGeo = new THREE.SphereGeometry(5, 5, 5 )
-    @meteorHead = new THREE.Object3D()
-    @meteorHead.position.copy @startingPos
+    @meteor = new THREE.Object3D()
+    @calculateStartPos()
     @newMeteor()
     FW.scene.add(@meteorTail.mesh)
 
@@ -38,7 +40,7 @@ FW.Meteor = class Meteor
 
   newMeteor: ->
     @emitter = new ShaderParticleEmitter
-      position: @meteorHead.position
+      position: @meteor.position
       size: rnd(0.01, 1.3),
       sizeSpread: rnd(0.1, 1.0),
       acceleration: new THREE.Vector3(-@dirX, -@dirY, -@dirZ),
@@ -53,27 +55,32 @@ FW.Meteor = class Meteor
     
   calcPosition: ->
 
-    distance =  FW.camera.position.distanceTo(@meteorHead.position)
-    console.log "DISTANCE", distance
+    distance =  FW.camera.position.distanceTo(@meteor.position)
     #meteor is off screen, respawn it somewhere
     if distance > FW.camera.far/4
       @generateSpeed()
-      @meteorHead.position.copy @startingPos
+      @calculateStartPos()
+
     setInterval(=>
       @calcPosition()
     1000)
     
-
+  calculateStartPos: ->
+    vFOV = FW.camera.fov * Math.PI /180
+    height = 2 * Math.tan(vFOV /2 ) * @distFromCamera
+    aspect = window.width / window.height
+    width = height * aspect # visible width
+    @meteor.position = new THREE.Vector3(-992, 820, @distFromCamera)
     
   tick: ->
     @speedX += @accelX
     @speedY += @accelY
     @speedZ += @accelZ
-    @meteorHead.translateX(@speedX * @dirX)
-    @meteorHead.translateY(@speedY * @dirY)
-    @meteorHead.translateZ(@speedZ * @dirZ)
-    @emitter.position = new THREE.Vector3().copy(@meteorHead.position)
-    @light.position = new THREE.Vector3().copy(@meteorHead.position)
+    @meteor.translateX(@speedX * @dirX)
+    @meteor.translateY(@speedY * @dirY)
+    @meteor.translateZ(@speedZ * @dirZ)
+    @emitter.position = new THREE.Vector3().copy(@meteor.position)
+    @light.position = new THREE.Vector3().copy(@meteor.position)
     @meteorTail.tick(0.16)
     
 
