@@ -6,7 +6,6 @@ FW.Meteor = class Meteor
     @startingPos = new THREE.Vector3(-992, 820, @distFromCamera)
     @colorStart = new THREE.Color()
     @colorStart.setRGB(Math.random(),Math.random(),Math.random() )
-    #create a few different emmitters and add to pool
 
     @meteorTail = new ShaderParticleGroup({
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
@@ -17,10 +16,9 @@ FW.Meteor = class Meteor
     @colorEnd = new THREE.Color()
     @colorEnd.setRGB(Math.random(),Math.random(),Math.random() )
     sphereGeo = new THREE.SphereGeometry(5, 5, 5 )
-    @meteorHead = new THREE.Mesh(sphereGeo, FW.rocketMat)
+    @meteorHead = new THREE.Object3D()
     @meteorHead.position.copy @startingPos
     @newMeteor()
-    # FW.scene.add(@meteorHead)
     FW.scene.add(@meteorTail.mesh)
 
     @light = new THREE.PointLight(0xefefef, 2, 2000)
@@ -54,13 +52,15 @@ FW.Meteor = class Meteor
     @calcPosition()
     
   calcPosition: ->
+
+    distance =  FW.camera.position.distanceTo(@meteorHead.position)
+    console.log "DISTANCE", distance
+    #meteor is off screen, respawn it somewhere
+    if distance > FW.camera.far/4
+      @generateSpeed()
+      @meteorHead.position.copy @startingPos
     setInterval(=>
-      distance =  FW.camera.position.distanceTo(@meteorHead.position)
-      #meteor is off screen, respawn it somewhere
-      if distance > FW.camera.far/4
-        @generateSpeed()
-        @meteorHead.position.copy @startingPos
-        @emit
+      @calcPosition()
     1000)
     
 

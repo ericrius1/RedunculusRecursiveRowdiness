@@ -21,7 +21,7 @@
       this.colorEnd = new THREE.Color();
       this.colorEnd.setRGB(Math.random(), Math.random(), Math.random());
       sphereGeo = new THREE.SphereGeometry(5, 5, 5);
-      this.meteorHead = new THREE.Mesh(sphereGeo, FW.rocketMat);
+      this.meteorHead = new THREE.Object3D();
       this.meteorHead.position.copy(this.startingPos);
       this.newMeteor();
       FW.scene.add(this.meteorTail.mesh);
@@ -58,15 +58,16 @@
     };
 
     Meteor.prototype.calcPosition = function() {
-      var _this = this;
+      var distance,
+        _this = this;
+      distance = FW.camera.position.distanceTo(this.meteorHead.position);
+      console.log("DISTANCE", distance);
+      if (distance > FW.camera.far / 4) {
+        this.generateSpeed();
+        this.meteorHead.position.copy(this.startingPos);
+      }
       return setInterval(function() {
-        var distance;
-        distance = FW.camera.position.distanceTo(_this.meteorHead.position);
-        if (distance > FW.camera.far / 4) {
-          _this.generateSpeed();
-          _this.meteorHead.position.copy(_this.startingPos);
-          return _this.emit;
-        }
+        return _this.calcPosition();
       }, 1000);
     };
 
