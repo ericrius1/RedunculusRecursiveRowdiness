@@ -9,7 +9,6 @@
     function Meteor() {
       var sphereGeo;
       this.generateSpeed();
-      this.distFromCamera = 1165;
       this.colorStart = new THREE.Color();
       this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
       this.meteorTail = new ShaderParticleGroup({
@@ -35,7 +34,7 @@
       this.accelX = rnd(.01, .05);
       this.accelY = .02;
       this.accelZ = .01;
-      this.dirX = rnd(-1, 1);
+      this.dirX = rnd(0, 1);
       this.dirY = rnd(-1, 1);
       return this.dirZ = rnd(-1, 1);
     };
@@ -66,16 +65,11 @@
       }
       return setInterval(function() {
         return _this.calcPosition();
-      }, 1000);
+      }, 3000);
     };
 
     Meteor.prototype.calculateStartPos = function() {
-      var aspect, height, vFOV, width;
-      vFOV = FW.camera.fov * Math.PI / 180;
-      height = 2 * Math.tan(vFOV / 2) * this.distFromCamera;
-      aspect = window.width / window.height;
-      width = height * aspect;
-      return this.meteor.position = new THREE.Vector3(-992, 820, this.distFromCamera);
+      return this.meteor.position = new THREE.Vector3(-752, 1202, -90);
     };
 
     Meteor.prototype.tick = function() {

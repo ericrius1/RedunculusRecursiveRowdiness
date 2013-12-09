@@ -2,7 +2,6 @@ FW.Meteor = class Meteor
   rnd = FW.rnd
   constructor: ()->
     @generateSpeed()
-    @distFromCamera = 1165
 
     @colorStart = new THREE.Color()
     @colorStart.setRGB(Math.random(),Math.random(),Math.random() )
@@ -33,7 +32,7 @@ FW.Meteor = class Meteor
     @accelX =rnd(.01, .05)
     @accelY = .02
     @accelZ = .01
-    @dirX = rnd(-1, 1)
+    @dirX = rnd(0, 1)
     @dirY = rnd(-1, 1)
     @dirZ = rnd(-1, 1)
 
@@ -63,14 +62,10 @@ FW.Meteor = class Meteor
 
     setInterval(=>
       @calcPosition()
-    1000)
+    3000)
     
   calculateStartPos: ->
-    vFOV = FW.camera.fov * Math.PI /180
-    height = 2 * Math.tan(vFOV /2 ) * @distFromCamera
-    aspect = window.width / window.height
-    width = height * aspect # visible width
-    @meteor.position = new THREE.Vector3(-992, 820, @distFromCamera)
+    @meteor.position = new THREE.Vector3(-752, 1202, -90)
     
   tick: ->
     @speedX += @accelX
