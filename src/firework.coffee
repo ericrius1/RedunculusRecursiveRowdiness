@@ -34,13 +34,14 @@ FW.Firework = class Firework
     @colorEnd.setRGB(Math.random(), Math.random(),Math.random())
     emitterSettings = 
       type: 'sphere'
-      radius: 5
-      speed: 12
+      radius: 4
+      speed: 20
       speedSpread: 6
       colorStart: @colorStart,
       colorEnd: @colorEnd,
       particlesPerSecond: 100
-      size: 200
+      size: 100
+      sizeSpread: 100
       alive: 0,  
       emitterDuration: 1.0
 
