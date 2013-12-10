@@ -20,7 +20,9 @@
     });
   }
 
-  window.soundOn = true;
+  window.soundOn = false;
+
+  FW.sfxVolume = 0.4;
 
   window.onload = function() {
     FW.startingPos = new THREE.Vector3(3537, 500, -324);

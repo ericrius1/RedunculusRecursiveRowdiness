@@ -1,8 +1,6 @@
 (function() {
   var Rockets;
 
-  window.soundOn = false;
-
   FW.Rockets = Rockets = (function() {
     var rnd;
 
@@ -13,7 +11,7 @@
       rnd = FW.rnd;
       this.rockets = [];
       this.launchSound = new Audio('./assets/launch.mp3');
-      this.soundOn = true;
+      this.launchSound.volume = FW.sfxVolume;
       this.color = new THREE.Color();
       this.color.setRGB(200, 10, 0);
       this.firework = new FW.Firework(this.color);

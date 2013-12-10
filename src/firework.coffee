@@ -12,7 +12,9 @@ FW.Firework = class Firework
     @lightDimmingFactor = .5/@fwAge
 
     @explodeSound = new Audio('./assets/explosion.mp3');
+    @explodeSound.volume = FW.sfxVolume
     @crackleSound = new Audio('./assets/crackle.mp3');
+    @crackleSound.volume = FW.sfxVolume
     @lights = []
     
     @particleGroup = new ShaderParticleGroup({

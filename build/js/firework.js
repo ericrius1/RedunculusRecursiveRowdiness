@@ -17,7 +17,9 @@
       this.startLightIntensity = 2;
       this.lightDimmingFactor = .5 / this.fwAge;
       this.explodeSound = new Audio('./assets/explosion.mp3');
+      this.explodeSound.volume = FW.sfxVolume;
       this.crackleSound = new Audio('./assets/crackle.mp3');
+      this.crackleSound.volume = FW.sfxVolume;
       this.lights = [];
       this.particleGroup = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
