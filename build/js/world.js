@@ -36,7 +36,7 @@
       this.cameraOrtho.position.z = 100;
       this.sceneRenderTarget.add(this.cameraOrtho);
       FW.scene = new THREE.Scene();
-      FW.scene.fog = new THREE.Fog(0x000000, 100, 4000);
+      FW.scene.fog = new THREE.Fog(0x000000, 1000, 4000);
       this.firework = new FW.Firework();
       this.groundControl = new FW.Rockets();
       this.meteor = new FW.Meteor();

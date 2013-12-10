@@ -40,7 +40,7 @@ FW.World = class World
     
     # SCENE (FINAL)
     FW.scene = new THREE.Scene()
-    FW.scene.fog = new THREE.Fog(0x000000, 100, 4000)
+    FW.scene.fog = new THREE.Fog(0x000000, 1000, 4000)
 
 
     #FUN
