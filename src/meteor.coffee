@@ -11,12 +11,12 @@ FW.Meteor = class Meteor
     FW.scene.add(@light)
 
   generateSpeed: ->
-    @speedX = rnd(5, 10)
-    @speedY = rnd(0.1, 0.5)
-    @speedZ = rnd(5, 10)
-    @accelX = .01
-    @accelY =.01 
-    @accelZ = .01
+    @speedX = 1
+    @speedY = .05
+    @speedZ = 1
+    @accelX = .1
+    @accelY = 0.001  
+    @accelZ = .1
     @dirX = rnd(-1, 1)
     @dirY = -1
     @dirZ = rnd(1, -1)
@@ -34,11 +34,11 @@ FW.Meteor = class Meteor
     @colorEnd.setRGB(Math.random(),Math.random(),Math.random() )
     @emitter = new ShaderParticleEmitter
       position: @meteor.position
-      size: rnd(0.1, 1.3),
-      sizeSpread: rnd(0.1, 1.0),
+      size: 10
+      sizeSpread: 10
       acceleration: new THREE.Vector3(-@dirX, -@dirY, -@dirZ),
-      accelerationSpread: new THREE.Vector3(.2, .2, .2),
-      particlesPerSecond: 1000
+      accelerationSpread: new THREE.Vector3(.4, .4, .4),
+      particlesPerSecond: 5000
       colorStart: @colorStart
       colorEnd: @colorEnd
     FW.scene.add(@meteorTail.mesh)
@@ -61,11 +61,10 @@ FW.Meteor = class Meteor
   tick: ->
     @speedX +=@accelX
     @speedY +=@accelY
-    @speedZ +=@accelY
+    @speedZ +=@accelZ
     @meteor.translateX(@speedX * @dirX)
     @meteor.translateY( @speedY * @dirY)
     @meteor.translateZ(@speedZ * @dirZ)
-    @emitter.position = new THREE.Vector3().copy(@meteor.position)
     @light.position = new THREE.Vector3().copy(@meteor.position)
     @meteorTail.tick(0.16)
     

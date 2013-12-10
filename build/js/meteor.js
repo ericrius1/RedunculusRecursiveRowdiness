@@ -18,12 +18,12 @@
     }
 
     Meteor.prototype.generateSpeed = function() {
-      this.speedX = rnd(5, 10);
-      this.speedY = rnd(0.1, 0.5);
-      this.speedZ = rnd(5, 10);
-      this.accelX = .01;
-      this.accelY = .01;
-      this.accelZ = .01;
+      this.speedX = 1;
+      this.speedY = .05;
+      this.speedZ = 1;
+      this.accelX = .1;
+      this.accelY = 0.001;
+      this.accelZ = .1;
       this.dirX = rnd(-1, 1);
       this.dirY = -1;
       return this.dirZ = rnd(1, -1);
@@ -43,11 +43,11 @@
       this.colorEnd.setRGB(Math.random(), Math.random(), Math.random());
       this.emitter = new ShaderParticleEmitter({
         position: this.meteor.position,
-        size: rnd(0.1, 1.3),
-        sizeSpread: rnd(0.1, 1.0),
+        size: 10,
+        sizeSpread: 10,
         acceleration: new THREE.Vector3(-this.dirX, -this.dirY, -this.dirZ),
-        accelerationSpread: new THREE.Vector3(.2, .2, .2),
-        particlesPerSecond: 1000,
+        accelerationSpread: new THREE.Vector3(.4, .4, .4),
+        particlesPerSecond: 5000,
         colorStart: this.colorStart,
         colorEnd: this.colorEnd
       });
@@ -72,11 +72,10 @@
     Meteor.prototype.tick = function() {
       this.speedX += this.accelX;
       this.speedY += this.accelY;
-      this.speedZ += this.accelY;
+      this.speedZ += this.accelZ;
       this.meteor.translateX(this.speedX * this.dirX);
       this.meteor.translateY(this.speedY * this.dirY);
       this.meteor.translateZ(this.speedZ * this.dirZ);
-      this.emitter.position = new THREE.Vector3().copy(this.meteor.position);
       this.light.position = new THREE.Vector3().copy(this.meteor.position);
       return this.meteorTail.tick(0.16);
     };
