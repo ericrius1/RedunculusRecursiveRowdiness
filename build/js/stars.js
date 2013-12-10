@@ -29,7 +29,7 @@
         size: 400,
         sizeSpread: 200,
         particlesPerSecond: rnd(100, 300),
-        colorSpread: new THREE.Vector3(.3, .3, .3),
+        colorSpread: new THREE.Vector3(.2, .2, .2),
         opacityStart: 0,
         opacityMiddle: 1,
         opacityEnd: 0.0,

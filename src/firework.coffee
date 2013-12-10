@@ -6,7 +6,7 @@ FW.Firework = class Firework
     @colorEnd = new THREE.Color()
     @numFireworksPerExplosion = 3
     @lightIndex = 0
-    @fwSpread = 500
+    @fwSpread = 200
     @fwAge = 15
     @lightRange = 1000
     @startLightIntensity = 2
@@ -28,24 +28,21 @@ FW.Firework = class Firework
 
   generateEmitter : ->
     @colorStart.setRGB(Math.random(), Math.random(),Math.random())
-    @colorEnd.setRGB(Math.random(), Math.random(),Math.random())
     light = new THREE.PointLight(@colorStart, 0.0, @lightRange)
     FW.scene.add(light)
     @lights.push(light)
+    @colorEnd.setRGB(Math.random(), Math.random(),Math.random())
     emitterSettings = 
       type: 'sphere'
-      radius: 1
-      radiusScale: new THREE.Vector3(rnd(1, 10), rnd(1, 10), rnd(1, 10))
-      speed: 1 
-      speedSpread: 5
+      radius: 5
+      speed: 12
+      speedSpread: 6
       colorStart: @colorStart,
-      colorSpread: new THREE.Vector3(rnd(.1, .5), rnd(.1, .5), rnd(.1, .5)),
       colorEnd: @colorEnd,
       particlesPerSecond: 100
-      size: 100
+      size: 200
       alive: 0,  
       emitterDuration: 1.0
-      opacityEnd: 0.4
 
   createExplosion: (origPos, newPos = origPos, count=0)->
     emitter = @particleGroup.triggerPoolEmitter(1, newPos)
