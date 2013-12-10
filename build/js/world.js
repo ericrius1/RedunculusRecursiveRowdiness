@@ -11,8 +11,8 @@
       this.textureCounter = 0;
       this.animDelta = 0;
       this.animDeltaDir = 1;
-      this.lightVal = 0;
-      this.lightDir = -1;
+      this.lightVal = .16;
+      this.lightDir = 0;
       this.clock = new THREE.Clock();
       this.updateNoise = true;
       this.animateTerrain = false;
@@ -20,13 +20,12 @@
       this.MARGIN = 10;
       this.SCREEN_WIDTH = window.innerWidth;
       this.SCREEN_HEIGHT = window.innerHeight - 2 * this.MARGIN;
-      this.camFar = 5000;
+      this.camFar = 50000;
       FW.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, this.camFar);
-      FW.camera.position.set(45, 570, 0);
+      FW.camera.position.set(0, 570, 0);
       this.controls = new THREE.FlyControls(FW.camera);
       this.controls.movementSpeed = 600;
       this.controls.rollSpeed = Math.PI / 6;
-      this.controls.dragToLook = true;
       this.stats = new Stats();
       this.stats.domElement.style.position = 'absolute';
       this.stats.domElement.style.left = '0px';
@@ -42,11 +41,10 @@
       this.groundControl = new FW.Rockets();
       this.meteor = new FW.Meteor();
       this.stars = new FW.Stars();
+      FW.scene.add(new THREE.AmbientLight(0xffffff));
       this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
       this.directionalLight.position.set(500, 2000, 0);
       FW.scene.add(this.directionalLight);
-      this.pointLight = new THREE.PointLight(0xff4400, 1.5);
-      this.pointLight.position.set(0, 0, 0);
       normalShader = THREE.NormalMapShader;
       rx = 256;
       ry = 256;
@@ -243,7 +241,6 @@
         FW.scene.fog.color.setHSL(0.1, 0.5, this.lightVal);
         this.renderer.setClearColor('0x000000', 1);
         this.directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15);
-        this.pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5);
         this.uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5);
         if (this.updateNoise) {
           this.animDelta = THREE.Math.clamp(this.animDelta + 0.00075 * this.animDeltaDir, 0, 0.01);

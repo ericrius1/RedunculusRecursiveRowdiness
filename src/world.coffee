@@ -4,8 +4,8 @@ FW.World = class World
     @textureCounter = 0
     @animDelta = 0
     @animDeltaDir = 1
-    @lightVal = 0
-    @lightDir = -1
+    @lightVal = .16
+    @lightDir = 0
     @clock = new THREE.Clock()
     @updateNoise = true
     @animateTerrain = false
@@ -13,17 +13,16 @@ FW.World = class World
     @MARGIN = 10
     @SCREEN_WIDTH = window.innerWidth
     @SCREEN_HEIGHT = window.innerHeight - 2 * @MARGIN
-    @camFar = 5000
+    @camFar = 50000
 
     # CAMERA
     FW.camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, @camFar)
-    FW.camera.position.set  45, 570, 0
+    FW.camera.position.set  0, 570, 0
     
     #CONTROLS
     @controls = new THREE.FlyControls(FW.camera)
     @controls.movementSpeed = 600;
     @controls.rollSpeed =  Math.PI / 6;
-    @controls.dragToLook = true
 
     #STATS
     @stats = new Stats()
@@ -52,13 +51,10 @@ FW.World = class World
 
     
     # LIGHTS
-    # FW.scene.add new THREE.AmbientLight(0xffffff)
+    FW.scene.add new THREE.AmbientLight(0xffffff)
     @directionalLight = new THREE.DirectionalLight(0xffffff, 1.15)
     @directionalLight.position.set 500, 2000, 0
     FW.scene.add @directionalLight
-    @pointLight = new THREE.PointLight(0xff4400, 1.5)
-    @pointLight.position.set 0, 0, 0
-    # FW.scene.add @pointLight
     
     # HEIGHT + NORMAL MAPS
     normalShader = THREE.NormalMapShader
@@ -268,7 +264,6 @@ FW.World = class World
       FW.scene.fog.color.setHSL 0.1, 0.5, @lightVal
       @renderer.setClearColor '0x000000', 1
       @directionalLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.1, 1.15)
-      @pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5)
       @uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5)
       if @updateNoise
         @animDelta = THREE.Math.clamp(@animDelta + 0.00075 * @animDeltaDir, 0, 0.01)

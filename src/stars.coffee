@@ -20,9 +20,10 @@ FW.Stars = class Stars
     @starEmitter = new ShaderParticleEmitter
       type: 'sphere'
       radius: 4000
+      speed: .1
       position: FW.camera.position
-      positionSpread: new THREE.Vector3(1000, 10000, 10000)
       size: 400
+      particlesPerSecond: 400
       colorSpread: new THREE.Vector3(.3, .3, .3)
       opacityStart: 0
       opacityMiddle: 1
