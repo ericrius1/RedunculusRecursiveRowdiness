@@ -5,7 +5,7 @@ FW.Meteor = class Meteor
     @startingPos = new THREE.Vector3 0, 700, 0
     @colorStart = new THREE.Color()
     @colorStart.setRGB(Math.random(),Math.random(),Math.random() )
-    @meteorVisibleDistance = 3000
+    @meteorVisibleDistance = 1000
 
 
 
@@ -29,11 +29,11 @@ FW.Meteor = class Meteor
 
 
   newMeteor: ->
+    FW.scene.remove(@meteorTail?.mesh)
     @meteorTail = new ShaderParticleGroup
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
       blending: THREE.AdditiveBlending,
       maxAge: 15
-    
     @meteor = new THREE.Object3D()
     @meteor.position = new THREE.Vector3().copy(@startingPos)
     @emitter = new ShaderParticleEmitter
@@ -61,7 +61,7 @@ FW.Meteor = class Meteor
       @calcPosition()
     10000)
     
-    
+
   tick: ->
     @speedX
     @speedY

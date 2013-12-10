@@ -11,7 +11,7 @@
       this.startingPos = new THREE.Vector3(0, 700, 0);
       this.colorStart = new THREE.Color();
       this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
-      this.meteorVisibleDistance = 3000;
+      this.meteorVisibleDistance = 1000;
       this.colorEnd = new THREE.Color();
       this.colorEnd.setRGB(Math.random(), Math.random(), Math.random());
       this.newMeteor();
@@ -29,6 +29,8 @@
     };
 
     Meteor.prototype.newMeteor = function() {
+      var _ref;
+      FW.scene.remove((_ref = this.meteorTail) != null ? _ref.mesh : void 0);
       this.meteorTail = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
