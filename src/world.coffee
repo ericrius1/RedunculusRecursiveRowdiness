@@ -13,7 +13,7 @@ FW.World = class World
     @MARGIN = 10
     @SCREEN_WIDTH = window.innerWidth
     @SCREEN_HEIGHT = window.innerHeight - 2 * @MARGIN
-    @camFar = 3000
+    @camFar = 5000
 
     # CAMERA
     FW.camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, @camFar)
@@ -145,7 +145,7 @@ FW.World = class World
     @sceneRenderTarget.add @quadTarget
     
     # TERRAIN MESH
-    @geometryTerrain = new THREE.PlaneGeometry(6000, 6000 ,256, 256)
+    @geometryTerrain = new THREE.PlaneGeometry(4000, 4000 ,256, 256)
     @geometryTerrain.computeFaceNormals()
     @geometryTerrain.computeVertexNormals()
     @geometryTerrain.computeTangents()
@@ -258,12 +258,11 @@ FW.World = class World
     @groundControl.update()
     @meteor.tick()
     @stars.tick()
-    uniforms1.time.value += delta * 5;
     if @terrain.visible
       @controls.update(delta)
-      time = Date.now() * 0.001
+      time = Date.now() * 0.0001
       fLow = 0.1
-      fHigh = 0.8
+      fHigh = 0.4
       @lightVal = THREE.Math.clamp(@lightVal + 0.5 * delta * @lightDir, fLow, fHigh)
       valNorm = (@lightVal - fLow) / (fHigh - fLow)
       FW.scene.fog.color.setHSL 0.1, 0.5, @lightVal
@@ -272,9 +271,9 @@ FW.World = class World
       @pointLight.intensity = THREE.Math.mapLinear(valNorm, 0, 1, 0.9, 1.5)
       @uniformsTerrain["uNormalScale"].value = THREE.Math.mapLinear(valNorm, 0, 1, 0.6, 3.5)
       if @updateNoise
-        @animDelta = THREE.Math.clamp(@animDelta + 0.00075 * @animDeltaDir, 0, 0.05)
+        @animDelta = THREE.Math.clamp(@animDelta + 0.00075 * @animDeltaDir, 0, 0.01)
         @uniformsNoise["time"].value += delta * @animDelta
-        @uniformsNoise["offset"].value.x += delta * 0.05
+        @uniformsNoise["offset"].value.x += delta * 0.005
         @uniformsTerrain["uOffset"].value.y = 2 * @uniformsNoise["offset"].value.y
         @quadTarget.material = @mlib["heightmap"]
         @renderer.render @sceneRenderTarget, @cameraOrtho, @heightMap, true

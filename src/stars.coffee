@@ -8,7 +8,7 @@ FW.Stars = class Stars
     @starGroup = new ShaderParticleGroup({
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
       blending: THREE.AdditiveBlending,
-      maxAge: 15
+      maxAge: 100
     });
 
     @colorEnd = new THREE.Color()
@@ -18,11 +18,15 @@ FW.Stars = class Stars
 
   createStars: ->
     @starEmitter = new ShaderParticleEmitter
-      position: FW.startingPos
-      positionSpread: new THREE.Vector3(10, 1000, 1000)
-      size: 100
-      particlesPerSecond: 1000
-      opacityEnd: 0.5
+      type: 'sphere'
+      radius: 4000
+      position: FW.camera.position
+      positionSpread: new THREE.Vector3(1000, 10000, 10000)
+      size: 400
+      colorSpread: new THREE.Vector3(.2, .2, .2)
+      opacityStart: 0
+      opacityMiddle: 1
+      opacityEnd: 0.0
       colorStart: @colorStart
       colorEnd: @colorEnd
     
