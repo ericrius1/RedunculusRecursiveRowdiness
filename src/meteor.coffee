@@ -1,6 +1,7 @@
 FW.Meteor = class Meteor
   rnd = FW.rnd
   constructor: ()->
+    @startingMeteorPos = new THREE.Vector3 210, 1894, -36
     @generateSpeed()
 
     @colorStart = new THREE.Color()
@@ -32,9 +33,9 @@ FW.Meteor = class Meteor
     @accelX =rnd(.01, .05)
     @accelY = .02
     @accelZ = .01
-    @dirX = rnd(0, 1)
-    @dirY = rnd(-1, 1)
-    @dirZ = rnd(-1, 1)
+    @dirX = rnd(0, 0)
+    @dirY = -1
+    @dirZ = rnd(0, 0)
 
 
   newMeteor: ->
@@ -71,9 +72,9 @@ FW.Meteor = class Meteor
     @speedX += @accelX
     @speedY += @accelY
     @speedZ += @accelZ
-    @meteor.translateX(@speedX * @dirX)
-    @meteor.translateY(@speedY * @dirY)
-    @meteor.translateZ(@speedZ * @dirZ)
+    # @meteor.translateX(@speedX * @dirX)
+    @meteor.translateY( @dirY)
+    # @meteor.translateZ(@speedZ * @dirZ)
     @emitter.position = new THREE.Vector3().copy(@meteor.position)
     @light.position = new THREE.Vector3().copy(@meteor.position)
     @meteorTail.tick(0.16)

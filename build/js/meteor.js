@@ -8,6 +8,7 @@
 
     function Meteor() {
       var sphereGeo;
+      this.startingMeteorPos = new THREE.Vector3(210, 1894, -36);
       this.generateSpeed();
       this.colorStart = new THREE.Color();
       this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
@@ -34,9 +35,9 @@
       this.accelX = rnd(.01, .05);
       this.accelY = .02;
       this.accelZ = .01;
-      this.dirX = rnd(0, 1);
-      this.dirY = rnd(-1, 1);
-      return this.dirZ = rnd(-1, 1);
+      this.dirX = rnd(0, 0);
+      this.dirY = -1;
+      return this.dirZ = rnd(0, 0);
     };
 
     Meteor.prototype.newMeteor = function() {
@@ -76,9 +77,7 @@
       this.speedX += this.accelX;
       this.speedY += this.accelY;
       this.speedZ += this.accelZ;
-      this.meteor.translateX(this.speedX * this.dirX);
-      this.meteor.translateY(this.speedY * this.dirY);
-      this.meteor.translateZ(this.speedZ * this.dirZ);
+      this.meteor.translateY(this.dirY);
       this.emitter.position = new THREE.Vector3().copy(this.meteor.position);
       this.light.position = new THREE.Vector3().copy(this.meteor.position);
       return this.meteorTail.tick(0.16);
