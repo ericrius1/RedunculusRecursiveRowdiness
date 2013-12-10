@@ -37,8 +37,8 @@ FW.Firework = class Firework
       type: 'sphere'
       radius: 4
       radiusScale: new THREE.Vector3(rnd(1, 1.5), rnd(1, 1.5), rnd(1, 1.5))
-      speed: 20
-      speedSpread: 6
+      speed: 10
+      speedSpread: 10
       colorStart: @colorStart,
       colorSpread: new THREE.Vector3(.2, .2, .2)
       colorEnd: @colorEnd,

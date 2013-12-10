@@ -49,7 +49,7 @@
       rocket.shootDirection.x = ray.direction.x;
       rocket.shootDirection.y = ray.direction.y;
       rocket.shootDirection.z = ray.direction.z;
-      rocket.launchSpeedY = 2;
+      rocket.launchSpeedY = rnd(2, 5);
       rocket.translateX(rocket.shootDirection.x);
       rocket.translateY(rocket.shootDirection.y);
       rocket.translateZ(rocket.shootDirection.z);
@@ -79,7 +79,7 @@
       rocket.translateY(this.launchSpeed * rocket.shootDirection.y);
       rocket.translateZ(this.launchSpeed * rocket.shootDirection.z);
       rocket.translateY(rocket.launchSpeedY);
-      return rocket.launchSpeedY -= .01;
+      return rocket.launchSpeedY -= .05;
     };
 
     return Rockets;
