@@ -6,7 +6,7 @@ FW.Firework = class Firework
     @colorEnd = new THREE.Color()
     @numFireworksPerExplosion = 3
     @lightIndex = 0
-    @fwSpread = 100
+    @fwSpread = 500
     @fwAge = 15
     @lightRange = 1000
     @startLightIntensity = 2
@@ -19,7 +19,7 @@ FW.Firework = class Firework
     @particleGroup = new ShaderParticleGroup({
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
       blending: THREE.AdditiveBlending,
-      maxAge: 6
+      maxAge: 9
     });
 
     for i in [1..10]
@@ -33,13 +33,16 @@ FW.Firework = class Firework
     FW.scene.add(light)
     @lights.push(light)
     emitterSettings = 
-      velocity: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1))
-      acceleration: new THREE.Vector3(0, -0.01, 0),
-      accelerationSpread: new THREE.Vector3(rnd(-2, 0), rnd(-2, 0), rnd(-2, 0)),
+      type: 'sphere'
+      radius: 1
+      radiusScale: new THREE.Vector3(rnd(1, 10), rnd(1, 10), rnd(1, 10))
+      speed: 1 
+      speedSpread: 5
       colorStart: @colorStart,
       colorSpread: new THREE.Vector3(rnd(.1, .5), rnd(.1, .5), rnd(.1, .5)),
       colorEnd: @colorEnd,
       particlesPerSecond: 100
+      size: 100
       alive: 0,  
       emitterDuration: 1.0
       opacityEnd: 0.4

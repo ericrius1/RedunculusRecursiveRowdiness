@@ -12,7 +12,7 @@
       this.colorEnd = new THREE.Color();
       this.numFireworksPerExplosion = 3;
       this.lightIndex = 0;
-      this.fwSpread = 100;
+      this.fwSpread = 500;
       this.fwAge = 15;
       this.lightRange = 1000;
       this.startLightIntensity = 2;
@@ -23,7 +23,7 @@
       this.particleGroup = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
-        maxAge: 6
+        maxAge: 9
       });
       for (i = _i = 1; _i <= 10; i = ++_i) {
         this.particleGroup.addPool(1, this.generateEmitter(), false);
@@ -39,13 +39,16 @@
       FW.scene.add(light);
       this.lights.push(light);
       return emitterSettings = {
-        velocity: new THREE.Vector3(rnd(-1, 1), rnd(-1, 1), rnd(-1, 1)),
-        acceleration: new THREE.Vector3(0, -0.01, 0),
-        accelerationSpread: new THREE.Vector3(rnd(-2, 0), rnd(-2, 0), rnd(-2, 0)),
+        type: 'sphere',
+        radius: 1,
+        radiusScale: new THREE.Vector3(rnd(1, 10), rnd(1, 10), rnd(1, 10)),
+        speed: 1,
+        speedSpread: 5,
         colorStart: this.colorStart,
         colorSpread: new THREE.Vector3(rnd(.1, .5), rnd(.1, .5), rnd(.1, .5)),
         colorEnd: this.colorEnd,
         particlesPerSecond: 100,
+        size: 100,
         alive: 0,
         emitterDuration: 1.0,
         opacityEnd: 0.4

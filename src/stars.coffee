@@ -24,7 +24,7 @@ FW.Stars = class Stars
       position: FW.camera.position
       size: 400
       sizeSpread: 200
-      particlesPerSecond: 400
+      particlesPerSecond: rnd(100, 300)
       colorSpread: new THREE.Vector3(.3, .3, .3)
       opacityStart: 0
       opacityMiddle: 1
