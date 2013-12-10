@@ -20,7 +20,7 @@
       this.MARGIN = 10;
       this.SCREEN_WIDTH = window.innerWidth;
       this.SCREEN_HEIGHT = window.innerHeight - 2 * this.MARGIN;
-      this.camFar = 50000;
+      this.camFar = 8000;
       FW.camera = new THREE.PerspectiveCamera(40, this.SCREEN_WIDTH / this.SCREEN_HEIGHT, 2, this.camFar);
       FW.camera.position.set(0, 570, 0);
       this.controls = new THREE.FlyControls(FW.camera);

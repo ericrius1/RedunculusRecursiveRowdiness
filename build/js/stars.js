@@ -27,6 +27,7 @@
         speed: .1,
         position: FW.camera.position,
         size: 400,
+        sizeSpread: 200,
         particlesPerSecond: 400,
         colorSpread: new THREE.Vector3(.3, .3, .3),
         opacityStart: 0,
