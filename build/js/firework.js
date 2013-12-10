@@ -15,7 +15,7 @@
       this.fwSpread = 100;
       this.fwAge = 15;
       this.lightRange = 1000;
-      this.startLightIntensity = 4;
+      this.startLightIntensity = 2;
       this.lightDimmingFactor = .5 / this.fwAge;
       this.explodeSound = new Audio('./assets/explosion.mp3');
       this.crackleSound = new Audio('./assets/crackle.mp3');

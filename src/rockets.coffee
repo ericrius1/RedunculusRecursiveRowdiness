@@ -15,8 +15,8 @@ FW.Rockets = class Rockets
     @firework = new FW.Firework(@color)
 
     @projector = new THREE.Projector()
-    @launchSpeed = 5
-    @explosionDelay = 1000
+    @launchSpeed = 20
+    @explosionDelay = rnd(1000, 1400)
     @shootDirection = new THREE.Vector3()
     @rocketMat = FW.rocketMat
 
@@ -53,6 +53,7 @@ FW.Rockets = class Rockets
     @rockets.push(rocket)
     setTimeout(()=>
       @explode(rocket)
+      @explosionDelay = rnd(1000, 1400)
     @explosionDelay)
   update: ()->
     @updateRocket rocket for rocket in @rockets

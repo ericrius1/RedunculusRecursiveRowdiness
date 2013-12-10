@@ -9,7 +9,7 @@ FW.Firework = class Firework
     @fwSpread = 100
     @fwAge = 15
     @lightRange = 1000
-    @startLightIntensity = 4
+    @startLightIntensity = 2
     @lightDimmingFactor = .5/@fwAge
 
     @explodeSound = new Audio('./assets/explosion.mp3');
