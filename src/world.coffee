@@ -162,10 +162,6 @@ FW.World = class World
     @renderer.gammaInput = true
     @renderer.gammaOutput = true
     
-
-    
-    
-    
     # EVENTS
     @onWindowResize()
 
