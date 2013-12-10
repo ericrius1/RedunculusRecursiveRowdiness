@@ -12,11 +12,6 @@
       this.colorStart = new THREE.Color();
       this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
       this.meteorVisibleDistance = 3000;
-      this.meteorTail = new ShaderParticleGroup({
-        texture: THREE.ImageUtils.loadTexture('assets/star.png'),
-        blending: THREE.AdditiveBlending,
-        maxAge: 15
-      });
       this.colorEnd = new THREE.Color();
       this.colorEnd.setRGB(Math.random(), Math.random(), Math.random());
       this.newMeteor();
@@ -34,6 +29,11 @@
     };
 
     Meteor.prototype.newMeteor = function() {
+      this.meteorTail = new ShaderParticleGroup({
+        texture: THREE.ImageUtils.loadTexture('assets/star.png'),
+        blending: THREE.AdditiveBlending,
+        maxAge: 15
+      });
       this.meteor = new THREE.Object3D();
       this.meteor.position = new THREE.Vector3().copy(this.startingPos);
       this.emitter = new ShaderParticleEmitter({
@@ -57,7 +57,7 @@
       distance = FW.camera.position.distanceTo(this.meteor.position);
       if (distance > this.meteorVisibleDistance) {
         this.generateSpeed();
-        this.meteor.position = new THREE.Vector3().copy(this.startingPos);
+        this.newMeteor();
       }
       return setInterval(function() {
         return _this.calcPosition();

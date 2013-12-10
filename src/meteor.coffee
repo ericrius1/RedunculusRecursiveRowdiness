@@ -9,11 +9,7 @@ FW.Meteor = class Meteor
 
 
 
-    @meteorTail = new ShaderParticleGroup({
-      texture: THREE.ImageUtils.loadTexture('assets/star.png'),
-      blending: THREE.AdditiveBlending,
-      maxAge: 15
-    });
+   
 
     @colorEnd = new THREE.Color()
     @colorEnd.setRGB(Math.random(),Math.random(),Math.random() )
@@ -33,6 +29,11 @@ FW.Meteor = class Meteor
 
 
   newMeteor: ->
+    @meteorTail = new ShaderParticleGroup
+      texture: THREE.ImageUtils.loadTexture('assets/star.png'),
+      blending: THREE.AdditiveBlending,
+      maxAge: 15
+    
     @meteor = new THREE.Object3D()
     @meteor.position = new THREE.Vector3().copy(@startingPos)
     @emitter = new ShaderParticleEmitter
@@ -54,7 +55,7 @@ FW.Meteor = class Meteor
     #meteor is off screen, respawn it somewhere
     if distance > @meteorVisibleDistance
       @generateSpeed()
-      @meteor.position = new THREE.Vector3().copy(@startingPos)
+      @newMeteor()
 
     setInterval(=>
       @calcPosition()
