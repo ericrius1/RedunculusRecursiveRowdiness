@@ -23,6 +23,7 @@ FW.World = class World
     @controls = new THREE.FlyControls(FW.camera)
     @controls.movementSpeed = 600;
     @controls.rollSpeed =  Math.PI / 6;
+    @controls.pitchEnabled = true
 
     #STATS
     @stats = new Stats()

@@ -7,53 +7,52 @@
     rnd = FW.rnd;
 
     function Meteor() {
-      this.generateSpeed();
       this.startingPos = new THREE.Vector3(0, 700, 0);
       this.colorStart = new THREE.Color();
       this.colorEnd = new THREE.Color();
-      this.meteorTail = new ShaderParticleGroup({
+      this.meteors = [];
+      this.meteorGroup = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
         maxAge: 15
       });
       this.meteorVisibleDistance = 3000;
       this.newMeteor();
-      this.light = new THREE.PointLight(0xefefef, 2, 699);
-      FW.scene.add(this.light);
+      FW.scene.add(this.meteorGroup.mesh);
     }
 
-    Meteor.prototype.generateSpeed = function() {
-      this.speedX = rnd(0.1, 1);
-      this.speedY = .05;
-      this.speedZ = rnd(0.1, 1);
-      this.accelX = .1;
-      this.accelY = 0.001;
-      this.accelZ = .1;
-      this.dirX = rnd(-1, 1);
-      this.dirY = -1;
-      return this.dirZ = rnd(1, -1);
+    Meteor.prototype.generateSpeed = function(meteor) {
+      meteor.speedX = rnd(0.1, 1);
+      meteor.speedY = .05;
+      meteor.speedZ = rnd(0.1, 1);
+      meteor.accelX = .1;
+      meteor.accelY = 0.001;
+      meteor.accelZ = .1;
+      meteor.dirX = rnd(-1, 1);
+      meteor.dirY = -1;
+      return meteor.dirZ = rnd(1, -1);
     };
 
     Meteor.prototype.newMeteor = function() {
-      var _ref;
+      var meteor, tailEmitter;
       this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
-      FW.scene.remove((_ref = this.meteorTail) != null ? _ref.mesh : void 0);
-      this.meteor = new THREE.Object3D();
-      this.meteor.position = new THREE.Vector3().copy(this.startingPos);
+      meteor = new THREE.Object3D();
+      this.generateSpeed(meteor);
+      meteor.position = new THREE.Vector3().copy(this.startingPos);
       this.colorEnd.setRGB(Math.random(), Math.random(), Math.random());
-      this.emitter = new ShaderParticleEmitter({
-        position: this.meteor.position,
+      meteor.light = new THREE.PointLight(0xefefef, 2, 799);
+      FW.scene.add(meteor.light);
+      tailEmitter = new ShaderParticleEmitter({
+        position: meteor.position,
         size: 10,
         sizeSpread: 10,
-        acceleration: new THREE.Vector3(-this.dirX, -this.dirY, -this.dirZ),
         accelerationSpread: new THREE.Vector3(.4, .4, .4),
         particlesPerSecond: 5000,
         colorStart: this.colorStart,
         colorEnd: this.colorEnd
       });
-      FW.scene.add(this.meteorTail.mesh);
-      this.meteorTail.addEmitter(this.emitter);
-      return this.calcPosition();
+      this.meteorGroup.addEmitter(tailEmitter);
+      return this.meteors.push(meteor);
     };
 
     Meteor.prototype.calcPosition = function() {
@@ -70,14 +69,19 @@
     };
 
     Meteor.prototype.tick = function() {
-      this.speedX += this.accelX;
-      this.speedY += this.accelY;
-      this.speedZ += this.accelZ;
-      this.meteor.translateX(this.speedX * this.dirX);
-      this.meteor.translateY(this.speedY * this.dirY);
-      this.meteor.translateZ(this.speedZ * this.dirZ);
-      this.light.position = new THREE.Vector3().copy(this.meteor.position);
-      return this.meteorTail.tick(0.16);
+      var meteor, _i, _len, _ref;
+      _ref = this.meteors;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        meteor = _ref[_i];
+        meteor.speedX += meteor.accelX;
+        meteor.speedY += meteor.accelY;
+        meteor.speedZ += meteor.accelZ;
+        meteor.translateX(meteor.speedX * meteor.dirX);
+        meteor.translateY(meteor.speedY * meteor.dirY);
+        meteor.translateZ(meteor.speedZ * meteor.dirZ);
+        meteor.light.position = new THREE.Vector3().copy(meteor.position);
+      }
+      return this.meteorGroup.tick(0.16);
     };
 
     return Meteor;
