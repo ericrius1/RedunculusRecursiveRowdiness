@@ -14,10 +14,6 @@ FW.Firework = class Firework
     @explodeSound = new Audio('./assets/explosion.mp3');
     @crackleSound = new Audio('./assets/crackle.mp3');
     @lights = []
-
-
-
-
     
     @particleGroup = new ShaderParticleGroup({
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),

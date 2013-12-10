@@ -22,7 +22,7 @@ FW.Meteor = class Meteor
     @newMeteor()
     FW.scene.add(@meteorTail.mesh)
 
-    @light = new THREE.PointLight(0xefefef, 2, 2000)
+    @light = new THREE.PointLight(0xefefef, 2, 1000)
     FW.scene.add(@light)
 
   generateSpeed: ->
@@ -56,16 +56,16 @@ FW.Meteor = class Meteor
 
     distance =  FW.camera.position.distanceTo(@meteor.position)
     #meteor is off screen, respawn it somewhere
-    if distance > FW.camera.far/4
+    if distance > FW.camera.far
       @generateSpeed()
       @calculateStartPos()
 
     setInterval(=>
       @calcPosition()
-    3000)
+    20000)
     
   calculateStartPos: ->
-    @meteor.position = new THREE.Vector3(-752, 1202, -90)
+    @meteor.position = new THREE.Vector3(-290, 1335, 883)
     
   tick: ->
     @speedX += @accelX

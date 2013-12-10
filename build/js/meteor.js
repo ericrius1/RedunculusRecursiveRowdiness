@@ -23,7 +23,7 @@
       this.calculateStartPos();
       this.newMeteor();
       FW.scene.add(this.meteorTail.mesh);
-      this.light = new THREE.PointLight(0xefefef, 2, 2000);
+      this.light = new THREE.PointLight(0xefefef, 2, 1000);
       FW.scene.add(this.light);
     }
 
@@ -59,17 +59,17 @@
       var distance,
         _this = this;
       distance = FW.camera.position.distanceTo(this.meteor.position);
-      if (distance > FW.camera.far / 4) {
+      if (distance > FW.camera.far) {
         this.generateSpeed();
         this.calculateStartPos();
       }
       return setInterval(function() {
         return _this.calcPosition();
-      }, 3000);
+      }, 20000);
     };
 
     Meteor.prototype.calculateStartPos = function() {
-      return this.meteor.position = new THREE.Vector3(-752, 1202, -90);
+      return this.meteor.position = new THREE.Vector3(-290, 1335, 883);
     };
 
     Meteor.prototype.tick = function() {
