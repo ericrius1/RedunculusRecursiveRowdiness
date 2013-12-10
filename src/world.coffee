@@ -210,7 +210,6 @@ FW.World = class World
     ), false
 
 
-  #
   onWindowResize : (event) ->
     @SCREEN_WIDTH = window.innerWidth
     @SCREEN_HEIGHT = window.innerHeight - 2 * @MARGIN
@@ -218,7 +217,6 @@ FW.World = class World
     FW.camera.aspect = @SCREEN_WIDTH / @SCREEN_HEIGHT
     FW.camera.updateProjectionMatrix()
 
-  #
   onKeyDown : (event) =>
     switch event.keyCode
       when 78
@@ -226,7 +224,6 @@ FW.World = class World
       when 77
         @animDeltaDir *= -1 #M
 
-  #
   applyShader : (shader, texture, target) ->
     shaderMaterial = new THREE.ShaderMaterial(
       fragmentShader: shader.fragmentShader
@@ -244,7 +241,6 @@ FW.World = class World
     @textureCounter += 1
     @terrain.visible = true  if @textureCounter is 3
 
-  #
   animate : =>
     requestAnimationFrame @animate
     @render()

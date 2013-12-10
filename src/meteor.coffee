@@ -5,7 +5,7 @@ FW.Meteor = class Meteor
     @startingPos = new THREE.Vector3 0, 700, 0
     @colorStart = new THREE.Color()
     @colorStart.setRGB(Math.random(),Math.random(),Math.random() )
-    @meteorVisibleDistance = 5000
+    @meteorVisibleDistance = 3000
 
 
 
@@ -59,7 +59,7 @@ FW.Meteor = class Meteor
 
     setInterval(=>
       @calcPosition()
-    20000)
+    10000)
     
     
   tick: ->

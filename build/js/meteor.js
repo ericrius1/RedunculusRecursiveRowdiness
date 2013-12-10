@@ -12,7 +12,7 @@
       this.startingPos = new THREE.Vector3(0, 700, 0);
       this.colorStart = new THREE.Color();
       this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
-      this.meteorVisibleDistance = 5000;
+      this.meteorVisibleDistance = 3000;
       this.meteorTail = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
@@ -63,7 +63,7 @@
       }
       return setInterval(function() {
         return _this.calcPosition();
-      }, 20000);
+      }, 10000);
     };
 
     Meteor.prototype.tick = function() {

@@ -49,7 +49,7 @@
       rocket.shootDirection.x = ray.direction.x;
       rocket.shootDirection.y = ray.direction.y;
       rocket.shootDirection.z = ray.direction.z;
-      rocket.launchSpeedY = 0.0;
+      rocket.launchSpeedY = 2;
       rocket.translateX(rocket.shootDirection.x);
       rocket.translateY(rocket.shootDirection.y);
       rocket.translateZ(rocket.shootDirection.z);
