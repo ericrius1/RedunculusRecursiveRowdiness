@@ -41,12 +41,14 @@
       return emitterSettings = {
         type: 'sphere',
         radius: 4,
+        radiusScale: new THREE.Vector3(rnd(1, 1.5), rnd(1, 1.5), rnd(1, 1.5)),
         speed: 20,
         speedSpread: 6,
         colorStart: this.colorStart,
+        colorSpread: new THREE.Vector3(.2, .2, .2),
         colorEnd: this.colorEnd,
-        particlesPerSecond: 100,
-        size: 100,
+        particlesPerSecond: 400,
+        size: rnd(50, 200),
         sizeSpread: 100,
         alive: 0,
         emitterDuration: 1.0

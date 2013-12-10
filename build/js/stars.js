@@ -26,14 +26,14 @@
         radius: 4000,
         speed: .1,
         position: FW.camera.position,
-        size: 400,
-        sizeSpread: 200,
+        size: 300,
+        sizeSpread: 300,
         particlesPerSecond: rnd(100, 300),
-        colorSpread: new THREE.Vector3(.2, .2, .2),
         opacityStart: 0,
         opacityMiddle: 1,
         opacityEnd: 0.0,
         colorStart: this.colorStart,
+        colorSpread: new THREE.Vector3(.2, .2, .2),
         colorEnd: this.colorEnd
       });
       return this.starGroup.addEmitter(this.starEmitter);
