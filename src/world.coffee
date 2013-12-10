@@ -17,7 +17,7 @@ FW.World = class World
 
     # CAMERA
     FW.camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, @camFar)
-    FW.camera.position.set  994, 484, -197
+    FW.camera.position.set  45, 570, 0
     
     #CONTROLS
     @controls = new THREE.FlyControls(FW.camera)

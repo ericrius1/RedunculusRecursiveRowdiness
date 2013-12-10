@@ -23,7 +23,7 @@ FW.Stars = class Stars
       position: FW.camera.position
       positionSpread: new THREE.Vector3(1000, 10000, 10000)
       size: 400
-      colorSpread: new THREE.Vector3(.2, .2, .2)
+      colorSpread: new THREE.Vector3(.3, .3, .3)
       opacityStart: 0
       opacityMiddle: 1
       opacityEnd: 0.0
