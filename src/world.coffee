@@ -17,11 +17,11 @@ FW.World = class World
 
     # CAMERA
     FW.camera = new THREE.PerspectiveCamera(40, @SCREEN_WIDTH / @SCREEN_HEIGHT, 2, @camFar)
-    FW.camera.position.set  -1200, 800, 1200
+    FW.camera.position.set  994, 484, -197
     
     #CONTROLS
     @controls = new THREE.FlyControls(FW.camera)
-    @controls.movementSpeed = 60;
+    @controls.movementSpeed = 600;
     @controls.rollSpeed =  Math.PI / 6;
     @controls.dragToLook = true
 
@@ -48,10 +48,7 @@ FW.World = class World
     @firework = new FW.Firework()
     @groundControl = new FW.Rockets()
     @meteor = new FW.Meteor()
-
-
-
-
+    @stars = new FW.Stars()
 
     
     # LIGHTS
@@ -260,6 +257,7 @@ FW.World = class World
     @stats.update()
     @groundControl.update()
     @meteor.tick()
+    @stars.tick()
     uniforms1.time.value += delta * 5;
     if @terrain.visible
       @controls.update(delta)

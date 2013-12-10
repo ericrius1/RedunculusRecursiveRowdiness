@@ -7,12 +7,11 @@ window.soundOn = true
 #inspire rameses b
 #Give user option between building a permanent structure or laun@stars fire works
 window.onload = ->
-  FW.startingPos = new THREE.Vector3(-580, 913, 1009)
+  FW.startingPos = new THREE.Vector3(3537, 1000, -324)
   FW.myWorld = new FW.World()
   FW.myWorld.animate()
   FW.main = new FW.Main()
-  FW.main.makeStars()
-  FW.camera.lookAt FW.main.stars.position  
+  FW.camera.lookAt FW.startingPos 
 
 
 FW.Main = class Main

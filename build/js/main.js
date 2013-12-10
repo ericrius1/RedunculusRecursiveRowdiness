@@ -12,12 +12,11 @@
   window.soundOn = true;
 
   window.onload = function() {
-    FW.startingPos = new THREE.Vector3(-580, 913, 1009);
+    FW.startingPos = new THREE.Vector3(3537, 1000, -324);
     FW.myWorld = new FW.World();
     FW.myWorld.animate();
     FW.main = new FW.Main();
-    FW.main.makeStars();
-    return FW.camera.lookAt(FW.main.stars.position);
+    return FW.camera.lookAt(FW.startingPos);
   };
 
   FW.Main = Main = (function() {
