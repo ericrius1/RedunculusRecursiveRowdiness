@@ -10,8 +10,10 @@ FW.Meteor = class Meteor
       blending: THREE.AdditiveBlending,
       maxAge: 15
     @meteorVisibleDistance = 3000
-    @newMeteor()
+    for i in [1..3]
+      @newMeteor()
     FW.scene.add(@meteorGroup.mesh)
+    @calcPositions()
     
 
   generateSpeed: (meteor)->
@@ -44,18 +46,18 @@ FW.Meteor = class Meteor
       colorStart: @colorStart
       colorEnd: @colorEnd
     @meteorGroup.addEmitter tailEmitter
-    # @calcPosition(meteor)
-    @meteors.push(meteor)
+    @meteors.push meteor
     
-  calcPosition: ->
-    distance =  FW.camera.position.distanceTo(@meteor.position)
-    #meteor is off screen, respawn it somewhere
-    if distance > @meteorVisibleDistance
-      @generateSpeed()
-      @newMeteor()
+  calcPositions: ->
+    for meteor in @meteors
+      distance =  FW.camera.position.distanceTo(meteor.position)
+      #meteor is off screen, respawn it somewhere
+      if distance > @meteorVisibleDistance
+        @generateSpeed meteor
+        meteor.position = new THREE.Vector3().copy(@startingPos)
 
     setInterval(=>
-      @calcPosition()
+      @calcPositions()
     10000)
     
 

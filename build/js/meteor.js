@@ -7,6 +7,7 @@
     rnd = FW.rnd;
 
     function Meteor() {
+      var i, _i;
       this.startingPos = new THREE.Vector3(0, 700, 0);
       this.colorStart = new THREE.Color();
       this.colorEnd = new THREE.Color();
@@ -17,8 +18,11 @@
         maxAge: 15
       });
       this.meteorVisibleDistance = 3000;
-      this.newMeteor();
+      for (i = _i = 1; _i <= 3; i = ++_i) {
+        this.newMeteor();
+      }
       FW.scene.add(this.meteorGroup.mesh);
+      this.calcPositions();
     }
 
     Meteor.prototype.generateSpeed = function(meteor) {
@@ -55,16 +59,20 @@
       return this.meteors.push(meteor);
     };
 
-    Meteor.prototype.calcPosition = function() {
-      var distance,
+    Meteor.prototype.calcPositions = function() {
+      var distance, meteor, _i, _len, _ref,
         _this = this;
-      distance = FW.camera.position.distanceTo(this.meteor.position);
-      if (distance > this.meteorVisibleDistance) {
-        this.generateSpeed();
-        this.newMeteor();
+      _ref = this.meteors;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        meteor = _ref[_i];
+        distance = FW.camera.position.distanceTo(meteor.position);
+        if (distance > this.meteorVisibleDistance) {
+          this.generateSpeed(meteor);
+          meteor.position = new THREE.Vector3().copy(this.startingPos);
+        }
       }
       return setInterval(function() {
-        return _this.calcPosition();
+        return _this.calcPositions();
       }, 10000);
     };
 
