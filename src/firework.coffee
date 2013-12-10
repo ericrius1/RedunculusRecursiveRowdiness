@@ -8,6 +8,7 @@ FW.Firework = class Firework
     @lightIndex = 0
     @fwSpread = 100
     @fwAge = 15
+    @lightRange = 1000
     @startLightIntensity = 4
     @lightDimmingFactor = .5/@fwAge
 
@@ -28,7 +29,7 @@ FW.Firework = class Firework
   generateEmitter : ->
     @colorStart.setRGB(Math.random(), Math.random(),Math.random())
     @colorEnd.setRGB(Math.random(), Math.random(),Math.random())
-    light = new THREE.PointLight(@colorStart, 0.0, 5000)
+    light = new THREE.PointLight(@colorStart, 0.0, @lightRange)
     FW.scene.add(light)
     @lights.push(light)
     emitterSettings = 

@@ -14,6 +14,7 @@
       this.lightIndex = 0;
       this.fwSpread = 100;
       this.fwAge = 15;
+      this.lightRange = 1000;
       this.startLightIntensity = 4;
       this.lightDimmingFactor = .5 / this.fwAge;
       this.explodeSound = new Audio('./assets/explosion.mp3');
@@ -34,7 +35,7 @@
       var emitterSettings, light;
       this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
       this.colorEnd.setRGB(Math.random(), Math.random(), Math.random());
-      light = new THREE.PointLight(this.colorStart, 0.0, 5000);
+      light = new THREE.PointLight(this.colorStart, 0.0, this.lightRange);
       FW.scene.add(light);
       this.lights.push(light);
       return emitterSettings = {
