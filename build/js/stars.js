@@ -25,7 +25,7 @@
         type: 'sphere',
         radius: 4000,
         speed: .1,
-        position: FW.camera.position,
+        position: new THREE.Vector3().copy(FW.camera.position),
         size: 300,
         sizeSpread: 300,
         particlesPerSecond: 300,

@@ -2,8 +2,7 @@ FW.Meteor = class Meteor
   rnd = FW.rnd
   constructor: ()->
     @startingPos = new THREE.Vector3 0, 700, 0
-    @colorStart = new THREE.Color()
-    @colorEnd = new THREE.Color()
+
     @meteors = []
     @meteorGroup = new ShaderParticleGroup
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
@@ -21,7 +20,7 @@ FW.Meteor = class Meteor
     meteor.speedY = .05
     meteor.speedZ = rnd(0.1, 1)
     meteor.accelX = .1
-    meteor.accelY = 0.001  
+    meteor.accelY = 0.005  
     meteor.accelZ = .1
     meteor.dirX = rnd(-1, 1)
     meteor.dirY = -1
@@ -29,23 +28,26 @@ FW.Meteor = class Meteor
 
 
   newMeteor: ->
-    @colorStart.setRGB(Math.random(),Math.random(),Math.random() )
+    colorStart = new THREE.Color()
+    colorStart.setRGB(Math.random(),Math.random(),Math.random() )
     meteor = new THREE.Object3D()
     @generateSpeed meteor
-    meteor.position = new THREE.Vector3().copy(@startingPos)
-    @colorEnd.setRGB(Math.random(),Math.random(),Math.random() )
-    meteor.light = new THREE.PointLight(0xefefef, 2, 799)
+    meteor.position = new THREE.Vector3(@startingPos.x, rnd(@startingPos.y, @startingPos.y+1000), @startingPos.z)
+    colorEnd = new THREE.Color()
+    colorEnd.setRGB(Math.random(),Math.random(),Math.random() )
+    meteor.light = new THREE.PointLight(colorStart, 2, 1000)
     FW.scene.add(meteor.light)
-    tailEmitter = new ShaderParticleEmitter
+    meteor.tailEmitter = new ShaderParticleEmitter
       position: meteor.position
-      size: 10
+      positionSpread: new THREE.Vector3(20, 20, 2)
+      size: 100
       sizeSpread: 10
-      # acceleration: new THREE.Vector3(-@dirX, -@dirY, -@dirZ),
-      accelerationSpread: new THREE.Vector3(.4, .4, .4),
-      particlesPerSecond: 5000
-      colorStart: @colorStart
-      colorEnd: @colorEnd
-    @meteorGroup.addEmitter tailEmitter
+      acceleration: new THREE.Vector3(meteor.dirX, meteor.dirY, meteor.dirZ),
+      accelerationSpread: new THREE.Vector3(.7, .7, .7),
+      particlesPerSecond: 100
+      colorStart: colorStart
+      colorEnd: colorEnd
+    @meteorGroup.addEmitter meteor.tailEmitter
     @meteors.push meteor
     
   calcPositions: ->
@@ -70,7 +72,8 @@ FW.Meteor = class Meteor
       meteor.translateY( meteor.speedY * meteor.dirY)
       meteor.translateZ(meteor.speedZ * meteor.dirZ)
       meteor.light.position = new THREE.Vector3().copy(meteor.position)
-    @meteorGroup.tick(0.16)
+      meteor.tailEmitter.position = new THREE.Vector3().copy(meteor.position)
+    @meteorGroup.tick(.32)
     
 
 
