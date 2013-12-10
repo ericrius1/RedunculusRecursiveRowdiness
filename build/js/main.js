@@ -20,7 +20,7 @@
     });
   }
 
-  window.soundOn = false;
+  window.soundOn = true;
 
   FW.sfxVolume = 0.4;
 
@@ -35,9 +35,7 @@
   FW.Main = Main = (function() {
     function Main() {
       if (soundOn) {
-        SC.stream("/tracks/rameses-b-inspire", function(sound) {
-          return sound.play();
-        });
+        SC.stream("/tracks/rameses-b-inspire", function(sound) {});
       }
     }
 

@@ -19,7 +19,7 @@
       this.explodeSound = new Audio('./assets/explosion.mp3');
       this.explodeSound.volume = FW.sfxVolume;
       this.crackleSound = new Audio('./assets/crackle.mp3');
-      this.crackleSound.volume = FW.sfxVolume;
+      this.crackleSound.volume = FW.sfxVolume * 0.5;
       this.lights = [];
       this.particleGroup = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
@@ -74,14 +74,15 @@
       light.intensity = this.startLightIntensity;
       if (count < FW.numExplosionsPerRocket - 1) {
         return setTimeout(function() {
-          _this.explodeSound.load();
           if (soundOn) {
             setTimeout(function() {
+              _this.explodeSound.load();
               _this.explodeSound.play();
               return setTimeout(function() {
+                _this.crackleSound.load();
                 return _this.crackleSound.play();
               }, 100);
-            }, 100);
+            }, 50);
           }
           count++;
           newPos = new THREE.Vector3(rnd(origPos.x - _this.fwSpread, origPos.x + _this.fwSpread), rnd(origPos.y - _this.fwSpread, origPos.y + _this.fwSpread), rnd(origPos.z - _this.fwSpread, origPos.z + _this.fwSpread));

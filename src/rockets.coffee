@@ -6,7 +6,7 @@ FW.Rockets = class Rockets
     rnd = FW.rnd
     @rockets = []
     @launchSound = new Audio('./assets/launch.mp3');
-    @launchSound.volume = FW.sfxVolume
+    @launchSound.volume = FW.sfxVolume * 0.5
 
     @color = new THREE.Color()
     @color.setRGB(200, 10, 0)

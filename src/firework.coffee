@@ -14,7 +14,7 @@ FW.Firework = class Firework
     @explodeSound = new Audio('./assets/explosion.mp3');
     @explodeSound.volume = FW.sfxVolume
     @crackleSound = new Audio('./assets/crackle.mp3');
-    @crackleSound.volume = FW.sfxVolume
+    @crackleSound.volume = FW.sfxVolume * 0.5
     @lights = []
     
     @particleGroup = new ShaderParticleGroup({
@@ -57,15 +57,16 @@ FW.Firework = class Firework
     light.intensity = @startLightIntensity
     if count < FW.numExplosionsPerRocket-1
       setTimeout =>
-        @explodeSound.load()
         #set timeout for speed of sound delay!
         if soundOn
           setTimeout(()=>
+            @explodeSound.load()
             @explodeSound.play()
             setTimeout(()=>
+              @crackleSound.load()
               @crackleSound.play()
             100)
-          100)
+          50)
         count++
         newPos = new THREE.Vector3(rnd(origPos.x - @fwSpread, origPos.x+@fwSpread), rnd(origPos.y - @fwSpread, origPos.y+@fwSpread), rnd(origPos.z - @fwSpread, origPos.z+@fwSpread))
         @createExplosion(origPos, newPos, count++)

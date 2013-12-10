@@ -12,7 +12,7 @@ window.FW = {}
 SC?.initialize({
     client_id: "7da24ca214bf72b66ed2494117d05480",
 });
-window.soundOn = false 
+window.soundOn = true
 FW.sfxVolume = 0.4
 
 #inspire rameses b
@@ -29,7 +29,7 @@ FW.Main = class Main
   constructor: ->
     if soundOn
       SC.stream "/tracks/rameses-b-inspire", (sound)->
-         sound.play()
+         # sound.play()
 
 
 

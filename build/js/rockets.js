@@ -11,7 +11,7 @@
       rnd = FW.rnd;
       this.rockets = [];
       this.launchSound = new Audio('./assets/launch.mp3');
-      this.launchSound.volume = FW.sfxVolume;
+      this.launchSound.volume = FW.sfxVolume * 0.5;
       this.color = new THREE.Color();
       this.color.setRGB(200, 10, 0);
       this.firework = new FW.Firework(this.color);
