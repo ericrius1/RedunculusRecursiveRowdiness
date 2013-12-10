@@ -13,7 +13,7 @@ SC?.initialize({
     client_id: "7da24ca214bf72b66ed2494117d05480",
 });
 window.soundOn = true
-FW.sfxVolume = 0.4
+FW.sfxVolume = 0.2
 
 #inspire rameses b
 #Give user option between building a permanent structure or laun@stars fire works

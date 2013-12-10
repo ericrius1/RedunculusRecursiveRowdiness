@@ -22,7 +22,7 @@
 
   window.soundOn = true;
 
-  FW.sfxVolume = 0.4;
+  FW.sfxVolume = 0.2;
 
   window.onload = function() {
     FW.startingPos = new THREE.Vector3(3537, 500, -324);
