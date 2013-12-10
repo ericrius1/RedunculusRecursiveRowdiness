@@ -1,6 +1,17 @@
 (function() {
   var Main;
 
+  window.uniforms1 = {
+    time: {
+      type: "f",
+      value: 1.0
+    },
+    resolution: {
+      type: "v2",
+      value: new THREE.Vector2()
+    }
+  };
+
   window.FW = {};
 
   if (typeof SC !== "undefined" && SC !== null) {
@@ -27,17 +38,6 @@
         });
       }
     }
-
-    Main.prototype.makeStars = function() {
-      var _this = this;
-      this.grow = new grow3.System(FW.scene, FW.camera, RULES.bush);
-      this.stars = this.grow.build(void 0, new THREE.Vector3().copy(FW.startingPos));
-      return setTimeout(function() {
-        FW.scene.remove(_this.stars);
-        console.log("NEW STARS");
-        return _this.makeStars();
-      }, 10000);
-    };
 
     return Main;
 

@@ -9,6 +9,7 @@
     rnd = FW.rnd;
 
     function Rockets() {
+      this.launching = false;
       rnd = FW.rnd;
       this.rockets = [];
       this.launchSound = new Audio('./assets/launch.mp3');
@@ -18,7 +19,7 @@
       this.firework = new FW.Firework(this.color);
       this.projector = new THREE.Projector();
       this.launchSpeed = 20;
-      this.explosionDelay = rnd(1000, 1400);
+      this.explosionDelay = rnd(2000, 1400);
       this.shootDirection = new THREE.Vector3();
       this.rocketMat = FW.rocketMat;
       this.rocketGeo = new THREE.CylinderGeometry(.1, 1, 1);
@@ -33,6 +34,11 @@
     Rockets.prototype.launchRocket = function() {
       var ray, rocket, vector,
         _this = this;
+      FW.numExplosionsPerRocket = rnd(1, 5);
+      if (this.launching) {
+        return;
+      }
+      this.launching = true;
       this.launchSound.load();
       rocket = new THREE.Mesh(this.rocketGeo, this.rocketMat);
       rocket.position.set(FW.camera.position.x, FW.camera.position.y, FW.camera.position.z);
@@ -55,6 +61,7 @@
       this.rockets.push(rocket);
       return setTimeout(function() {
         _this.explode(rocket);
+        _this.launching = false;
         return _this.explosionDelay = rnd(1000, 1400);
       }, this.explosionDelay);
     };

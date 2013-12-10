@@ -4,7 +4,6 @@ FW.Firework = class Firework
     #create a few different emmitters and add to pool
     @colorStart = new THREE.Color()
     @colorEnd = new THREE.Color()
-    @numFireworksPerExplosion = 3
     @lightIndex = 0
     @fwSpread = 200
     @fwAge = 15
@@ -54,7 +53,7 @@ FW.Firework = class Firework
       @lightIndex = 0
     light.position.set(newPos.x, newPos.y, newPos.z)
     light.intensity = @startLightIntensity
-    if count < @numFireworksPerExplosion
+    if count < FW.numExplosionsPerRocket-1
       setTimeout =>
         @explodeSound.load()
         #set timeout for speed of sound delay!
@@ -68,7 +67,7 @@ FW.Firework = class Firework
         count++
         newPos = new THREE.Vector3(rnd(origPos.x - @fwSpread, origPos.x+@fwSpread), rnd(origPos.y - @fwSpread, origPos.y+@fwSpread), rnd(origPos.z - @fwSpread, origPos.z+@fwSpread))
         @createExplosion(origPos, newPos, count++)
-      ,rnd(100, 700)
+      ,rnd(10, 300)
 
     
   tick: ->

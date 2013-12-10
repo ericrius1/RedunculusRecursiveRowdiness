@@ -1,3 +1,13 @@
+window.uniforms1 = {
+  time: {
+    type: "f",
+    value: 1.0
+  },
+  resolution: {
+    type: "v2",
+    value: new THREE.Vector2()
+  }
+};
 window.FW = {}
 SC?.initialize({
     client_id: "7da24ca214bf72b66ed2494117d05480",
@@ -20,17 +30,7 @@ FW.Main = class Main
       SC.stream "/tracks/rameses-b-inspire", (sound)->
          sound.play()
 
-  makeStars: ->
-    @grow = new grow3.System(FW.scene, FW.camera, RULES.bush)
-    @stars = @grow.build(undefined, new THREE.Vector3().copy(FW.startingPos))
-    setTimeout(()=>
-      FW.scene.remove(@stars)
-      console.log ("NEW STARS")
-      @makeStars()
-    10000)
 
-
-    
 
 
 
@@ -39,3 +39,4 @@ FW.rocketMat= new THREE.ShaderMaterial({
   vertexShader: document.getElementById('rocketVertexShader').textContent,
   fragmentShader: document.getElementById('fragment_shader1').textContent
 })
+

@@ -3,6 +3,7 @@ window.soundOn = false
 FW.Rockets = class Rockets
   rnd = FW.rnd
   constructor: ()->
+    @launching = false
     rnd = FW.rnd
     @rockets = []
     @launchSound = new Audio('./assets/launch.mp3');
@@ -16,7 +17,7 @@ FW.Rockets = class Rockets
 
     @projector = new THREE.Projector()
     @launchSpeed = 20
-    @explosionDelay = rnd(1000, 1400)
+    @explosionDelay = rnd(2000, 1400)
     @shootDirection = new THREE.Vector3()
     @rocketMat = FW.rocketMat
 
@@ -32,6 +33,10 @@ FW.Rockets = class Rockets
 
 
   launchRocket: ()->
+    FW.numExplosionsPerRocket = rnd(1, 5)
+    if @launching
+      return
+    @launching = true
     @launchSound.load();
     rocket = new THREE.Mesh(@rocketGeo, @rocketMat)
     rocket.position.set(FW.camera.position.x, FW.camera.position.y, FW.camera.position.z)
@@ -53,6 +58,7 @@ FW.Rockets = class Rockets
     @rockets.push(rocket)
     setTimeout(()=>
       @explode(rocket)
+      @launching = false
       @explosionDelay = rnd(1000, 1400)
     @explosionDelay)
   update: ()->

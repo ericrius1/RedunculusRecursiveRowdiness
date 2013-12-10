@@ -10,7 +10,6 @@
       var i, _i;
       this.colorStart = new THREE.Color();
       this.colorEnd = new THREE.Color();
-      this.numFireworksPerExplosion = 3;
       this.lightIndex = 0;
       this.fwSpread = 200;
       this.fwAge = 15;
@@ -71,7 +70,7 @@
       }
       light.position.set(newPos.x, newPos.y, newPos.z);
       light.intensity = this.startLightIntensity;
-      if (count < this.numFireworksPerExplosion) {
+      if (count < FW.numExplosionsPerRocket - 1) {
         return setTimeout(function() {
           _this.explodeSound.load();
           if (soundOn) {
@@ -85,7 +84,7 @@
           count++;
           newPos = new THREE.Vector3(rnd(origPos.x - _this.fwSpread, origPos.x + _this.fwSpread), rnd(origPos.y - _this.fwSpread, origPos.y + _this.fwSpread), rnd(origPos.z - _this.fwSpread, origPos.z + _this.fwSpread));
           return _this.createExplosion(origPos, newPos, count++);
-        }, rnd(100, 700));
+        }, rnd(10, 300));
       }
     };
 

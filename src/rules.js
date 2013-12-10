@@ -1,13 +1,3 @@
-window.uniforms1 = {
-  time: {
-    type: "f",
-    value: 1.0
-  },
-  resolution: {
-    type: "v2",
-    value: new THREE.Vector2()
-  }
-};
 
 
 window.RULES = {}
