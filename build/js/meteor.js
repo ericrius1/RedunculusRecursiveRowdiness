@@ -9,9 +9,10 @@
     function Meteor() {
       var sphereGeo;
       this.generateSpeed();
-      this.startingPos = new THREE.Vector3(0, 1000, 0);
+      this.startingPos = new THREE.Vector3(0, 700, 0);
       this.colorStart = new THREE.Color();
       this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
+      this.meteorVisibleDistance = 5000;
       this.meteorTail = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
         blending: THREE.AdditiveBlending,
@@ -29,12 +30,9 @@
     }
 
     Meteor.prototype.generateSpeed = function() {
-      this.speedX = .1;
-      this.speedY = .1;
-      this.speedZ = .1;
-      this.accelX = rnd(.01, .05);
-      this.accelY = .02;
-      this.accelZ = .01;
+      this.speedX = 10;
+      this.speedY = .5;
+      this.speedZ = 10;
       this.dirX = rnd(-1, 1);
       this.dirY = -1;
       return this.dirZ = rnd(1, -1);
@@ -48,7 +46,6 @@
         acceleration: new THREE.Vector3(-this.dirX, -this.dirY, -this.dirZ),
         accelerationSpread: new THREE.Vector3(.2, .2, .2),
         particlesPerSecond: 1000,
-        opacityEnd: 0.5,
         colorStart: this.colorStart,
         colorEnd: this.colorEnd
       });
@@ -60,7 +57,7 @@
       var distance,
         _this = this;
       distance = FW.camera.position.distanceTo(this.meteor.position);
-      if (distance > FW.camera.far) {
+      if (distance > this.meteorVisibleDistance) {
         this.generateSpeed();
         this.meteor.position = new THREE.Vector3().copy(this.startingPos);
       }
@@ -70,11 +67,11 @@
     };
 
     Meteor.prototype.tick = function() {
-      this.speedX += this.accelX;
-      this.speedY += this.accelY;
-      this.speedZ += this.accelZ;
+      this.speedX;
+      this.speedY;
+      this.speedZ;
       this.meteor.translateX(this.speedX * this.dirX);
-      this.meteor.translateY(this.dirY);
+      this.meteor.translateY(this.speedY * this.dirY);
       this.meteor.translateZ(this.speedZ * this.dirZ);
       this.emitter.position = new THREE.Vector3().copy(this.meteor.position);
       this.light.position = new THREE.Vector3().copy(this.meteor.position);

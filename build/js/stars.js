@@ -31,7 +31,7 @@
         particlesPerSecond: rnd(100, 300),
         opacityStart: 0,
         opacityMiddle: 1,
-        opacityEnd: 0.0,
+        opacityEnd: 0.5,
         colorStart: this.colorStart,
         colorSpread: new THREE.Vector3(.2, .2, .2),
         colorEnd: this.colorEnd
