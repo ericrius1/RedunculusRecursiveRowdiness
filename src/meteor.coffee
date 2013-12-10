@@ -17,11 +17,8 @@ FW.Meteor = class Meteor
 
     @colorEnd = new THREE.Color()
     @colorEnd.setRGB(Math.random(),Math.random(),Math.random() )
-    sphereGeo = new THREE.SphereGeometry(5, 5, 5 )
-    @meteor = new THREE.Object3D()
-    @meteor.position = new THREE.Vector3().copy(@startingPos)
+
     @newMeteor()
-    FW.scene.add(@meteorTail.mesh)
 
     @light = new THREE.PointLight(0xefefef, 2, 1000)
     FW.scene.add(@light)
@@ -36,6 +33,8 @@ FW.Meteor = class Meteor
 
 
   newMeteor: ->
+    @meteor = new THREE.Object3D()
+    @meteor.position = new THREE.Vector3().copy(@startingPos)
     @emitter = new ShaderParticleEmitter
       position: @meteor.position
       size: rnd(0.01, 1.3),
@@ -45,7 +44,7 @@ FW.Meteor = class Meteor
       particlesPerSecond: 1000
       colorStart: @colorStart
       colorEnd: @colorEnd
-    
+    FW.scene.add(@meteorTail.mesh)
     @meteorTail.addEmitter @emitter
     @calcPosition()
     

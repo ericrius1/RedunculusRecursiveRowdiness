@@ -7,7 +7,6 @@
     rnd = FW.rnd;
 
     function Meteor() {
-      var sphereGeo;
       this.generateSpeed();
       this.startingPos = new THREE.Vector3(0, 700, 0);
       this.colorStart = new THREE.Color();
@@ -20,11 +19,7 @@
       });
       this.colorEnd = new THREE.Color();
       this.colorEnd.setRGB(Math.random(), Math.random(), Math.random());
-      sphereGeo = new THREE.SphereGeometry(5, 5, 5);
-      this.meteor = new THREE.Object3D();
-      this.meteor.position = new THREE.Vector3().copy(this.startingPos);
       this.newMeteor();
-      FW.scene.add(this.meteorTail.mesh);
       this.light = new THREE.PointLight(0xefefef, 2, 1000);
       FW.scene.add(this.light);
     }
@@ -39,6 +34,8 @@
     };
 
     Meteor.prototype.newMeteor = function() {
+      this.meteor = new THREE.Object3D();
+      this.meteor.position = new THREE.Vector3().copy(this.startingPos);
       this.emitter = new ShaderParticleEmitter({
         position: this.meteor.position,
         size: rnd(0.01, 1.3),
@@ -49,6 +46,7 @@
         colorStart: this.colorStart,
         colorEnd: this.colorEnd
       });
+      FW.scene.add(this.meteorTail.mesh);
       this.meteorTail.addEmitter(this.emitter);
       return this.calcPosition();
     };
