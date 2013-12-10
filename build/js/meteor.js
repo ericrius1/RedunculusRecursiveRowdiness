@@ -8,8 +8,8 @@
 
     function Meteor() {
       var sphereGeo;
-      this.startingMeteorPos = new THREE.Vector3(210, 1894, -36);
       this.generateSpeed();
+      this.startingPos = new THREE.Vector3(-290, 1335, 883);
       this.colorStart = new THREE.Color();
       this.colorStart.setRGB(Math.random(), Math.random(), Math.random());
       this.meteorTail = new ShaderParticleGroup({
@@ -21,7 +21,7 @@
       this.colorEnd.setRGB(Math.random(), Math.random(), Math.random());
       sphereGeo = new THREE.SphereGeometry(5, 5, 5);
       this.meteor = new THREE.Object3D();
-      this.calculateStartPos();
+      this.meteor.position = new THREE.Vector3().copy(this.startingPos);
       this.newMeteor();
       FW.scene.add(this.meteorTail.mesh);
       this.light = new THREE.PointLight(0xefefef, 2, 1000);
@@ -62,15 +62,11 @@
       distance = FW.camera.position.distanceTo(this.meteor.position);
       if (distance > FW.camera.far) {
         this.generateSpeed();
-        this.calculateStartPos();
+        this.meteor.position = new THREE.Vector3().copy(this.startingPos);
       }
       return setInterval(function() {
         return _this.calcPosition();
       }, 20000);
-    };
-
-    Meteor.prototype.calculateStartPos = function() {
-      return this.meteor.position = new THREE.Vector3(-290, 1335, 883);
     };
 
     Meteor.prototype.tick = function() {

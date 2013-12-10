@@ -1,9 +1,8 @@
 FW.Meteor = class Meteor
   rnd = FW.rnd
   constructor: ()->
-    @startingMeteorPos = new THREE.Vector3 210, 1894, -36
     @generateSpeed()
-
+    @startingPos = new THREE.Vector3 -290, 1335, 883
     @colorStart = new THREE.Color()
     @colorStart.setRGB(Math.random(),Math.random(),Math.random() )
 
@@ -19,7 +18,7 @@ FW.Meteor = class Meteor
     @colorEnd.setRGB(Math.random(),Math.random(),Math.random() )
     sphereGeo = new THREE.SphereGeometry(5, 5, 5 )
     @meteor = new THREE.Object3D()
-    @calculateStartPos()
+    @meteor.position = new THREE.Vector3().copy(@startingPos)
     @newMeteor()
     FW.scene.add(@meteorTail.mesh)
 
@@ -59,14 +58,12 @@ FW.Meteor = class Meteor
     #meteor is off screen, respawn it somewhere
     if distance > FW.camera.far
       @generateSpeed()
-      @calculateStartPos()
+      @meteor.position = new THREE.Vector3().copy(@startingPos)
 
     setInterval(=>
       @calcPosition()
     20000)
     
-  calculateStartPos: ->
-    @meteor.position = new THREE.Vector3(-290, 1335, 883)
     
   tick: ->
     @speedX += @accelX
