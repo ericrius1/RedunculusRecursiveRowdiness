@@ -2,7 +2,7 @@ FW.Meteor = class Meteor
   rnd = FW.rnd
   constructor: ()->
     @startingPos = new THREE.Vector3 0, 700, 0
-
+    @startYRange = 3000
     @meteors = []
     @meteorGroup = new ShaderParticleGroup
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
@@ -19,9 +19,9 @@ FW.Meteor = class Meteor
     meteor.speedX = rnd(0.1, 1)
     meteor.speedY = .05
     meteor.speedZ = rnd(0.1, 1)
-    meteor.accelX = .1
+    meteor.accelX = rnd(.01, .1)
     meteor.accelY = 0.005  
-    meteor.accelZ = .1
+    meteor.accelZ = rnd(.01, .1)
     meteor.dirX = rnd(-1, 1)
     meteor.dirY = -1
     meteor.dirZ = rnd(1, -1)
@@ -32,16 +32,17 @@ FW.Meteor = class Meteor
     colorStart.setRGB(Math.random(),Math.random(),Math.random() )
     meteor = new THREE.Object3D()
     @generateSpeed meteor
-    meteor.position = new THREE.Vector3(@startingPos.x, rnd(@startingPos.y, @startingPos.y+1000), @startingPos.z)
+    meteor.position = new THREE.Vector3(@startingPos.x, rnd(@startingPos.y, @startingPos.y + @startYRange), @startingPos.z)
     colorEnd = new THREE.Color()
     colorEnd.setRGB(Math.random(),Math.random(),Math.random() )
     meteor.light = new THREE.PointLight(colorStart, 2, 1000)
     FW.scene.add(meteor.light)
     meteor.tailEmitter = new ShaderParticleEmitter
       position: meteor.position
-      positionSpread: new THREE.Vector3(20, 20, 2)
-      size: 100
-      sizeSpread: 10
+      positionSpread: new THREE.Vector3(20, 20, 20)
+      size: rnd(100, 200)
+      sizeSpread: 100
+      sizeEnd: rnd(20, 50)
       acceleration: new THREE.Vector3(meteor.dirX, meteor.dirY, meteor.dirZ),
       accelerationSpread: new THREE.Vector3(.7, .7, .7),
       particlesPerSecond: 100
@@ -56,7 +57,7 @@ FW.Meteor = class Meteor
       #meteor is off screen, respawn it somewhere
       if distance > @meteorVisibleDistance
         @generateSpeed meteor
-        meteor.position = new THREE.Vector3().copy(@startingPos)
+        meteor.position = new THREE.Vector3(@startingPos.x, rnd(@startingPos.y, @startingPos.y + @startYRange), @startingPos.z)
 
     setInterval(=>
       @calcPositions()

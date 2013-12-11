@@ -30,7 +30,6 @@ FW.Rockets = class Rockets
     @firework.createExplosion(rocket.position)
 
 
-
   launchRocket: ()->
     FW.numExplosionsPerRocket = rnd(1, 5)
     if @launching

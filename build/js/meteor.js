@@ -9,6 +9,7 @@
     function Meteor() {
       var i, _i;
       this.startingPos = new THREE.Vector3(0, 700, 0);
+      this.startYRange = 3000;
       this.meteors = [];
       this.meteorGroup = new ShaderParticleGroup({
         texture: THREE.ImageUtils.loadTexture('assets/star.png'),
@@ -27,9 +28,9 @@
       meteor.speedX = rnd(0.1, 1);
       meteor.speedY = .05;
       meteor.speedZ = rnd(0.1, 1);
-      meteor.accelX = .1;
+      meteor.accelX = rnd(.01, .1);
       meteor.accelY = 0.005;
-      meteor.accelZ = .1;
+      meteor.accelZ = rnd(.01, .1);
       meteor.dirX = rnd(-1, 1);
       meteor.dirY = -1;
       return meteor.dirZ = rnd(1, -1);
@@ -41,16 +42,17 @@
       colorStart.setRGB(Math.random(), Math.random(), Math.random());
       meteor = new THREE.Object3D();
       this.generateSpeed(meteor);
-      meteor.position = new THREE.Vector3(this.startingPos.x, rnd(this.startingPos.y, this.startingPos.y + 1000), this.startingPos.z);
+      meteor.position = new THREE.Vector3(this.startingPos.x, rnd(this.startingPos.y, this.startingPos.y + this.startYRange), this.startingPos.z);
       colorEnd = new THREE.Color();
       colorEnd.setRGB(Math.random(), Math.random(), Math.random());
       meteor.light = new THREE.PointLight(colorStart, 2, 1000);
       FW.scene.add(meteor.light);
       meteor.tailEmitter = new ShaderParticleEmitter({
         position: meteor.position,
-        positionSpread: new THREE.Vector3(20, 20, 2),
-        size: 100,
-        sizeSpread: 10,
+        positionSpread: new THREE.Vector3(20, 20, 20),
+        size: rnd(100, 200),
+        sizeSpread: 100,
+        sizeEnd: rnd(20, 50),
         acceleration: new THREE.Vector3(meteor.dirX, meteor.dirY, meteor.dirZ),
         accelerationSpread: new THREE.Vector3(.7, .7, .7),
         particlesPerSecond: 100,
@@ -70,7 +72,7 @@
         distance = FW.camera.position.distanceTo(meteor.position);
         if (distance > this.meteorVisibleDistance) {
           this.generateSpeed(meteor);
-          meteor.position = new THREE.Vector3().copy(this.startingPos);
+          meteor.position = new THREE.Vector3(this.startingPos.x, rnd(this.startingPos.y, this.startingPos.y + this.startYRange), this.startingPos.z);
         }
       }
       return setInterval(function() {
