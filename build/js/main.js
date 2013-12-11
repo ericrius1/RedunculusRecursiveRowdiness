@@ -24,6 +24,8 @@
 
   FW.sfxVolume = 0.2;
 
+  FW.tickRate = .16;
+
   window.onload = function() {
     FW.startingPos = new THREE.Vector3(3537, 500, -324);
     FW.myWorld = new FW.World();

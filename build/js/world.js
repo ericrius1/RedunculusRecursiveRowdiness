@@ -26,7 +26,6 @@
       this.controls = new THREE.FlyControls(FW.camera);
       this.controls.movementSpeed = 600;
       this.controls.rollSpeed = Math.PI / 6;
-      this.controls.pitchEnabled = true;
       this.stats = new Stats();
       this.stats.domElement.style.position = 'absolute';
       this.stats.domElement.style.left = '0px';

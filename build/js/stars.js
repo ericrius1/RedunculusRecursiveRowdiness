@@ -40,7 +40,7 @@
     };
 
     Stars.prototype.tick = function() {
-      return this.starGroup.tick(0.16);
+      return this.starGroup.tick(FW.tickRatess);
     };
 
     return Stars;

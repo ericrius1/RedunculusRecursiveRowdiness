@@ -1,17 +1,20 @@
 FW.Meteor = class Meteor
   rnd = FW.rnd
   constructor: ()->
-    @startingPos = new THREE.Vector3 0, 700, 0
+    @startingPos = new THREE.Vector3 0, 1000, 0
     @startYRange = 3000
     @meteors = []
+    @activeMeteors = []
+    @currentMeteorIndex = 0
     @meteorGroup = new ShaderParticleGroup
       texture: THREE.ImageUtils.loadTexture('assets/star.png'),
       blending: THREE.AdditiveBlending,
       maxAge: 15
     @meteorVisibleDistance = 3000
-    for i in [1..3]
+    for i in [1..10]
       @newMeteor()
     FW.scene.add(@meteorGroup.mesh)
+    @activeMeteors.push @meteors[0]
     @calcPositions()
     
 
@@ -35,7 +38,7 @@ FW.Meteor = class Meteor
     meteor.position = new THREE.Vector3(@startingPos.x, rnd(@startingPos.y, @startingPos.y + @startYRange), @startingPos.z)
     colorEnd = new THREE.Color()
     colorEnd.setRGB(Math.random(),Math.random(),Math.random() )
-    meteor.light = new THREE.PointLight(colorStart, 2, 1000)
+    meteor.light = new THREE.PointLight(colorStart, 0, 1000)
     FW.scene.add(meteor.light)
     meteor.tailEmitter = new ShaderParticleEmitter
       position: meteor.position
@@ -47,17 +50,27 @@ FW.Meteor = class Meteor
       accelerationSpread: new THREE.Vector3(.7, .7, .7),
       particlesPerSecond: 100
       colorStart: colorStart
-      colorEnd: colorEnd
+      colorSpread: new THREE.Vector3(rnd(0, .5), rnd(0.5), rnd(0.5))
     @meteorGroup.addEmitter meteor.tailEmitter
     @meteors.push meteor
-    
+  
+  activateMeteor: ->
+    if @currentMeteorIndex is @meteors.length
+      @currentMeteorIndex = 0
+    @activeMeteors.push @meteors[@currentMeteorIndex++]
+    if @activeMeteors.length > @maxActiveMeteors
+      @activeMeteors.shift()
+
+
+
   calcPositions: ->
-    for meteor in @meteors
+    for meteor in @activeMeteors
       distance =  FW.camera.position.distanceTo(meteor.position)
       #meteor is off screen, respawn it somewhere
       if distance > @meteorVisibleDistance
         @generateSpeed meteor
         meteor.position = new THREE.Vector3(@startingPos.x, rnd(@startingPos.y, @startingPos.y + @startYRange), @startingPos.z)
+        @activateMeteor()
 
     setInterval(=>
       @calcPositions()
@@ -65,7 +78,7 @@ FW.Meteor = class Meteor
     
 
   tick: ->
-    for meteor in @meteors
+    for meteor in @activeMeteors
       meteor.speedX +=meteor.accelX
       meteor.speedY +=meteor.accelY
       meteor.speedZ +=meteor.accelZ
@@ -74,7 +87,7 @@ FW.Meteor = class Meteor
       meteor.translateZ(meteor.speedZ * meteor.dirZ)
       meteor.light.position = new THREE.Vector3().copy(meteor.position)
       meteor.tailEmitter.position = new THREE.Vector3().copy(meteor.position)
-    @meteorGroup.tick(.32)
+    @meteorGroup.tick(FW.tickRate)
     
 
 

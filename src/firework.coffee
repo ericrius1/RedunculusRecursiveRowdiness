@@ -74,7 +74,7 @@ FW.Firework = class Firework
 
     
   tick: ->
-    @particleGroup.tick(0.16)
+    @particleGroup.tick(FW.tickRate)
     for light in @lights
       if light.intensity > 0
         light.intensity -=@lightDimmingFactor

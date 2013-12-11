@@ -14,6 +14,7 @@ SC?.initialize({
 });
 window.soundOn = true
 FW.sfxVolume = 0.2
+FW.tickRate = .16
 
 #inspire rameses b
 #Give user option between building a permanent structure or laun@stars fire works

@@ -36,7 +36,7 @@ FW.Stars = class Stars
  
     
   tick: ->
-    @starGroup.tick(0.16)
+    @starGroup.tick(FW.tickRatess)
     
 
 
